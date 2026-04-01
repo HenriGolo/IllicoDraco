@@ -29,3 +29,4 @@ replay_pid*
 build
 bin
 out
+!lib/*
