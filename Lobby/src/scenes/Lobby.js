@@ -1,7 +1,7 @@
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 1, code = 666) {
+    constructor(joueur_courant = 1, code = 1234) {
         super('Lobby');
 
         this.joueur_courant = joueur_courant;
@@ -32,6 +32,9 @@ export class Lobby extends Phaser.Scene {
         this.load.image('j4_mage', 'assets/yellow_mage_idle.png');
         this.load.image('j4_archer', 'assets/yellow_archer_idle.png');
 
+        this.load.image('bt_quitter', 'assets/button/ButtonTemplate.png');
+        this.load.image('bt_parametre', 'assets/yellow_pretre_idle.png');
+        this.load.image('bt_lancer_partie', 'assets/button/BiggerButtonTemplate.png');
         
     }
 
@@ -54,17 +57,21 @@ export class Lobby extends Phaser.Scene {
         graphics.fillStyle(0xffffcc, 1);
         graphics.fillRect(720, 0, 240, 720);
         */
+
+        graphics.fillStyle(0xaaaaaa, 1);
+        graphics.fillRect(1184, 32, 64, 64);
+    
         /////////////////////////////////////
 
         //Affichage du titre et code
-        this.add.text(0, 16, 'En attente de joueur ...', { fontSize: '32px', fill: '#000' }).setFixedSize(1280, 32).setAlign('center');
-        this.add.text(0, 58, 'code : ' + this.code, { fontSize: '24px', fill: '#000' }).setFixedSize(1280, 24).setAlign('center');
+        this.add.text(0, 16, 'En attente de joueur ...', { fontSize: '32px', fill: '#000' }).setFixedSize(960, 32).setAlign('center');
+        this.add.text(0, 58, 'code : ' + this.code, { fontSize: '24px', fill: '#000' }).setFixedSize(960, 24).setAlign('center');
 
         this.joueurs = [];
         for (var i = 0; i < 4; i++) {
 
             let x = 120 + 240*i;
-            this.joueurs.push(this.add.sprite(x, 300, ("j" + (i+1) + "_" + joueur_classe[3])).setScale(zoom, zoom));
+            this.joueurs.push(this.add.sprite(x, 300, ("j" + (i+1) + "_" + joueur_classe[0])).setScale(zoom, zoom));
             this.joueurs[i].setState(0);
             this.joueurs[i].setName("j" + (i+1));
 
@@ -81,7 +88,33 @@ export class Lobby extends Phaser.Scene {
             }
             
         }
-      
+
+        //Créer le bouton seulement si c'est le joueur 1 (lancer partie)
+        if (this.joueur_courant == 1) {
+            this.add.sprite(480, 656, 'bt_lancer_partie').setScale(3, 3)
+                .setInteractive()
+                .on('pointerdown', function (pointer)
+                {
+                    start_game();
+                });
+        }
+
+        //Créer les boutons paramètres et quitté
+        this.add.sprite(1120, 656, 'bt_quitter').setScale(3, 3)
+            .setInteractive()
+            .on('pointerdown', function (pointer) {
+                quit();
+            });
+ 
+    }
+
+
+    quit() {
+        //TODO
+    }
+
+    start_game() {
+        //TODO
     }
 
     update() {
