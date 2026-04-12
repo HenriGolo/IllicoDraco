@@ -1,3 +1,5 @@
+import Tchat from '../gameObjects/Tchat.js';
+
 export class Lobby extends Phaser.Scene {
 
 
@@ -8,6 +10,7 @@ export class Lobby extends Phaser.Scene {
         this.code = code;
 
         this.joueurs;
+        this.tchat;
         
     }
 
@@ -35,6 +38,11 @@ export class Lobby extends Phaser.Scene {
         this.load.image('bt_quitter', 'assets/button/ButtonTemplate.png');
         this.load.image('bt_parametre', 'assets/yellow_pretre_idle.png');
         this.load.image('bt_lancer_partie', 'assets/button/BiggerButtonTemplate.png');
+
+
+        //Pour le tchat
+        this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
+        this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
         
     }
 
@@ -47,6 +55,11 @@ export class Lobby extends Phaser.Scene {
         graphics.fillStyle(0x555555, 1);
         graphics.fillRect(960, 0, 320, 720);
 
+        graphics.fillStyle(0x550055, 1);
+        graphics.fillRect(0,592,1280, 128);
+
+        graphics.fillStyle(0xffeeff, 1);
+        graphics.fillRect(0,0,1280, 128);
         /*
         graphics.fillStyle(0xccccff, 1);
         graphics.fillRect(0, 0, 240, 720);
@@ -71,7 +84,7 @@ export class Lobby extends Phaser.Scene {
         for (var i = 0; i < 4; i++) {
 
             let x = 120 + 240*i;
-            this.joueurs.push(this.add.sprite(x, 300, ("j" + (i+1) + "_" + joueur_classe[0])).setScale(zoom, zoom));
+            this.joueurs.push(this.add.sprite(x, 360, ("j" + (i+1) + "_" + joueur_classe[0])).setScale(zoom, zoom));
             this.joueurs[i].setState(0);
             this.joueurs[i].setName("j" + (i+1));
 
@@ -95,26 +108,23 @@ export class Lobby extends Phaser.Scene {
                 .setInteractive()
                 .on('pointerdown', function (pointer)
                 {
-                    start_game();
-                });
+                    //TODO
+                }
+                );
         }
 
         //Créer les boutons paramètres et quitté
         this.add.sprite(1120, 656, 'bt_quitter').setScale(3, 3)
             .setInteractive()
             .on('pointerdown', function (pointer) {
-                quit();
-            });
+                //TODO
+            }
+            );
+
+        //Ajout du tchat /////////////////////////////////////////
+        this.tchat = new Tchat(this);
+        /////////////////////////////////////////////////////////
  
-    }
-
-
-    quit() {
-        //TODO
-    }
-
-    start_game() {
-        //TODO
     }
 
     update() {
