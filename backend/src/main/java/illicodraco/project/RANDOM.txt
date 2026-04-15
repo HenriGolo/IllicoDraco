@@ -1,0 +1,9 @@
+servlet : connexion menu -> lobby
+=> si lobby en mode "créer partie" : 
+    lancer le lobby (params = 1 (joueur 1), code (le code de la partie), pseudo (clé primaire du joueur))
+
+=> si en mode "rejoindre partie" :
+    on recoit un code du menu
+    on trouve la partie asso au code
+    lance lobby avec mêmes params (avec n° du joueur et pseudo qui changent)
+

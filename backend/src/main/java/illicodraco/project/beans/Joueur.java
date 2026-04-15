@@ -13,8 +13,8 @@ public class Joueur {
 
   private String pseudo;      // pseudonyme du joueur
 
-  @ManyToOne
-  private Classe classe;      // "classe" du joueur (contient ses statistiques)
+  @OneToOne
+  private Controles controles;      // controles du joueur
 
     /*@OneToOne
     private Produit produit;    // produit porté par le joueur
@@ -38,8 +38,8 @@ public class Joueur {
         return stats;
     }*/
 
-  public Classe getClasse() {
-    return classe;
+  public Controles getControles() {
+    return controles;
   }
 
     /*public Produit getProduit() {
@@ -60,8 +60,8 @@ public class Joueur {
         this.stats = stats;
     }*/
 
-  public void setClasse(Classe classe) {
-    this.classe = classe;
+  public void setControles(Controles controles) {
+    this.controles = controles;
   }
 
     /*public void setProduit(Produit produit) {
