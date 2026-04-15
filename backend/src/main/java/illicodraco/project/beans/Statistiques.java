@@ -20,7 +20,7 @@ public class Statistiques {
 
   private int defense;    // défense du monstre/joueur
 
-
+  
   // constructeur
   public Statistiques() {
   }
