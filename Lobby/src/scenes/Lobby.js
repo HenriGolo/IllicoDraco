@@ -3,10 +3,11 @@ import Tchat from '../gameObjects/Tchat.js';
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 1, code = 1234) {
+    constructor(joueur_courant = 1,code = 1234, pseudo = "Pseudo") {
         super('Lobby');
 
         this.joueur_courant = joueur_courant;
+        this.pseudo = pseudo;
         this.code = code;
 
         this.joueurs;
@@ -52,15 +53,19 @@ export class Lobby extends Phaser.Scene {
 
         //Background pour l'organisation générale :
         var graphics = this.add.graphics();
+        
+        //Bandeau Tchat
         graphics.fillStyle(0x555555, 1);
-        graphics.fillRect(960, 0, 320, 720);
-
+        graphics.fillRect(960, 128, 320, 464);
+ /*
+        //Bandeau bas
         graphics.fillStyle(0x550055, 1);
         graphics.fillRect(0,592,1280, 128);
 
-        graphics.fillStyle(0xffeeff, 1);
+        //Bandeau haut
+        graphics.fillStyle(0x00eeff, 1);
         graphics.fillRect(0,0,1280, 128);
-        /*
+       
         graphics.fillStyle(0xccccff, 1);
         graphics.fillRect(0, 0, 240, 720);
         graphics.fillStyle(0xffcccc, 1);
@@ -73,6 +78,7 @@ export class Lobby extends Phaser.Scene {
 
         graphics.fillStyle(0xaaaaaa, 1);
         graphics.fillRect(1184, 32, 64, 64);
+
     
         /////////////////////////////////////
 
@@ -122,7 +128,7 @@ export class Lobby extends Phaser.Scene {
             );
 
         //Ajout du tchat /////////////////////////////////////////
-        this.tchat = new Tchat(this);
+        this.tchat = new Tchat(this, this.pseudo, 960, 128);
         /////////////////////////////////////////////////////////
  
     }
