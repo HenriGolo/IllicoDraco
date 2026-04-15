@@ -1,9 +1,12 @@
 import Tchat from '../gameObjects/Tchat.js';
 
+const zoom = 10;
+const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
+
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 1,code = 1234, pseudo = "Pseudo") {
+    constructor(joueur_courant = 3,code = 1234, pseudo = "Pseudo") {
         super('Lobby');
 
         this.joueur_courant = joueur_courant;
@@ -45,11 +48,11 @@ export class Lobby extends Phaser.Scene {
         this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
         this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
         
+        
     }
 
     create() {
-        const zoom = 10;
-        const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
+        
 
         //Background pour l'organisation générale :
         var graphics = this.add.graphics();
@@ -86,51 +89,69 @@ export class Lobby extends Phaser.Scene {
         this.add.text(0, 16, 'En attente de joueur ...', { fontSize: '32px', fill: '#000' }).setFixedSize(960, 32).setAlign('center');
         this.add.text(0, 58, 'code : ' + this.code, { fontSize: '24px', fill: '#000' }).setFixedSize(960, 24).setAlign('center');
 
+        //Afficher les joueurs déjà connecté
         this.joueurs = [];
-        for (var i = 0; i < 4; i++) {
-
-            let x = 120 + 240*i;
-            this.joueurs.push(this.add.sprite(x, 360, ("j" + (i+1) + "_" + joueur_classe[0])).setScale(zoom, zoom));
-            this.joueurs[i].setState(0);
-            this.joueurs[i].setName("j" + (i+1));
-
-            
-            if (i == (this.joueur_courant - 1)) {
-
-                this.joueurs[i].setInteractive();
-                this.joueurs[i].on('pointerdown', function (pointer)
-                {
-                    this.setState((this.state + 1)%4);
-                    this.setTexture(this.name + "_" + joueur_classe[this.state]);
-
-                });
-            }
-            
+        for (var i = 0; i < this.joueur_courant; i++) {
+            this.connect_player(i)
         }
+ 
+        //Permettre au joueur de changer son perso
+        this.joueurs[this.joueur_courant-1].setInteractive();
+        this.joueurs[this.joueur_courant-1].on('pointerdown', function (pointer)
+        {
+            this.setState((this.state + 1)%4);
+            this.setTexture(this.name + "_" + joueur_classe[this.state]);
 
+        });
+        
+            
         //Créer le bouton seulement si c'est le joueur 1 (lancer partie)
         if (this.joueur_courant == 1) {
             this.add.sprite(480, 656, 'bt_lancer_partie').setScale(3, 3)
                 .setInteractive()
-                .on('pointerdown', function (pointer)
-                {
-                    //TODO
-                }
-                );
+                .on('pointerdown', () => this.start_game());
         }
 
-        //Créer les boutons paramètres et quitté
+        //Créer les boutons paramètres et quitter
         this.add.sprite(1120, 656, 'bt_quitter').setScale(3, 3)
             .setInteractive()
-            .on('pointerdown', function (pointer) {
-                //TODO
-            }
-            );
+            .on('pointerdown', () => this.quit());
 
-        //Ajout du tchat /////////////////////////////////////////
+        //Ajout du tchat
         this.tchat = new Tchat(this, this.pseudo, 960, 128);
-        /////////////////////////////////////////////////////////
+        
+
+        this.switch_class(0);
  
+    }
+
+
+    //Permet d'afficher le joueur numéro num (num entre 1 et 4)
+    connect_player(num) {
+        let x = 120 + 240*num;
+        this.joueurs.push(this.add.sprite(x, 360, ("j" + (num+1) + "_" + joueur_classe[0])).setScale(zoom, zoom));
+        this.joueurs[num].setState(0);
+        this.joueurs[num].setName("j" + (num+1));
+    }
+
+
+    //Changer l'avatar d'un joueur pour le prochain
+    switch_class(num) {
+        let o = this.joueurs[num];
+        o.setState((o.state + 1)%4);
+        o.setTexture(o.name + "_" + joueur_classe[o.state]);
+    }
+
+    //Quitter le jeu
+    quit () {
+        //TODO QUITTER
+        console.log(this.pseudo + " : Je pars");
+    }
+
+    //Lancer le jeu
+    start_game () {
+        //TODO START
+        console.log (this.pseudo + " : Cuisinons !")
     }
 
     update() {
