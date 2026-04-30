@@ -43,7 +43,6 @@ public class Facade {
     @Autowired
     StatistiquesRepository stats_r;
 
-
     // méthodes
 
     @PostMapping("/joueurs")
@@ -64,6 +63,16 @@ public class Facade {
         return joueur.getControles();
     }
 
+    @PostMapping("/controles")
+    public void setControlesOfJoueur(@RequestParam("idj") int id_joueur, @RequestParam("ctrls") Controles ctrls) throws RuntimeException {
+        Joueur joueur = getJoueur(id_joueur);
+        joueur.setControles(ctrls);
+    } 
+
+
+
+
+    
     /* TODO (l'idée est là)
     @PostMapping("/achat")
     public Produit achatBoutique(@RequestParam("idj") int id_joueur, @RequestParam("arg") int argent, @RequestParam("idp") int id_produit) throws RuntimeException {

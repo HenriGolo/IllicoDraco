@@ -1,5 +1,7 @@
 package illicodraco.project.beans;
 
+import java.util.Collection;
+
 import jakarta.persistence.*;
 
 // Classe java pour gérer l'entité "joueur"
@@ -8,13 +10,21 @@ public class Joueur {
 
   // attributs
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;             // clef primaire dans la BD
+  /*@GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;             // clef primaire dans la BD*/
+  private String pseudo;      // pseudonyme du joueur (clef primaire dans la BD)
 
-  private String pseudo;      // pseudonyme du joueur
+  @OneToOne
+  private Avatar avatar;      // Avatar du joueur
 
   @OneToOne
   private Controles controles;      // controles du joueur
+
+  @OneToOne
+  private Collection<Monstre> bestiaire;   // bestiaire du joueur
+
+  @OneToOne
+  private Collection<Recette> livreRecettes;   // livre de recettes du joueur
 
     /*@OneToOne
     private Produit produit;    // produit porté par le joueur
@@ -26,46 +36,54 @@ public class Joueur {
 
 
   // getters
-  public int getId() {
+  /*public int getId() {
     return id;
-  }
+  }*/
 
   public String getPseudo() {
     return pseudo;
   }
 
-    /*public Statistiques getStats() {
-        return stats;
-    }*/
+  public Collection<Recette> getLivreRecette() {
+        return livreRecettes;
+  }
+
+  public Collection<Monstre> getBestiaire() {
+        return bestiaire;
+  }
 
   public Controles getControles() {
     return controles;
   }
 
-    /*public Produit getProduit() {
-        return produit;
-    }*/
+  public Avatar getAvatar() {
+        return avatar;
+  }
 
 
   // setters
-  public void setId(int id) {
+  /*public void setId(int id) {
     this.id = id;
-  }
+  }*/
 
   public void setPseudo(String pseudo) {
     this.pseudo = pseudo;
   }
 
-    /*public void setStats(Statistiques stats) {
-        this.stats = stats;
-    }*/
+  public void setLivreRecette(Collection<Recette> livreRecettes) {
+        this.livreRecettes = livreRecettes;
+  }
+
+  public void setBestiaire(Collection<Monstre> bestiaire) {
+        this.bestiaire = bestiaire;
+  }
 
   public void setControles(Controles controles) {
     this.controles = controles;
   }
 
-    /*public void setProduit(Produit produit) {
-        this.produit = produit;
-    }*/
+  public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+  } 
 
 }
