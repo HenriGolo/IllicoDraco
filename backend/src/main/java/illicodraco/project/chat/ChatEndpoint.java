@@ -31,7 +31,7 @@ public class ChatEndpoint {
 
     Message message = new Message();
     message.setFrom(username);
-    message.setContent("Connected!");
+    message.setContent("*arrive en renfort !*");
     broadcast(message);
   }
 
@@ -47,7 +47,7 @@ public class ChatEndpoint {
     chatEndpoints.remove(this);
     Message message = new Message();
     message.setFrom(users.get(session.getId()));
-    message.setContent("Disconnected!");
+    message.setContent("*a cru qu'il était discret en partant...*");
     broadcast(message);
   }
 
