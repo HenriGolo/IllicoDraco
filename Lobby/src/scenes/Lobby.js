@@ -6,8 +6,10 @@ const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 4,code = 1234, pseudo = "Pseudo") {
+    constructor(joueur_courant = 4,code = 1234, pseudo = "Pseudo", serveur_url = "test") {
         super('Lobby');
+
+        this.serveur_url = serveur_url;
 
         this.joueur_courant = joueur_courant;
         this.pseudo = pseudo;
@@ -19,6 +21,11 @@ export class Lobby extends Phaser.Scene {
     }
 
     preload() {
+
+        //Tile map d'arrière plan
+        this.load.image('tiles', 'assets/tileMaps/Tile-Sheet.png');
+
+        //Image des joueurs
         this.load.image('j1_pretre', 'assets/blue_pretre_idle.png');
         this.load.image('j1_guerrier', 'assets/blue_guerrier_idle.png');
         this.load.image('j1_mage', 'assets/blue_mage_idle.png');
@@ -39,6 +46,7 @@ export class Lobby extends Phaser.Scene {
         this.load.image('j4_mage', 'assets/yellow_mage_idle.png');
         this.load.image('j4_archer', 'assets/yellow_archer_idle.png');
 
+        //Image des boutons
         this.load.image('bt_quitter', 'assets/button/quitButton.png');
         this.load.image('bt_parametre', 'assets/button/parameterButton.png');
         this.load.image('bt_lancer_partie', 'assets/button/startGameButton.png');
@@ -122,7 +130,7 @@ export class Lobby extends Phaser.Scene {
             .on('pointerdown', () => this.parameter());
 
         //Ajout du tchat
-        this.tchat = new Tchat(this, this.pseudo, 960, 128);
+        this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url);
         
 
         this.switch_class(0);
