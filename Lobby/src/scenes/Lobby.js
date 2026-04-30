@@ -6,7 +6,7 @@ const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 3,code = 1234, pseudo = "Pseudo") {
+    constructor(joueur_courant = 4,code = 1234, pseudo = "Pseudo") {
         super('Lobby');
 
         this.joueur_courant = joueur_courant;
@@ -39,9 +39,9 @@ export class Lobby extends Phaser.Scene {
         this.load.image('j4_mage', 'assets/yellow_mage_idle.png');
         this.load.image('j4_archer', 'assets/yellow_archer_idle.png');
 
-        this.load.image('bt_quitter', 'assets/button/ButtonTemplate.png');
-        this.load.image('bt_parametre', 'assets/yellow_pretre_idle.png');
-        this.load.image('bt_lancer_partie', 'assets/button/BiggerButtonTemplate.png');
+        this.load.image('bt_quitter', 'assets/button/quitButton.png');
+        this.load.image('bt_parametre', 'assets/button/parameterButton.png');
+        this.load.image('bt_lancer_partie', 'assets/button/startGameButton.png');
 
 
         //Pour le tchat
@@ -77,11 +77,11 @@ export class Lobby extends Phaser.Scene {
         graphics.fillRect(480, 0, 240, 720);
         graphics.fillStyle(0xffffcc, 1);
         graphics.fillRect(720, 0, 240, 720);
-        */
+      
 
-        graphics.fillStyle(0xaaaaaa, 1);
+        graphics.fillStyle(0x000aaa, 1);
         graphics.fillRect(1184, 32, 64, 64);
-
+          */
     
         /////////////////////////////////////
 
@@ -116,6 +116,10 @@ export class Lobby extends Phaser.Scene {
         this.add.sprite(1120, 656, 'bt_quitter').setScale(3, 3)
             .setInteractive()
             .on('pointerdown', () => this.quit());
+
+        this.add.sprite(1216, 64, 'bt_parametre').setScale(3, 3)
+            .setInteractive()
+            .on('pointerdown', () => this.parameter());
 
         //Ajout du tchat
         this.tchat = new Tchat(this, this.pseudo, 960, 128);
@@ -152,6 +156,12 @@ export class Lobby extends Phaser.Scene {
     start_game () {
         //TODO START
         console.log (this.pseudo + " : Cuisinons !")
+    }
+
+    //Parametre
+    parameter () {
+        //TODO START
+        console.log (this.pseudo + " : Parametre !")
     }
 
     update() {
