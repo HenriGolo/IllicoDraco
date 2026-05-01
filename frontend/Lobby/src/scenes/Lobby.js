@@ -55,6 +55,7 @@ export class Lobby extends Phaser.Scene {
         //Pour le tchat
         this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
         this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
+        this.load.image('text_bubble', 'assets/button/textBubble.png');
         
         
     }

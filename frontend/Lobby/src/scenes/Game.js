@@ -27,6 +27,7 @@ export class Game extends Phaser.Scene {
         //Pour le tchat
         this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
         this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
+        this.load.image('text_bubble', 'assets/button/textBubble.png');
         
         
     }
@@ -60,7 +61,8 @@ export class Game extends Phaser.Scene {
             .on('pointerdown', () => this.open_parameter());
 
         //Ajout du tchat
-        this.tchat = new Tchat(this, this.pseudo, 960, 178, this.serveur_url);
+        this.tchat = new Tchat(this, this.pseudo, 960, 158, this.serveur_url);
+        this.tchat.switch_visibility();
 
         //Initialiser les touches du jeu
         this.input.keyboard.on('keyup', (event) => this.handle_key(event))
