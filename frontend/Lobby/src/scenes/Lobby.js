@@ -6,7 +6,7 @@ const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 4,code = 1234, pseudo = "Pseudo", serveur_url = "ws://localhost:8080/IllicoDraco/chat/") {
+    constructor(joueur_courant = 1,code = 1234, pseudo = "Pseudo", serveur_url = "ws://localhost:8080/IllicoDraco/chat/") {
         super('Lobby');
 
         this.serveur_url = serveur_url;
@@ -21,43 +21,6 @@ export class Lobby extends Phaser.Scene {
     }
 
     preload() {
-
-        //Tile map d'arrière plan
-        this.load.image('tiles', 'assets/tileMaps/Tile-Sheet.png');
-
-        //Image des joueurs
-        this.load.image('j1_pretre', 'assets/blue_pretre_idle.png');
-        this.load.image('j1_guerrier', 'assets/blue_guerrier_idle.png');
-        this.load.image('j1_mage', 'assets/blue_mage_idle.png');
-        this.load.image('j1_archer', 'assets/blue_archer_idle.png');
-
-        this.load.image('j2_pretre', 'assets/red_pretre_idle.png');
-        this.load.image('j2_guerrier', 'assets/red_guerrier_idle.png');
-        this.load.image('j2_mage', 'assets/red_mage_idle.png');
-        this.load.image('j2_archer', 'assets/red_archer_idle.png');
-
-        this.load.image('j3_pretre', 'assets/green_pretre_idle.png');
-        this.load.image('j3_guerrier', 'assets/green_guerrier_idle.png');
-        this.load.image('j3_mage', 'assets/green_mage_idle.png');
-        this.load.image('j3_archer', 'assets/green_archer_idle.png');
-
-        this.load.image('j4_pretre', 'assets/yellow_pretre_idle.png');
-        this.load.image('j4_guerrier', 'assets/yellow_guerrier_idle.png');
-        this.load.image('j4_mage', 'assets/yellow_mage_idle.png');
-        this.load.image('j4_archer', 'assets/yellow_archer_idle.png');
-
-        //Image des boutons
-        this.load.image('bt_quitter', 'assets/button/quitButton.png');
-        this.load.image('bt_parametre', 'assets/button/parameterButton.png');
-        this.load.image('bt_lancer_partie', 'assets/button/startGameButton.png');
-
-
-        //Pour le tchat
-        this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
-        this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
-        this.load.image('text_bubble', 'assets/button/textBubble.png');
-        
-        
     }
 
     create() {

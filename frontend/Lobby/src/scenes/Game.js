@@ -18,18 +18,6 @@ export class Game extends Phaser.Scene {
     }
 
     preload() {
-
-        //Boutons
-        this.load.image('bt_parametre', 'assets/button/parameterButton.png');
-        this.load.image('bt_boutique', 'assets/button/boutiqueButton.png');
-        this.load.image('bt_receuil', 'assets/button/recetteButton.png');
-
-        //Pour le tchat
-        this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
-        this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
-        this.load.image('text_bubble', 'assets/button/textBubble.png');
-        
-        
     }
 
     create() {

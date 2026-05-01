@@ -1,5 +1,7 @@
 import { Lobby } from './scenes/Lobby.js';
 import { Game } from './scenes/Game.js';
+import { Receuil } from './scenes/Receuil.js';
+import { Preloader } from './scenes/Preloader.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -11,6 +13,8 @@ const config = {
     backgroundColor: '#ffffff',
     pixelArt: true,
     scene: [
+        Preloader,
+        Receuil,
         Game,
         Lobby
     ],
