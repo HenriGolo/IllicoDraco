@@ -1,4 +1,5 @@
 import { Lobby } from './scenes/Lobby.js';
+import { Game } from './scenes/Game.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -10,6 +11,7 @@ const config = {
     backgroundColor: '#ffffff',
     pixelArt: true,
     scene: [
+        Game,
         Lobby
     ],
     scale: {

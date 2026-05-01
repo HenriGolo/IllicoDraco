@@ -6,7 +6,7 @@ const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 4,code = 1234, pseudo = "Pseudo", serveur_url = "test") {
+    constructor(joueur_courant = 4,code = 1234, pseudo = "Pseudo", serveur_url = "ws://localhost:8080/IllicoDraco/chat/") {
         super('Lobby');
 
         this.serveur_url = serveur_url;
@@ -132,9 +132,6 @@ export class Lobby extends Phaser.Scene {
         //Ajout du tchat
         this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url);
         
-
-        this.switch_class(0);
- 
     }
 
 
