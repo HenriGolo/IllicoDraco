@@ -1,4 +1,6 @@
     const zoom = 3;
+    const nb_row_display = 2; //Nombre de ligne affiché par page 
+    const nb_col_display = 4; //Nombre de col affiché par page
 
 export class Receuil extends Phaser.Scene {
 
@@ -7,6 +9,14 @@ export class Receuil extends Phaser.Scene {
 
         this.recetteButton;
         this.bestiaireButton;
+
+        this.total_monster; //Nombre de monstre
+        this.total_recipe; //Nombre de recette
+
+        this.curPageText;
+
+        this.curPage = 0;
+        this.dansRecette = true;
     }
 
     preload() {
@@ -40,6 +50,10 @@ export class Receuil extends Phaser.Scene {
         //Défilement entre les pages
         this.add.sprite(640, 10 + (24*zoom)/2, 'pageNum').setScale(zoom, zoom);
 
+        this.curPageText = this.add.text(0, 32, '1', { fontSize: '32px', fill: '#fff' })
+        .setFixedSize(1280, 44)
+        .setAlign('center');
+
         this.add.sprite(640 - 24*zoom, 10 + (24*zoom)/2, 'bt_leftArrow').setScale(zoom, zoom)
             .setInteractive()
             .on('pointerdown', () => this.nextPage(true));
@@ -48,7 +62,10 @@ export class Receuil extends Phaser.Scene {
             .setInteractive()
             .on('pointerdown', () => this.nextPage());
 
-            
+        //Set les recettes
+        this.total_monster = 13; //TODO
+        //Set les monstres
+        this.total_recipe = 32; //TODO
 
         this.switch_recette();
     }
@@ -58,18 +75,55 @@ export class Receuil extends Phaser.Scene {
     }
 
     switch_recette() {
+        this.curPage = 0;
         this.recetteButton.setTint(0xffffff, 0xffffff, 0xff0000, 0xffffff);
         this.bestiaireButton.clearTint();
+        this.dansRecette = true;
+        this.curPageText.setText("1");
 
     }
 
     switch_bestaire() {
+        this.curPage = 0;
         this.bestiaireButton.setTint(0xffffff, 0xffffff, 0xff0000, 0xffffff);
         this.recetteButton.clearTint();
+        this.dansRecette = false;
+        this.curPageText.setText("1");
     }
 
     nextPage(left = false) {
 
+        //Regarder si on peut changer de page 
+        if (left) {
+            if (this.curPage > 0) this.curPage -= 1;
+        } else {
+            if (this.dansRecette) {
+                if (this.curPage+1 < this.total_recipe/(nb_col_display*nb_row_display))
+                    this.curPage += 1;
+            } else {
+                if (this.curPage+1 < this.total_monster/(nb_col_display*nb_row_display))
+                    this.curPage += 1;
+            }
+        }
+        this.curPageText.setText(this.curPage+1);
+
+        //Charge la prochaine page de monstre / recette
+        if (this.dansRecette) {
+            this.chargeRecipePage();
+        } else {
+            this.chargeMonsterPage();
+        }
+
+    }
+
+    //Charge la page courante de monstre
+    chargeMonsterPage() {
+
+    }
+
+    //Charge la page courante de recette
+    chargeRecipePage() {
+        
     }
 
     update() {
