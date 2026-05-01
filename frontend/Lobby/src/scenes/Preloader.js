@@ -34,6 +34,9 @@ export class Preloader extends Phaser.Scene {
         //Bouton du Receuil
         this.load.image('bt_recette', 'assets/button/recetteButton.png');
         this.load.image('bt_bestiaire', 'assets/button/bestiaireButton.png');
+        this.load.image('bt_leftArrow', 'assets/button/leftArrowButton.png');
+        this.load.image('bt_rightArrow', 'assets/button/rightArrowButton.png');
+        this.load.image('pageNum', 'assets/button/pageNum.png');
 
         //Boutons de Lobby
         this.load.image('bt_quitter', 'assets/button/quitButton.png');
