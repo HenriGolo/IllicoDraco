@@ -13,7 +13,11 @@ export default class Tchat {
     this.tchatInput.on("click", (event) => this.send_enter_text(event));
 
     //Compteur de nouveau message
-    this.compteurText = scene.add.text(x + 246 , y-10, "", { fontSize: '32px', fill: '#ff0000' }).setFixedSize(128, 32);
+    this.bubble = scene.add.sprite(x + 276 ,  y+11, 'text_bubble').setScale(3, 3)
+    .setVisible(false);
+    this.compteurText = scene.add.text(x + 228 , y-10, "", { fontSize: '32px', fill: '#ff0000' })
+      .setFixedSize(96, 32)
+      .setAlign('center');
     this.compteur = 0;
 
     //Historique de la conversation
@@ -71,11 +75,13 @@ export default class Tchat {
     //Affiche des messages en attente si tchat invisible
     if (!this.tchatInput.visible) {
       this.compteur += 1;
+      this.bubble.setVisible(true);
       if (this.compteur > 99) {
         this.compteurText.setText("+99");
       } else {
         this.compteurText.setText(this.compteur);
       }
+      
     }
   }
 
@@ -86,7 +92,9 @@ export default class Tchat {
     //Efface le compteur
     if (this.tchatOutput.visible) {
       this.compteur = 0;
+      this.bubble.setVisible(false);
       this.compteurText.setText("");
+      
     }
   }
 
