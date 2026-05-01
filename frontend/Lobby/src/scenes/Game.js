@@ -1,0 +1,88 @@
+import Tchat from '../gameObjects/Tchat.js';
+
+const zoom = 3;
+
+export class Game extends Phaser.Scene {
+
+
+    constructor(joueur_courant = 4, pseudo = "Pseudo", serveur_url = "ws://localhost:8080/IllicoDraco/chat/") {
+        super('Game');
+
+        this.serveur_url = serveur_url;
+        this.joueur_courant = joueur_courant;
+        this.pseudo = pseudo;
+
+        this.tchat;
+
+    }
+
+    preload() {
+
+        //Boutons
+        this.load.image('bt_parametre', 'assets/button/parameterButton.png');
+        this.load.image('bt_boutique', 'assets/button/boutiqueButton.png');
+        this.load.image('bt_receuil', 'assets/button/recetteButton.png');
+
+        //Pour le tchat
+        this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
+        this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
+        
+        
+    }
+
+    create() {
+
+
+        //Bouton Boutique / Receuil
+        this.add.sprite(10 + (24*zoom)/2, 10 + (24*zoom)/2, 'bt_boutique').setScale(zoom, zoom)
+            .setInteractive()
+            .on('pointerdown', () => this.open_boutique());
+
+        this.add.sprite(10 + (24*zoom)/2, 20 + (24*zoom)/2*3, 'bt_receuil').setScale(zoom, zoom)
+            .setInteractive()
+            .on('pointerdown', () => this.open_receuil());
+
+        //Bouton Parametre
+        this.add.sprite(1270 - (24*zoom)/2, 10 + (24*zoom)/2, 'bt_parametre').setScale(zoom, zoom)
+            .setInteractive()
+            .on('pointerdown', () => this.open_parameter());
+
+        //Ajout du tchat
+        this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url);
+
+        //Initialiser les touches du jeu
+        this.input.keyboard.on('keyup', (event) => this.handle_key(event))
+        
+    }
+
+    open_boutique() {
+        this.tchat.add_text_to_tchat("boutique");
+        //TODO
+    }
+
+    open_receuil() {
+        this.tchat.add_text_to_tchat("receuil");
+        //TODO
+    }
+
+    open_parameter() {
+        this.tchat.add_text_to_tchat("parameter");
+        //TODO
+    }
+
+    handle_key(event) {
+       
+       switch (event.key) {
+        case 't' : {
+            this.tchat.switch_visibility();
+            break;
+        }
+       };
+
+    }
+
+    update() {
+       
+    }
+    
+}

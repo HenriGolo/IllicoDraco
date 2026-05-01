@@ -12,6 +12,13 @@ export default class Tchat {
     this.tchatInput.addListener("click");
     this.tchatInput.on("click", (event) => this.send_enter_text(event));
 
+    //Compteur de nouveau message
+    this.compteurText = scene.add.text(x + 246 , y-10, "", { fontSize: '32px', fill: '#ff0000' }).setFixedSize(128, 32);
+    this.compteur = 0;
+
+    //Historique de la conversation
+    this.historique = "";
+
     //this.ws = new WebSocket(serveur_url);
     this.ws = new WebSocket(`ws://localhost:8080/IllicoDraco/chat/${pseudo}`);
     console.log(this.ws);
@@ -57,8 +64,30 @@ export default class Tchat {
   // Ajoute le texte sur le tchat
   add_text_to_tchat(text) {
     let textout = document.getElementById("tchat_output");
-    let newText = textout.innerText + text + "\n";
-    textout.innerText = newText;
+    this.historique += text + "\n";
+    textout.innerText = this.historique;
+
+
+    //Affiche des messages en attente si tchat invisible
+    if (!this.tchatInput.visible) {
+      this.compteur += 1;
+      if (this.compteur > 99) {
+        this.compteurText.setText("+99");
+      } else {
+        this.compteurText.setText(this.compteur);
+      }
+    }
+  }
+
+  switch_visibility () {
+    this.tchatInput.setVisible(!this.tchatInput.visible);
+    this.tchatOutput.setVisible(!this.tchatOutput.visible);
+
+    //Efface le compteur
+    if (this.tchatOutput.visible) {
+      this.compteur = 0;
+      this.compteurText.setText("");
+    }
   }
 
 }
