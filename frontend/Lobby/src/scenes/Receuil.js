@@ -1,5 +1,7 @@
 import RecipePresentation from '../gameObjects/RecipePresentation.js';
+import MonsterPresentation from '../gameObjects/MonsterPresentation.js';
 import Recipe from '../entities/Recipe.js';
+import Monster from '../entities/Monster.js';
 
     const zoom = 3;
     const nb_row_display = 2; //Nombre de ligne affiché par page 
@@ -9,16 +11,28 @@ export class Receuil extends Phaser.Scene {
 
     constructor (recipes = [
         new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
+        new Recipe("Mage Vert", ['j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
         new Recipe("Mage Rouge", ['j2_guerrier', 'j2_archer', 'j2_pretre'], 'j2_mage', 'j4_mage')
-    ], monsters = []) {
+    ], monsters = [
+        new Monster("Mage Vert", 'j3_mage'),
+        new Monster("Mage Rouge", 'j2_mage'),
+        new Monster("Mage Bleu", 'j1_mage'),
+        new Monster("Mage Jaune", 'j4_mage'),
+        new Monster("Guerrier Vert", 'j3_guerrier'),
+        new Monster("Guerrier Rouge", 'j2_guerrier'),
+        new Monster("Guerrier Bleu", 'j1_guerrier'),
+        new Monster("Guerrier Jaune", 'j4_guerrier'),
+        new Monster("Archer Vert", 'j3_archer'),
+        new Monster("Archer Rouge", 'j2_archer'),
+        new Monster("Archer Bleu", 'j1_archer'),
+        new Monster("Archer Jaune", 'j4_archer'),
+        new Monster("Pretre Vert", 'j3_pretre'),
+        new Monster("Pretre Rouge", 'j2_pretre'),
+        new Monster("Pretre Bleu", 'j1_pretre'),
+        new Monster("Pretre Jaune", 'j4_pretre')
+
+
+    ]) {
         super('Receuil');
 
         this.recetteButton;
@@ -82,9 +96,20 @@ export class Receuil extends Phaser.Scene {
             .setInteractive()
             .on('pointerdown', () => this.nextPage());
 
-        //Set les recettes
-        this.total_monster = this.monsters.length;
         //Set les monstres
+        this.total_monster = this.monsters.length;
+
+        this.monstersPres = [];
+        for (var y = 0; y < nb_row_display; y ++) {
+            for (var x = 0; x < nb_col_display; x++) {
+                this.monstersPres[x+(y*nb_col_display)] = new MonsterPresentation(
+                    this,
+                    (315)*x+(5*(x+1))+5,
+                    (y*314) + 102
+                )
+            }
+        }
+        //Set les recettes
         this.total_recipe = this.recipes.length;
 
         this.recipesPres = [];
@@ -154,6 +179,12 @@ export class Receuil extends Phaser.Scene {
     //Charge la page courante de monstre
     chargeMonsterPage() {
         this.hideMonsterPage();
+        var size = nb_col_display*nb_row_display;
+        var lim = Math.min(this.curPage*size+size, this.total_monster);
+        for (var i = this.curPage*size; i < lim ;i++) {
+            this.monstersPres[i-(size*this.curPage)].change_monster(this.monsters[i]);
+
+        }
     }
 
     //Charge la page courante de recette
@@ -171,7 +202,9 @@ export class Receuil extends Phaser.Scene {
 
 
     hideMonsterPage() {
-        //TODO
+        for (var i = 0; i < nb_col_display*nb_row_display; i++) {
+            this.monstersPres[i].switch_visibility(false);
+        }
     }
 
     hideRecipePage() {
