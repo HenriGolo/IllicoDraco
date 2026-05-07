@@ -10,11 +10,6 @@ export class Start extends Phaser.Scene {
 
         //  Load the assets for the game - see ./src/assets.js
         
-        // this.load.spritesheet('buttons', 'assets/Boutons/tilesetButtons.png', {
-        //         frameWidth: 64,
-        //         frameHeight: 32
-        //     });
-        
         this.load.image('creer', 'assets/Boutons/BiggerButtonCreer.png', {
                 frameWidth: 128,
                 frameHeight: 64
@@ -42,12 +37,6 @@ export class Start extends Phaser.Scene {
 
 
         this.pseudoChoisi = false;
-        
-
-    }
-
-    init() {
-
         
 
     }
@@ -91,13 +80,6 @@ export class Start extends Phaser.Scene {
 
     update() {
         
-        // setTimeout( () => {
-        //      this.updateMap()
-        // }, 5000);
-
-        //this.updateMap();
-
-        //while (!this.pseudoChoisi) { }
 
         if (this.keyEntree.isDown && !this.isTherePseudo){ // essayer de mettre un addListener sur une entrée classique ?
             this.isTherePseudo = true;

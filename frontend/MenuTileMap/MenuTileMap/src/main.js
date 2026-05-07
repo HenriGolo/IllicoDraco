@@ -1,5 +1,6 @@
 import { Start } from './scenes/Start.js';
 import { Preloader } from './scenes/Preloader.js';
+import { Main } from './scenes/Main.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -11,6 +12,7 @@ const config = {
     backgroundColor: '#000000',
     pixelArt: true,
     scene: [
+        Main,
         Preloader,
         Start
     ],
