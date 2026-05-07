@@ -53,9 +53,37 @@ export class Preloader extends Phaser.Scene {
         this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
         this.load.image('text_bubble', 'assets/button/textBubble.png');
 
+
+        //TileMap
+        this.load.image('tiles', 'assets/tileMaps/full_tileset.png');
+        this.load.tilemapTiledJSON("tilemap", 'assets/tileMaps/tilemap_original.json');
+       
+        //SpriteSheet des outils
+        this.load.spritesheet('marmite', 'assets/tools/marmite-Sheet.png', { 
+        frameWidth: 64, 
+        frameHeight: 64, 
+        });
+
+        this.load.spritesheet('table', 'assets/tools/table_de_decoupe-Sheet.png', { 
+        frameWidth: 16, 
+        frameHeight: 32, 
+        });
+
+        this.load.spritesheet('coffre', 'assets/tools/coffre-Sheet.png', { 
+        frameWidth: 16, 
+        frameHeight: 32, 
+        });
+
+         //PlayerTest
+        this.load.spritesheet('player', 'assets/players/green_archer.png', { 
+        frameWidth: 16, 
+        frameHeight: 16, 
+        });
+
     }
 
     create() {
-        this.scene.start('Receuil');
+        this.scene.start('Game');
+        this.scene.start('GameUI');
     }
 }

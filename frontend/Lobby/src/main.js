@@ -1,5 +1,5 @@
 import { Lobby } from './scenes/Lobby.js';
-import { Game } from './scenes/Game.js';
+import { Game, GameUI } from './scenes/Game.js';
 import { Receuil } from './scenes/Receuil.js';
 import { Preloader } from './scenes/Preloader.js';
 
@@ -16,11 +16,19 @@ const config = {
         Preloader,
         Receuil,
         Game,
+        GameUI,
         Lobby
     ],
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
+    }, 
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 0 },
+            debug: true
+        }
     },
      dom: {
         createContainer: true
