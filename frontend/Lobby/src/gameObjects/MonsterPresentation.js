@@ -27,8 +27,10 @@ export default class MonsterPresentation {
           .setAlign('center');
 
         this.monster_img = null;
+        this.produit_img = null;
 
         this.monster_info = scene.add.text(x + 50, y + 120,  "" ,{ fontSize: '16px', fill: '#FFF' });
+        this.text_produit = scene.add.text(x + 20, y + 235,  "Produit :" ,{ fontSize: '32px', fill: '#FFF' });
        
        this.graphics.setVisible(false);
 
@@ -51,6 +53,9 @@ export default class MonsterPresentation {
     this.monster_img =  this.scene.add.sprite( this.x+(width/2),  this.y+84, monster.getImage())
       .setScale(zoom, zoom);
 
+    this.produit_img =  this.scene.add.sprite( this.x+250,  this.y+250, monster.getProduit())
+      .setScale(zoom, zoom);
+
     this.switch_visibility(true);
   }
 
@@ -58,9 +63,11 @@ export default class MonsterPresentation {
     this.graphics.setVisible(b);
     this.monster_name.setVisible(b);
     this.monster_info.setVisible(b);
+    this.text_produit.setVisible(b);
 
     if (this.monster_img != null) {
       this.monster_img.setVisible(b);
+      this.produit_img.setVisible(b);
     }
   }
 

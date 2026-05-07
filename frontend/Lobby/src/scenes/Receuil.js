@@ -14,22 +14,22 @@ export class Receuil extends Phaser.Scene {
         new Recipe("Mage Vert", ['j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
         new Recipe("Mage Rouge", ['j2_guerrier', 'j2_archer', 'j2_pretre'], 'j2_mage', 'j4_mage')
     ], monsters = [
-        new Monster("Mage Vert", 'j3_mage'),
-        new Monster("Mage Rouge", 'j2_mage'),
-        new Monster("Mage Bleu", 'j1_mage'),
-        new Monster("Mage Jaune", 'j4_mage'),
-        new Monster("Guerrier Vert", 'j3_guerrier'),
-        new Monster("Guerrier Rouge", 'j2_guerrier'),
-        new Monster("Guerrier Bleu", 'j1_guerrier'),
-        new Monster("Guerrier Jaune", 'j4_guerrier'),
-        new Monster("Archer Vert", 'j3_archer'),
-        new Monster("Archer Rouge", 'j2_archer'),
-        new Monster("Archer Bleu", 'j1_archer'),
-        new Monster("Archer Jaune", 'j4_archer'),
-        new Monster("Pretre Vert", 'j3_pretre'),
-        new Monster("Pretre Rouge", 'j2_pretre'),
-        new Monster("Pretre Bleu", 'j1_pretre'),
-        new Monster("Pretre Jaune", 'j4_pretre')
+        new Monster("Mage Vert", 'j3_mage','j3_mage'),
+        new Monster("Mage Rouge", 'j2_mage','j3_mage'),
+        new Monster("Mage Bleu", 'j1_mage','j3_mage'),
+        new Monster("Mage Jaune", 'j4_mage','j3_mage'),
+        new Monster("Guerrier Vert", 'j3_guerrier','j3_mage'),
+        new Monster("Guerrier Rouge", 'j2_guerrier','j3_mage'),
+        new Monster("Guerrier Bleu", 'j1_guerrier','j3_mage'),
+        new Monster("Guerrier Jaune", 'j4_guerrier','j3_mage'),
+        new Monster("Archer Vert", 'j3_archer','j3_mage'),
+        new Monster("Archer Rouge", 'j2_archer','j3_mage'),
+        new Monster("Archer Bleu", 'j1_archer','j3_mage'),
+        new Monster("Archer Jaune", 'j4_archer','j3_mage'),
+        new Monster("Pretre Vert", 'j3_pretre','j3_mage'),
+        new Monster("Pretre Rouge", 'j2_pretre','j3_mage'),
+        new Monster("Pretre Bleu", 'j1_pretre','j3_mage'),
+        new Monster("Pretre Jaune", 'j4_pretre','j3_mage')
 
 
     ]) {
