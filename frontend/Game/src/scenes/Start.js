@@ -1,11 +1,28 @@
 import ASSETS from '../assets.js';
+
+const nom_pc = "localhost"; //n'ayant pas de serveur qui tourne en permanence
+const server_adress = 'ws://' + nom_pc + ':8080/IllicoDraco';
+
 export class Start extends Phaser.Scene {
 
     constructor() {
         super('Start');
         this.pseudo;
 
-        this.creer = null;
+        /*
+        this.ws = new WebSocket(server_adress);
+
+
+        
+        this.ws.onmessage = (e) => {
+            console.log('onmessage', { e });
+            const message = JSON.parse(e.data);
+            //TODO s'occuper des messages du serveur
+        };
+        // this.ws.onclose = () => this.send_text(this.pseudo + " vous a abandonné...");
+        this.ws.onerror = () => console.log("Error (avec la wweb socket)");
+        */
+
     }
 
     preload() {
@@ -44,7 +61,7 @@ export class Start extends Phaser.Scene {
     }
 
     create() {
-
+        
         this.isTherePseudo = false;
        
 
@@ -99,6 +116,7 @@ export class Start extends Phaser.Scene {
 
             // On fait apparaitre les autres éléments du menu
             this.addingButtons();
+            this.createPopup();
 
 
         }
@@ -201,18 +219,82 @@ export class Start extends Phaser.Scene {
 
         this.options.on('pointerdown', () => this.on_options());
 
+        this.createPopup();
+
     }
 
 
-    on_creer () {
+    //Précreer le popup de récupération de code
+    createPopup() {
+
+        this.popupBackground = this.add.rectangle(this.middleX, this.height*0.6, 128*2, 64, 0x888); // sera remplacé par le logo
+        let form = `
+        <input type="text" name="gameCode" placeholder="Entrez le code de la partie">
+        <input type="button" name="sendCodeButton" value=">" style="font-size: 16px">
+        `;
+        this.gameCodeContainer = this.add.dom(this.middleX,this.height*0.6 ).createFromHTML(form, 'form');
+
+        this.gameCodeContainer.addListener("click");
+        this.gameCodeContainer.on("click", (event) => this.send_code(event));
+
+        this.switchCodePopPupVisibility(false);
+        
+    }
+
+    //Envoi le code au joueur
+    async send_code(event) {
+        if (event.target.name === "sendCodeButton") {
+            let inputCode = this.gameCodeContainer.getChildByName("gameCode");
+            if (inputCode.value !== "") {
+                let code = inputCode.value;
+                
+                const response = await fetch(server_adress + "/join?code=" + code + "&pseudo=" + this.pseudo);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    //Start le lobby avec le nombre de joueur dans datz
+                } else {
+                    inputCode.value = "Code Invalide";
+                }
+                /*
+                console.log(JSON.stringify({ code, from: this.pseudo}));
+                this.ws.send(JSON.stringify({mode: "join", code, from: this.pseudo}));
+                */
+
+            } else {
+                this.switchCodePopPupVisibility(false);
+                this.switchButtonMode(true);
+            }
+    }
+
+    }
+
+    switchCodePopPupVisibility(val) {
+        this.popupBackground.setVisible(val);
+        this.gameCodeContainer.setVisible(val);
+    }
+
+    async on_creer () {
         //... actions sur le serveur pour créer un lobby
         console.log("Créer cliqué");
+        const response = await fetch(server_adress + "/create?" + "pseudo=" + this.pseudo);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                    //Start le lobby avec le code dans data et le nombre de joueur a 1
+            } else {
+                console.log("Erreur a la création de la partie");
+            }
         //this.scene.start('Lobby');
     }
 
     on_join () {
         //... actions sur le serveur pour rejoindre un lobby
         console.log("Rejoindre cliqué");
+        this.switchCodePopPupVisibility(true);
+        this.switchButtonMode(false);
         //this.scene.start('Lobby');
     }
 
@@ -228,7 +310,7 @@ export class Start extends Phaser.Scene {
 
     on_options () {
         //... ouvrir pannel options
-            console.log("Options cliqué");
+        console.log("Options cliqué");
     }
 
     switchButtonMode(val) {
