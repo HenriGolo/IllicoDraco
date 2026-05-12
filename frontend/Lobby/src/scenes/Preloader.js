@@ -83,7 +83,8 @@ export class Preloader extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('Game');
-        this.scene.start('GameUI');
+        //this.scene.start('Game');
+        //this.scene.start('GameUI');
+        this.scene.start('Receuil');
     }
 }
