@@ -2,12 +2,17 @@ package illicodraco.project.database;
 
 import illicodraco.project.beans.*;
 import illicodraco.project.repositories.*;
+import main.java.illicodraco.project.database.FullGame;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.ParameterizedType;
+import java.net.CookieHandler;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Random;
 
 @RestController
 public class Facade {
@@ -137,5 +142,60 @@ public class Facade {
   public Statistiques getStats(@RequestParam("id") int stats_id) {
     return stats_r.findById(stats_id).orElseThrow(() -> new EntityNotFound("Statistiques inexistantes"));
   }
+
+  @GetMapping("/create")
+  public String createGame(@RequestParam("pseudo") String pseudo) {
+    
+    Random r = new Random();
+    Collection<Parametres> params = param_r.findAll();
+    boolean nok = true;
+
+    while (nok) {
+
+      nok = false;
+      String c1 = (String)(r.nextInt(26) + 'a');
+      String c2 = (String)(r.nextInt(26) + 'a');
+      String code = c1 + c2 + (String)r.nextInt(10) + (String)r.nextInt(10) + (String)r.nextInt(10) + (String)r.nextInt(10);
+
+      for (Parametres p : params) {
+        if (p.getCode().equals(code)) {
+          nok = true;
+        }
+      }
+    }
+
+    Parametres parametres = new Parametres();
+    parametres.setArgent(0);
+    parametres.setCode(code);
+    parametres.setNbJoueurs(1);
+    parametres.setSatisfaction(0);
+    parametres.setTempsEcoule(0);
+    parametres.setVitesseMonstres(1);
+    param_r.save(parametres);
+
+    return code;
+  }
+
+  @GetMapping("/join/")
+  public int joinGame(@RequestParam("pseudo") String pseudo, @RequestParam("code") String code) {
+
+    Optional<Parametres> params = param_r.findById(code);
+    if (params.isPresent()) {
+      Parametres p = params.get();
+      if (p.getNbJoueurs() >= 4) {
+        throw new FullGame("Partie déjà remplie !");
+      } else {
+        p.addJoueurs(pseudo);
+        int nbj = p.getNbJoueurs() + 1;
+        p.setNbJoueurs(nbj);
+        param_r.save(p);
+        return nbj;
+      }
+      
+    } else {
+      throw new EntityNotFound("Code invalide !");
+    }
+  }
+
 
 }

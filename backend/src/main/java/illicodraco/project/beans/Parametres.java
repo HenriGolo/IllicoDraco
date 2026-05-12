@@ -1,5 +1,8 @@
 package illicodraco.project.beans;
 
+import java.text.CollationElementIterator;
+import java.util.Collection;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +15,12 @@ public class Parametres {
   // attributs
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;                     // clef primaire dans la BD
+  //private int id;                     // clef primaire dans la BD
+  private String code;                // code de la partie
+
+  private int nbJoueurs;              // nb de joueurs dans la partie
+
+  private Collection<String> joueurs; // joueurs connectés dans la partie
 
   private float vitesseMonstres;      // facteur multiplicatif de la vitesse des monstres
 
@@ -52,6 +60,18 @@ public class Parametres {
     return satisfaction;
   }
 
+  public String getCode() {
+    return code;
+  }
+
+  public int getNbJoueurs() {
+    return nbJoueurs;
+  }
+
+  public Collection<String> getJoueurs() {
+    return joueurs;
+  }
+
     /*public Collection<Produit> getCoffre() {
         return coffre;
     }*/
@@ -60,6 +80,22 @@ public class Parametres {
   // setters
   public void setId(int id) {
     this.id = id;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
+
+  public void setNbJoueurs(int nbj) {
+    this.nbJoueurs = nbj;
+  }
+
+  public void setJoueurs(Collection<String> js) {
+    this.joueurs = js;
+  }
+
+  public void addJoueurs(String joueur) {
+    this.joueurs.add(joueur);
   }
 
   public void setVitesseMonstres(float vitesseMonstres) {
