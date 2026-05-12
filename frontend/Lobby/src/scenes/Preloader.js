@@ -56,6 +56,7 @@ export class Preloader extends Phaser.Scene {
 
         //TileMap
         this.load.image('tiles', 'assets/tileMaps/full_tileset.png');
+        this.load.image('tilesMenu', 'assets/tileMaps/Tile-Sheet.png');
         this.load.tilemapTiledJSON("tilemap", 'assets/tileMaps/tilemap_original.json');
        
         //SpriteSheet des outils
@@ -85,6 +86,6 @@ export class Preloader extends Phaser.Scene {
     create() {
         //this.scene.start('Game');
         //this.scene.start('GameUI');
-        this.scene.start('Receuil');
+        this.scene.start('Start');
     }
 }

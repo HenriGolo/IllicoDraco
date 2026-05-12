@@ -2,6 +2,7 @@ import { Lobby } from './scenes/Lobby.js';
 import { Game, GameUI } from './scenes/Game.js';
 import { Receuil } from './scenes/Receuil.js';
 import { Preloader } from './scenes/Preloader.js';
+import { Start } from './scenes/Start.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -17,7 +18,8 @@ const config = {
         Receuil,
         Game,
         GameUI,
-        Lobby
+        Lobby,
+        Start
     ],
     scale: {
         mode: Phaser.Scale.FIT,
