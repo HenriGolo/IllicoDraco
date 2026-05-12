@@ -1,5 +1,6 @@
 package illicodraco.project.beans;
 
+import java.beans.Transient;
 import java.util.Collection;
 
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ public class Joueur {
   private int id;             // clef primaire dans la BD*/
   private String pseudo;      // pseudonyme du joueur (clef primaire dans la BD)
 
-  @OneToOne
+  @Transient
   private Avatar avatar;      // Avatar du joueur
 
   @OneToOne
