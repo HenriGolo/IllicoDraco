@@ -4,6 +4,8 @@ export class Start extends Phaser.Scene {
     constructor() {
         super('Start');
         this.pseudo;
+
+        this.creer = null;
     }
 
     preload() {
@@ -180,42 +182,69 @@ export class Start extends Phaser.Scene {
 
         //Sprites for buttons
 
-        const creer = this.add.sprite(this.middleX, this.height*0.40, 'creer').setScale(2).setInteractive();            // Boutons
-        const join = this.add.sprite(this.middleX, this.height*0.525, 'join').setScale(2).setInteractive();
-        const recette = this.add.sprite(this.middleX, this.height*0.65, 'recette').setScale(2).setInteractive();
-        const bestiaire = this.add.sprite(this.middleX, this.height*0.75, 'bestiaire').setScale(2).setInteractive();
-        const options = this.add.sprite(this.middleX, this.height*0.85, 'options').setScale(2).setInteractive();
+        this.creer = this.add.sprite(this.middleX, this.height*0.40, 'creer').setScale(2).setInteractive();            // Boutons
+        this.join = this.add.sprite(this.middleX, this.height*0.525, 'join').setScale(2).setInteractive();
+        this.recette = this.add.sprite(this.middleX, this.height*0.65, 'recette').setScale(2).setInteractive();
+        this.bestiaire = this.add.sprite(this.middleX, this.height*0.75, 'bestiaire').setScale(2).setInteractive();
+        this.options = this.add.sprite(this.middleX, this.height*0.85, 'options').setScale(2).setInteractive();
 
          // Détection des clics : 
         //  Input Events
 
-        creer.on('pointerdown', function (pointer) {
-            //... actions sur le serveur pour créer un lobby
-            console.log("Créer cliqué");
-            //this.scene.start('Lobby');
-        });
+        this.creer.on('pointerdown', () => this.on_creer());
 
-        join.on('pointerdown', function (pointer) {
-            //... actions sur le serveur pour rejoindre un lobby
-            console.log("Rejoindre cliqué");
-            //this.scene.start('Lobby');
-        });
+        this.join.on('pointerdown', () => this.on_join());
 
-        recette.on('pointerdown', function (pointer) {
-            //... ouvrir recette
-            console.log("Recette cliqué");
-        });
+        this.recette.on('pointerdown', () => this.on_recette());
 
-        bestiaire.on('pointerdown', function (pointer) {
-            //... ouvrir bestiaire
-            console.log("Bestiaire cliqué");
-        });
+        this.bestiaire.on('pointerdown', () => this.on_bestiaire());
 
-        options.on('pointerdown', function (pointer) {
-            //... ouvrir pannel options
+        this.options.on('pointerdown', () => this.on_options());
+
+    }
+
+
+    on_creer () {
+        //... actions sur le serveur pour créer un lobby
+        console.log("Créer cliqué");
+        //this.scene.start('Lobby');
+    }
+
+    on_join () {
+        //... actions sur le serveur pour rejoindre un lobby
+        console.log("Rejoindre cliqué");
+        //this.scene.start('Lobby');
+    }
+
+    on_recette () {
+        //... ouvrir recette
+        console.log("Recette cliqué");
+    }
+
+    on_bestiaire () {
+        //... ouvrir bestiaire
+        console.log("Bestiaire cliqué");
+    }
+
+    on_options () {
+        //... ouvrir pannel options
             console.log("Options cliqué");
-        });
+    }
 
+    switchButtonMode(val) {
+        if (!val) {
+            this.creer.disableInteractive();
+            this.join.disableInteractive();
+            this.recette.disableInteractive();
+            this.bestiaire.disableInteractive();
+            this.options.disableInteractive();
+        } else {
+            this.creer.setInteractive();
+            this.join.setInteractive();
+            this.recette.setInteractive();
+            this.bestiaire.setInteractive();
+            this.options.setInteractive();
+        }
     }
     
     

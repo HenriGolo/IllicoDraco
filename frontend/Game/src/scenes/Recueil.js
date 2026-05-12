@@ -7,7 +7,7 @@ import Monster from '../entities/Monster.js';
     const nb_row_display = 2; //Nombre de ligne affiché par page 
     const nb_col_display = 4; //Nombre de col affiché par page
 
-export class Receuil extends Phaser.Scene {
+export class Recueil extends Phaser.Scene {
 
     constructor (recipes = [
         new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
@@ -33,7 +33,7 @@ export class Receuil extends Phaser.Scene {
 
 
     ]) {
-        super('Receuil');
+        super('Recueil');
 
         this.recetteButton;
         this.bestiaireButton;
