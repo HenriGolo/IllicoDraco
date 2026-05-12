@@ -7,8 +7,7 @@ import jakarta.persistence.*;
 public class Avatar {
 
     // attributs
-
-    private int id;                 // clef primaire dans la BD
+    private int id;                 // clef primaire dans la BD (INUTILE ?)
 
     private Joueur joueur;          // joueur possédant l'avatar (joueur = owner)
 
