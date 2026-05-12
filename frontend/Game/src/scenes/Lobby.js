@@ -6,18 +6,27 @@ const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 4,code = 1234, pseudo = "Pseudo", serveur_url = "ws://localhost:8080/IllicoDraco/chat/") {
+    constructor() {
         super('Lobby');
 
-        this.serveur_url = serveur_url;
+        /*this.serveur_url = serveur_url;
 
         this.joueur_courant = joueur_courant;
         this.pseudo = pseudo;
-        this.code = code;
+        this.code = code;*/
 
         this.joueurs;
         this.tchat;
         
+    }
+
+    init(data) {
+
+        this.serveur_url = data.serveur_url;
+
+        this.joueur_courant = data.joueur_courant;
+        this.pseudo = data.pseudo;
+        this.code = data.code;
     }
 
     preload() {
