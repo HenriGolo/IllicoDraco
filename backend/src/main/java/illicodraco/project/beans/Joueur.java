@@ -1,8 +1,8 @@
 package illicodraco.project.beans;
 
-import java.util.Collection;
-
 import jakarta.persistence.*;
+
+import java.util.Collection;
 
 // Classe java pour gérer l'entité "joueur"
 @Entity
@@ -10,20 +10,20 @@ public class Joueur {
 
   // attributs
   @Id
-  /*@GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;             // clef primaire dans la BD*/
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  // private int id;             // clef primaire dans la BD
   private String pseudo;      // pseudonyme du joueur (clef primaire dans la BD)
 
-  @OneToOne
+  @Transient
   private Avatar avatar;      // Avatar du joueur
 
   @OneToOne
   private Controles controles;      // controles du joueur
 
-  @OneToOne
+  @OneToMany
   private Collection<Monstre> bestiaire;   // bestiaire du joueur
 
-  @OneToOne
+  @OneToMany
   private Collection<Recette> livreRecettes;   // livre de recettes du joueur
 
     /*@OneToOne
@@ -45,11 +45,11 @@ public class Joueur {
   }
 
   public Collection<Recette> getLivreRecette() {
-        return livreRecettes;
+    return livreRecettes;
   }
 
   public Collection<Monstre> getBestiaire() {
-        return bestiaire;
+    return bestiaire;
   }
 
   public Controles getControles() {
@@ -57,7 +57,7 @@ public class Joueur {
   }
 
   public Avatar getAvatar() {
-        return avatar;
+    return avatar;
   }
 
 
@@ -71,11 +71,11 @@ public class Joueur {
   }
 
   public void setLivreRecette(Collection<Recette> livreRecettes) {
-        this.livreRecettes = livreRecettes;
+    this.livreRecettes = livreRecettes;
   }
 
   public void setBestiaire(Collection<Monstre> bestiaire) {
-        this.bestiaire = bestiaire;
+    this.bestiaire = bestiaire;
   }
 
   public void setControles(Controles controles) {
@@ -83,7 +83,7 @@ public class Joueur {
   }
 
   public void setAvatar(Avatar avatar) {
-        this.avatar = avatar;
-  } 
+    this.avatar = avatar;
+  }
 
 }

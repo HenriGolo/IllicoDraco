@@ -23,6 +23,11 @@ public class Produit {
   public Produit() {
   }
 
+  public Produit(String nom) {
+    this();
+    setNom(nom);
+  }
+
 
   // getters
   public int getId() {
