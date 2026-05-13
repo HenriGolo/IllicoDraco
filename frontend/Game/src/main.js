@@ -4,6 +4,7 @@ import { Recueil } from './scenes/Recueil.js';
 import { Preloader } from './scenes/Preloader.js';
 import { Start } from './scenes/Start.js';
 import { Boutique } from './scenes/Boutique.js';
+import { Parametre } from './scenes/Parametre.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -21,7 +22,8 @@ const config = {
         GameUI,
         Lobby,
         Start,
-        Boutique
+        Boutique,
+        Parametre
     ],
     scale: {
         mode: Phaser.Scale.FIT,

@@ -114,12 +114,15 @@ export class Preloader extends Phaser.Scene {
             }
         );*/
 
+            /*
             this.scene.start('Boutique', {
                 ingredients : [
                     "j1_pretre","j2_pretre", "j3_pretre", "j4_pretre",
                     "j1_mage","j2_mage", "j3_mage", "j4_mage",
                     "j1_archer","j2_archer", "j3_archer", "j4_archer"],
                 money : 1
-            });
+            });*/
+
+        this.scene.start('Parametre')
     }
 }
