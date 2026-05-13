@@ -1,6 +1,5 @@
 package illicodraco.project.beans;
 
-import java.beans.Transient;
 import java.util.Collection;
 
 import jakarta.persistence.*;

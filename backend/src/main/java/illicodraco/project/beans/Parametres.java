@@ -40,9 +40,9 @@ public class Parametres {
 
 
   // getters
-  public int getId() {
+  /*public int getId() {
     return id;
-  }
+  }*/
 
   public float getVitesseMonstres() {
     return vitesseMonstres;
@@ -78,9 +78,9 @@ public class Parametres {
 
 
   // setters
-  public void setId(int id) {
+  /*public void setId(int id) {
     this.id = id;
-  }
+  }*/
 
   public void setCode(String code) {
     this.code = code;

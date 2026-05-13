@@ -2,7 +2,7 @@ package illicodraco.project.database;
 
 import illicodraco.project.beans.*;
 import illicodraco.project.repositories.*;
-import main.java.illicodraco.project.database.FullGame;
+import illicodraco.project.database.FullGame;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
 
-@RestController
+@RestController("Facade")
 public class Facade {
 
   // attributs
@@ -71,7 +71,7 @@ public class Facade {
   }
 
   @GetMapping("/params")
-  public Parametres getParametres(@RequestParam("game_id") int game_id) {
+  public Parametres getParametres(@RequestParam("game_id") String game_id) {
     return param_r.findById(game_id).orElseThrow(() -> new EntityNotFound("Partie inexistante"));
   }
 
@@ -149,13 +149,14 @@ public class Facade {
     Random r = new Random();
     Collection<Parametres> params = param_r.findAll();
     boolean nok = true;
+    String code = "XXXXXX";
 
     while (nok) {
 
       nok = false;
-      String c1 = (String)(r.nextInt(26) + 'a');
-      String c2 = (String)(r.nextInt(26) + 'a');
-      String code = c1 + c2 + (String)r.nextInt(10) + (String)r.nextInt(10) + (String)r.nextInt(10) + (String)r.nextInt(10);
+      String c1 = Integer.toString(r.nextInt(26)) + "a";
+      String c2 = Integer.toString(r.nextInt(26)) + "a";
+      code = c1 + c2 + Integer.toString(r.nextInt(10)) + Integer.toString(r.nextInt(10)) + Integer.toString(r.nextInt(10)) + Integer.toString(r.nextInt(10));
 
       for (Parametres p : params) {
         if (p.getCode().equals(code)) {
