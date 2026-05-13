@@ -123,6 +123,19 @@ export class Preloader extends Phaser.Scene {
                 money : 1
             });*/
 
-        this.scene.start('Parametre')
+        this.scene.start('Parametre',
+            {
+                haut : "KeyZ",
+                bas : "KeyS",
+                droite : "KeyD",
+                gauche : "KeyQ",
+                attaquer : "Space",
+                interagir : "KeyF",
+                prendre : "KeyA",
+                boutique : "KeyB",
+                recueil : "KeyR",
+                chat : "KeyT"
+            }
+        )
     }
 }

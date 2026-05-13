@@ -9,6 +9,18 @@ export class Parametre extends Phaser.Scene {
 
     init(data) {
 
+        this.keys = [];
+
+        this.keys[0] = data.haut;
+        this.keys[1] = data.bas;
+        this.keys[2] = data.gauche;
+        this.keys[3] = data.droite;
+        this.keys[4] = data.attaquer;
+        this.keys[5] = data.interagir;
+        this.keys[6] = data.prendre;
+        this.keys[7] = data.boutique;
+        this.keys[8] = data.recueil;
+        this.keys[9] = data.chat;
     }
 
 
@@ -16,18 +28,26 @@ export class Parametre extends Phaser.Scene {
 
         this.touchesTitres = ["haut", "bas", "gauche", "droite", "attaquer", "interagir", "prendre / poser", "boutique", "recueil", "chat"]
 
-        this.keyHandler = [];
+        this.keyText = [];
 
         for (let i = 0; i < this.touchesTitres.length; i++) {
-            this.add.rectangle(610,(i*52)+100,310,42,0x6b4b34);
-            this.add.text(460, (i*52)+84, this.touchesTitres[i], { fontSize: '32px', fill: '#ffffff' })
+            this.add.rectangle(510,(i*52)+100,310,42,0x6b4b34);
+            this.add.text(360, (i*52)+84, this.touchesTitres[i], { fontSize: '32px', fill: '#ffffff' })
             .setFixedSize(300, 32)
             .setAlign('left');
 
-            this.add.rectangle(800,(i*52)+100,42,42,0x6b4b34)
+            this.add.rectangle(770,(i*52)+100,180,42,0x6b4b34)
             .setInteractive()
             .on('pointerdown', () => this.select(i));
+
+            this.keyText[i] = this.add.text(680, (i*52)+84, this.keys[i], { fontSize: '32px', fill: '#ffffff' })
+            .setFixedSize(180, 32)
+            .setAlign('center');
         }
+
+        this.input.keyboard.on('keydown', 
+            (event) => this.change_key(event.code)
+        )
 
         
 
@@ -35,12 +55,35 @@ export class Parametre extends Phaser.Scene {
 
     //Permet de selectionner le controle a changer
     select(indice) {
-        console.log(indice);
+
+        if (this.selected != -1) {
+            this.keyText[this.selected].setColor("#ffffff");
+        }
+
+        this.keyText[indice].setColor("#ff0000");
         this.selected = indice;
     }
 
     //change la touche associé a l'indice selectionné courant
     change_key(new_key) {
+
+        if (this.selected != -1) {
+            this.keyText[this.selected].setColor("#ffffff");
+            
+            
+
+            for (let i = 0; i < this.keys.length; i++) {
+                if (this.keys[i] === new_key) {
+                    this.keyText[i].setText(":(");
+                    this.keys[i] = "";
+                }
+            }
+
+            this.keyText[this.selected].setText(new_key);
+            this.keys[this.selected] = new_key;
+            this.selected = -1
+        }
+
 
     }
 
