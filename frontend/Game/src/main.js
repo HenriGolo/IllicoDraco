@@ -1,6 +1,6 @@
 import { Lobby } from './scenes/Lobby.js';
 import { Game, GameUI } from './scenes/Game.js';
-import { Receuil } from './scenes/Receuil.js';
+import { Recueil } from './scenes/Recueil.js';
 import { Preloader } from './scenes/Preloader.js';
 import { Start } from './scenes/Start.js';
 
@@ -15,7 +15,7 @@ const config = {
     pixelArt: true,
     scene: [
         Preloader,
-        Receuil,
+        Recueil,
         Game,
         GameUI,
         Lobby,

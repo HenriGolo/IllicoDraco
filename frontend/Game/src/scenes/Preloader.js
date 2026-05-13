@@ -28,10 +28,26 @@ export class Preloader extends Phaser.Scene {
         this.load.image('j4_mage', 'assets/yellow_mage_idle.png');
         this.load.image('j4_archer', 'assets/yellow_archer_idle.png');
 
+        //Monstres
+
+        this.load.image('champi', 'assets/monsters/champi.png' );
+        this.load.image('chelou_monster', 'assets/monsters/chelou_monster.png' );
+        this.load.image('dragon_smaller', 'assets/monsters/dragon_smaller.png' );
+        this.load.image('evil_carotte', 'assets/monsters/evil_carotte.png' );
+        this.load.image('female_poussin', 'assets/monsters/female_poussin.png' );
+        this.load.image('genie', 'assets/monsters/genie.png' );
+        this.load.image('killer_chicken', 'assets/monsters/killer_chicken.png' );
+        this.load.image('male_poussin', 'assets/monsters/male_poussin.png' );
+        this.load.image('minotaure', 'assets/monsters/minotaure.png' );
+        this.load.image('navet', 'assets/monsters/navet.png' );
+        this.load.image('onigiri', 'assets/monsters/onigiri.png' );
+        this.load.image('slime', 'assets/monsters/slime.png' );
+
+
         //Bouton partagé
         this.load.image('bt_retour', 'assets/button/retourButton.png');
 
-        //Bouton du Receuil
+        //Bouton du recueil
         this.load.image('bt_recette', 'assets/button/recetteButton.png');
         this.load.image('bt_bestiaire', 'assets/button/bestiaireButton.png');
         this.load.image('bt_leftArrow', 'assets/button/leftArrowButton.png');
@@ -46,7 +62,7 @@ export class Preloader extends Phaser.Scene {
         //Boutons de Game
         this.load.image('bt_parametre', 'assets/button/parameterButton.png');
         this.load.image('bt_boutique', 'assets/button/boutiqueButton.png');
-        this.load.image('bt_receuil', 'assets/button/receuilButton.png');
+        this.load.image('bt_recueil', 'assets/button/recueilButton.png');
 
         //Pour le tchat
         this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
@@ -84,8 +100,8 @@ export class Preloader extends Phaser.Scene {
     }
 
     create() {
-        //this.scene.start('Game');
+        this.scene.start('Game');
         //this.scene.start('GameUI');
-        this.scene.start('Start');
+        //this.scene.start('Start');
     }
 }
