@@ -310,6 +310,22 @@ export class Start extends Phaser.Scene {
 
     on_options () {
         //... ouvrir pannel options
+        //TODO Récuperer les touches dans la bd
+        this.scene.launch('Parametre',
+            {
+                haut : "KeyZ",
+                bas : "KeyS",
+                droite : "KeyD",
+                gauche : "KeyQ",
+                attaquer : "Space",
+                interagir : "KeyF",
+                prendre : "KeyA",
+                boutique : "KeyB",
+                recueil : "KeyR",
+                chat : "KeyT"
+            }
+        )
+        //this.scene.remove("Parametre");
         console.log("Options cliqué");
     }
 

@@ -102,7 +102,7 @@ export class Preloader extends Phaser.Scene {
     create() {
         //this.scene.start('Game');
         //this.scene.start('GameUI');
-        //this.scene.start('Start');
+        this.scene.start('Start');
         
         /*
         this.scene.start("Lobby",
@@ -121,7 +121,7 @@ export class Preloader extends Phaser.Scene {
                     "j1_mage","j2_mage", "j3_mage", "j4_mage",
                     "j1_archer","j2_archer", "j3_archer", "j4_archer"],
                 money : 1
-            });*/
+            });
 
         this.scene.start('Parametre',
             {
@@ -136,6 +136,6 @@ export class Preloader extends Phaser.Scene {
                 recueil : "KeyR",
                 chat : "KeyT"
             }
-        )
+        )*/
     }
 }

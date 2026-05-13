@@ -62,7 +62,6 @@ export class Recueil extends Phaser.Scene {
         //Background pour l'organisation générale :
         var graphics = this.add.graphics();
         
-        //Bandeau Tchat
         graphics.fillStyle(0x555555, 1);
         graphics.fillRect(0, 20 + 24*3, 1280, 720 - 24*3);
 

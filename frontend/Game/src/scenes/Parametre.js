@@ -26,6 +26,16 @@ export class Parametre extends Phaser.Scene {
 
     create() {
 
+        var graphics = this.add.graphics();
+        
+        graphics.fillStyle(0x000000, 1);
+        graphics.fillRect(0, 0, 1280, 720);
+
+        //Bouton Retour
+        this.add.sprite(46, 46, 'bt_retour').setScale(3, 3)
+            .setInteractive()
+            .on('pointerdown', () => this.close_window());
+
         this.touchesTitres = ["haut", "bas", "gauche", "droite", "attaquer", "interagir", "prendre / poser", "boutique", "recueil", "chat"]
 
         this.keyText = [];
@@ -85,6 +95,13 @@ export class Parametre extends Phaser.Scene {
         }
 
 
+    }
+
+    close_window() {
+        //Si aucune touche a ""
+            //Sauvegarder les touches
+            //Retour a la fenetre précédente
+            this.scene.stop(this);
     }
 
 }
