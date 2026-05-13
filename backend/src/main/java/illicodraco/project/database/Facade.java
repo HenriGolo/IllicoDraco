@@ -66,7 +66,7 @@ public class Facade {
   }
 
   @GetMapping("/params")
-  public Parametres getParametres(@RequestParam("game_id") int game_id) {
+  public Parametres getParametres(@RequestParam("game_id") String game_id) {
     return param_r.findById(game_id).orElseThrow(() -> new EntityNotFound("Partie inexistante"));
   }
 

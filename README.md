@@ -13,3 +13,13 @@ mvn install:install-file \
 -Dpackaging=jar
 done
 ```
+
+# En cas de problème avec `deploy.sh`
+
+Trouver et tuer le processus qui utilise le port 8080 ou le port 8005.
+
+Alternative :
+```bash
+cd backend
+./mvnw spring-boot:run
+```

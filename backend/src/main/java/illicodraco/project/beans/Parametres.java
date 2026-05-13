@@ -1,9 +1,8 @@
 package illicodraco.project.beans;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.Collection;
 
 // Classe java gérant l'entité "paramètres"
 @Entity
@@ -13,6 +12,13 @@ public class Parametres {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;                     // clef primaire dans la BD
+  //private int id;                     // clef primaire dans la BD
+  private String code;                // code de la partie
+
+  private int nbJoueurs;              // nb de joueurs dans la partie
+
+  @OneToMany
+  private Collection<Joueur> joueurs; // joueurs connectés dans la partie
 
   private float vitesseMonstres;      // facteur multiplicatif de la vitesse des monstres
 

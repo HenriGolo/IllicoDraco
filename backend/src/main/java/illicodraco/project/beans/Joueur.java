@@ -10,7 +10,6 @@ public class Joueur {
 
   // attributs
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   // private int id;             // clef primaire dans la BD
   private String pseudo;      // pseudonyme du joueur (clef primaire dans la BD)
 
@@ -20,15 +19,11 @@ public class Joueur {
   @OneToOne
   private Controles controles;      // controles du joueur
 
-  @OneToMany
+  @ManyToMany
   private Collection<Monstre> bestiaire;   // bestiaire du joueur
 
-  @OneToMany
+  @ManyToMany
   private Collection<Recette> livreRecettes;   // livre de recettes du joueur
-
-    /*@OneToOne
-    private Produit produit;    // produit porté par le joueur
-    */
 
   // constructeur
   public Joueur() {
