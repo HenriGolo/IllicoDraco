@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 // Interface java gérant le repository des Parametres
-public interface ParametresRepository extends JpaRepository<Parametres, Integer> {
+public interface ParametresRepository extends JpaRepository<Parametres, String> {
 
   Parametres save(Parametres params);
 
-  Optional<Parametres> findById(Integer id);
+  Optional<Parametres> findById(String id);
 
   List<Parametres> findAll();
 
