@@ -5,9 +5,16 @@
 export class Boutique extends Phaser.Scene {
 
     //ingredients liste des noms de sprites des ingredients boutique
-    constructor (ingedients) {
+    constructor () {
         super('Boutique');
 
+        this.curPage = 0;
+        this.dansIngredient = true;
+
+    }
+
+    init(data) {
+        this.ingredients = data.ingredients;
     }
 
     preload() {
@@ -55,9 +62,70 @@ export class Boutique extends Phaser.Scene {
             .setInteractive()
             .on('pointerdown', () => this.nextPage());
 
+        //Creation des sprites
+        this.ingredients_button = []
+        let row = 0;
+        let col = 0;
+
+        let ecart = 32*(zoom**2);
+        for (let ing = 0; ing < this.ingredients.length; ing++) {
+            
+            let ingreRectangle = this.add.rectangle((ecart*col)+190,(ecart*row)+270, 18*zoom**2, 24*zoom**2, 0xffffff)
+            .setInteractive()
+            .on('pointerdown', () => this.buy_ingredient(this.ingredients[ing]));
+            let ingreSprite = this.add.sprite((ecart*col)+190,(ecart*row)+250, this.ingredients[ing]).setScale(zoom*zoom);
+            let ingrePrice = this.add.text((ecart*col)+110,(ecart*row)+330, '00000 Or', { fontSize: '32px', fill: '#000' })
+                .setFixedSize(18*zoom**2, 32).setAlign('center');
+
+            this.ingredients_button[ing] = this.add.group([ingreSprite,ingreRectangle, ingrePrice]);
+
+            this.ingredients_button[ing].setVisible(false);
+            col ++;
+            if (col >= nb_col_display) {
+                row = (row + 1) % nb_row_display;
+                col = 0;
+            }
+        }
+
      
+        this.switch_ingredient();
 
        
+        
+    }
+
+    buy_ingredient(ingredient) {
+        //TODO
+        console.log(ingredient);
+    }
+
+    nextPage(left = false) {
+
+        if (this.dansIngredient) {
+            this.switch_ingredient_visibility(false);
+        } else {
+        }
+
+         //Regarder si on peut changer de page 
+        if (left) {
+            if (this.curPage > 0) this.curPage -= 1;
+        } else {
+            if (this.dansIngredient) {
+                if (this.curPage+1 < this.ingredients_button.length/(nb_col_display*nb_row_display))
+                    this.curPage += 1;
+            } else {
+                /*
+                if (this.curPage+1 < this.total_monster/(nb_col_display*nb_row_display))
+                    this.curPage += 1;
+                */
+            }
+        }
+        this.curPageText.setText(this.curPage+1);
+
+        if (this.dansIngredient) {
+            this.switch_ingredient_visibility(true);
+        } else {
+        }
         
     }
 
@@ -75,15 +143,29 @@ export class Boutique extends Phaser.Scene {
     }
 
     switch_ingredient() {
+        this.curPage = 0;
+        this.dansIngredient = true;
+        this.curPageText.setText("1");
+        this.switch_ingredient_visibility(true);
         /*
         this.hideRecipePage();
-        this.curPage = 0;
+        
         this.bestiaireButton.setTint(0xffffff, 0xffffff, 0xff0000, 0xffffff);
         this.recetteButton.clearTint();
-        this.dansRecette = false;
-        this.curPageText.setText("1");
-        this.chargeMonsterPage();
+
         */
+    }
+
+    switch_ingredient_visibility(val) {
+
+        let begin = this.curPage * (nb_row_display* nb_col_display)
+        let end = Math.min(begin+(nb_row_display*nb_col_display), begin + this.ingredients_button.length-begin)
+
+        for (let i = begin; i < end; i++) {
+            this.ingredients_button[i].setVisible(val);
+        }
+
+
     }
 
     close_window() {

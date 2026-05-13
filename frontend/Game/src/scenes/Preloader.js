@@ -88,6 +88,7 @@ export class Preloader extends Phaser.Scene {
         //this.scene.start('GameUI');
         //this.scene.start('Start');
         
+        /*
         this.scene.start("Lobby",
             {
                 joueur_courant : 1,
@@ -95,6 +96,13 @@ export class Preloader extends Phaser.Scene {
                 pseudo : "Pseudo", 
                 serveur_url : "ws://localhost:8080/IllicoDraco/chat/"
             }
-        )
+        );*/
+
+            this.scene.start('Boutique', {
+                ingredients : [
+                    "j1_pretre","j2_pretre", "j3_pretre", "j4_pretre",
+                    "j1_mage","j2_mage", "j3_mage", "j4_mage",
+                    "j1_archer","j2_archer", "j3_archer", "j4_archer"]
+            });
     }
 }
