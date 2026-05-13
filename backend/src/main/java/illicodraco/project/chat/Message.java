@@ -1,16 +1,17 @@
 package illicodraco.project.chat;
 
 public class Message {
+
   private String from;
   private String content;
   private String to;
+  private boolean system;
 
   public String getFrom() {
     return from;
   }
 
   public void setFrom(String from) {
-    System.out.println("from <- " + from);
     this.from = from;
   }
 
@@ -19,7 +20,6 @@ public class Message {
   }
 
   public void setContent(String content) {
-    System.out.println("content <- " + content);
     this.content = content;
   }
 
@@ -28,7 +28,14 @@ public class Message {
   }
 
   public void setTo(String to) {
-    System.out.println("to <- " + to);
     this.to = to;
+  }
+
+  public boolean isSystem() {
+    return system;
+  }
+
+  public void setSystem(boolean system) {
+    this.system = system;
   }
 }
