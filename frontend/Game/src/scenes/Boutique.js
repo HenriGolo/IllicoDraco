@@ -15,6 +15,7 @@ export class Boutique extends Phaser.Scene {
 
     init(data) {
         this.ingredients = data.ingredients;
+        this.money = data.money;
     }
 
     preload() {
@@ -26,43 +27,50 @@ export class Boutique extends Phaser.Scene {
         //Background pour l'organisation générale :
         var graphics = this.add.graphics();
         
-        //Bandeau Tchat
         graphics.fillStyle(0x555555, 1);
-        graphics.fillRect(0, 20 + 24*3, 1280, 720 - 24*3);
+        graphics.fillRect(0, 92, 1280, 628);
+
+        
 
         //Bouton Retour
         this.add.sprite(10 + (24*zoom)/2, 10 + (24*zoom)/2, 'bt_retour').setScale(zoom, zoom)
             .setInteractive()
             .on('pointerdown', () => this.close_window());
 
-        /*
-        //Bouton Recette
-        this.recetteButton = this.add.sprite(20 + (24*zoom)/2*3, 10 + (24*zoom)/2, 'bt_recette').setScale(zoom, zoom)
+        
+        //Bouton Ingredient
+        this.ingredientButton = this.add.sprite(20 + (24*zoom)/2*3, 10 + (24*zoom)/2, 'bt_ingredient').setScale(zoom, zoom)
             .setInteractive()
-            .on('pointerdown', () => this.switch_recette());
+            .on('pointerdown', () => this.switch_ingredient());
 
-        //Bouton Bestaire
-        this.bestiaireButton = this.add.sprite(30 + (24*zoom)/2*5, 10 + (24*zoom)/2, 'bt_bestiaire').setScale(zoom, zoom)
+        //Bouton Boost
+        this.boostButton = this.add.sprite(30 + (24*zoom)/2*5, 10 + (24*zoom)/2, 'bt_boost').setScale(zoom, zoom)
             .setInteractive()
-            .on('pointerdown', () => this.switch_bestaire());
-        */
+            .on('pointerdown', () => this.switch_boost());
+        
 
         //Défilement entre les pages
-        this.add.sprite(640, 10 + (24*zoom)/2, 'pageNum').setScale(zoom, zoom);
+        this.curPageSprite = this.add.sprite(640, 10 + (24*zoom)/2, 'pageNum').setScale(zoom, zoom);
 
         this.curPageText = this.add.text(0, 32, '1', { fontSize: '32px', fill: '#fff' })
         .setFixedSize(1280, 44)
         .setAlign('center');
 
-        this.add.sprite(640 - 24*zoom, 10 + (24*zoom)/2, 'bt_leftArrow').setScale(zoom, zoom)
+        this.moneyText = this.add.text(1100, 32, this.money + ' Or', { fontSize: '32px', fill: '#000' })
+        .setFixedSize(160, 44)
+        .setAlign('right');
+  
+
+        this.leftArrowButton = this.add.sprite(640 - 24*zoom, 10 + (24*zoom)/2, 'bt_leftArrow').setScale(zoom, zoom)
             .setInteractive()
             .on('pointerdown', () => this.nextPage(true));
 
-        this.add.sprite(640 + 24*zoom, 10 + (24*zoom)/2, 'bt_rightArrow').setScale(zoom, zoom)
+        this.rightArrowButton = this.add.sprite(640 + 24*zoom, 10 + (24*zoom)/2, 'bt_rightArrow').setScale(zoom, zoom)
             .setInteractive()
             .on('pointerdown', () => this.nextPage());
 
-        //Creation des sprites
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Creation des boutons ingrédients
         this.ingredients_button = []
         let row = 0;
         let col = 0;
@@ -87,11 +95,40 @@ export class Boutique extends Phaser.Scene {
             }
         }
 
-     
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        this.boosts = ['dec_monster_vit', 'inc_player_atq', 'inc_player_def', 'inc_player_life', 'heal_player', 'lvl_chaudron', 'lvl_planche'];
+        this.boosts_button = []
+        row = 0;
+        col = 0
+        for (let b = 0; b < this.boosts.length; b++) {
+            
+            let boostRectangle = this.add.rectangle((ecart*col)+190,(ecart*row)+270, 18*zoom**2, 24*zoom**2, 0x000000)
+            .setInteractive()
+            .on('pointerdown', () => this.buy_boost(this.boosts[b]));
+            let boostSprite = this.add.sprite((ecart*col)+190,(ecart*row)+250, this.boosts[b]).setScale(zoom*zoom);
+            let boostPrice = this.add.text((ecart*col)+110,(ecart*row)+330, '00000 Or', { fontSize: '32px', fill: '#fff' })
+                .setFixedSize(18*zoom**2, 32).setAlign('center');
+
+            this.boosts_button[b] = this.add.group([boostSprite,boostRectangle, boostPrice]);
+
+            this.boosts_button[b].setVisible(false);
+            col ++;
+            if (col >= nb_col_display) {
+                row = (row + 1) % nb_row_display;
+                col = 0;
+            }
+        }
+
         this.switch_ingredient();
 
        
         
+    }
+
+
+    buy_boost(boost) {
+        //TODO
+        console.log(boost);
     }
 
     buy_ingredient(ingredient) {
@@ -130,15 +167,23 @@ export class Boutique extends Phaser.Scene {
     }
 
     switch_boost() {
-        /*
-        this.hideMonsterPage();
+        
+        this.switch_ingredient_visibility(false);
         this.curPage = 0;
-        this.recetteButton.setTint(0xffffff, 0xffffff, 0xff0000, 0xffffff);
-        this.bestiaireButton.clearTint();
-        this.dansRecette = true;
+        this.boostButton.setTint(0xffffff, 0xffffff, 0xff0000, 0xffffff);
+        this.ingredientButton.clearTint();
+        this.dansIngredient = false;
         this.curPageText.setText("1");
-        this.chargeRecipePage();
-        */
+        this.switch_boost_visibility(true);
+
+        ////
+        this.curPageText.setVisible(false);
+        this.leftArrowButton.setVisible(false);
+        this.rightArrowButton.setVisible(false);
+        this.curPageSprite.setVisible(false);
+        ////
+
+        
 
     }
 
@@ -147,13 +192,16 @@ export class Boutique extends Phaser.Scene {
         this.dansIngredient = true;
         this.curPageText.setText("1");
         this.switch_ingredient_visibility(true);
-        /*
-        this.hideRecipePage();
-        
-        this.bestiaireButton.setTint(0xffffff, 0xffffff, 0xff0000, 0xffffff);
-        this.recetteButton.clearTint();
+        this.ingredientButton.setTint(0xffffff, 0xffffff, 0xff0000, 0xffffff);
+        this.boostButton.clearTint();
+        this.switch_boost_visibility(false);
 
-        */
+        ////
+        this.curPageText.setVisible(true);
+        this.leftArrowButton.setVisible(true);
+        this.rightArrowButton.setVisible(true);
+        this.curPageSprite.setVisible(true);
+        ////
     }
 
     switch_ingredient_visibility(val) {
@@ -165,7 +213,17 @@ export class Boutique extends Phaser.Scene {
             this.ingredients_button[i].setVisible(val);
         }
 
+        
 
+    }
+
+    switch_boost_visibility(val) {
+        let begin = this.curPage * (nb_row_display* nb_col_display)
+        let end = Math.min(begin+(nb_row_display*nb_col_display), begin + this.boosts_button.length-begin)
+
+        for (let i = begin; i < end; i++) {
+            this.boosts_button[i].setVisible(val);
+        }
     }
 
     close_window() {

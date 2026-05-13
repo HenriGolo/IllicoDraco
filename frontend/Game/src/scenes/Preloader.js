@@ -48,6 +48,22 @@ export class Preloader extends Phaser.Scene {
         this.load.image('bt_boutique', 'assets/button/boutiqueButton.png');
         this.load.image('bt_receuil', 'assets/button/receuilButton.png');
 
+        //Boutons de la Boutique
+        this.load.image('bt_ingredient', 'assets/button/ingredientButton.png');
+        this.load.image('bt_boost', 'assets/button/boostButton.png');
+
+        //Boosts de la boutique
+        this.load.image('dec_monster_vit', 'assets/boosts/dec_monster_vit.png');
+
+        this.load.image('inc_player_atq', 'assets/boosts/inc_player_atq.png');
+        this.load.image('inc_player_life', 'assets/boosts/inc_player_life.png');
+        this.load.image('inc_player_def', 'assets/boosts/inc_player_def.png');
+
+        this.load.image('heal_player', 'assets/boosts/heal_player.png');
+
+        this.load.image('lvl_chaudron', 'assets/boosts/lvl_chaudron.png');
+        this.load.image('lvl_planche', 'assets/boosts/lvl_planche.png');
+
         //Pour le tchat
         this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
         this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
@@ -102,7 +118,8 @@ export class Preloader extends Phaser.Scene {
                 ingredients : [
                     "j1_pretre","j2_pretre", "j3_pretre", "j4_pretre",
                     "j1_mage","j2_mage", "j3_mage", "j4_mage",
-                    "j1_archer","j2_archer", "j3_archer", "j4_archer"]
+                    "j1_archer","j2_archer", "j3_archer", "j4_archer"],
+                money : 1
             });
     }
 }
