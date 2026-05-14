@@ -1,8 +1,7 @@
 import ASSETS from '../assets.js';
 
-const nom_pc = "localhost"; //n'ayant pas de serveur qui tourne en permanence
-const server_address = 'ws://' + nom_pc + ':8080/IllicoDraco';
-
+const nom_pc = "172.22.224.255"; //n'ayant pas de serveur qui tourne en permanence
+const server_address = 'ws://' + nom_pc + ':8080/';
 export class Start extends Phaser.Scene {
 
     constructor() {
@@ -45,10 +44,20 @@ export class Start extends Phaser.Scene {
 
     }
 
+    init(data) {
+        this.pseudo = data.pseudo
+
+        //Pas besoin de rerentrer le pseudo si on a quitté le lobby
+        if (this.pseudo === "") {
+            this.isTherePseudo = false;
+        } else {
+            this.isTherePseudo = true;
+        }
+
+        console.log(this.isTherePseudo)
+    }
+
     create() {
-        
-        this.isTherePseudo = false;
-       
 
         this.initVariables();
         this.initMap();
@@ -80,6 +89,13 @@ export class Start extends Phaser.Scene {
         this.keyEntree = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         //container.addListener('')
 
+        if (this.isTherePseudo) {
+            this.textInser.visible = false;
+            this.pseudoContainer.visible = false;
+            this.addingButtons();
+            this.createPopup();
+        }
+
     }
 
     update() {
@@ -109,6 +125,7 @@ export class Start extends Phaser.Scene {
         }
     }
 
+    //Envoyer le pseudo au serveur pour ajout ou connection dans la base de donnée
     async loggin() {
         //On envoie le pseudo au serveur
         const response = await fetch(server_address + "/loggin?" + "pseudo=" + this.pseudo);
@@ -311,7 +328,7 @@ export class Start extends Phaser.Scene {
     async on_options () {
         //... ouvrir pannel options
         console.log("Options cliqué");
-
+       
         const response = await fetch(server_address + "/control?" + "pseudo=" + this.pseudo);
 
             if (response.ok) {
@@ -329,7 +346,8 @@ export class Start extends Phaser.Scene {
                     prendre : data.prendre,
                     boutique : data.boutique,
                     recueil : data.recueil,
-                    chat : data.chat
+                    chat : data.chat,
+                    previousScene : this
                 }
                 )
             } else {

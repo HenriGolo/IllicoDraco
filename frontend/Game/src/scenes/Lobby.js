@@ -9,12 +9,6 @@ export class Lobby extends Phaser.Scene {
     constructor() {
         super('Lobby');
 
-        /*this.serveur_url = serveur_url;
-
-        this.joueur_courant = joueur_courant;
-        this.pseudo = pseudo;
-        this.code = code;*/
-
         this.joueurs;
         this.tchat;
         
@@ -41,28 +35,6 @@ export class Lobby extends Phaser.Scene {
         //Bandeau Tchat
         graphics.fillStyle(0x555555, 1);
         graphics.fillRect(960, 128, 320, 464);
- /*
-        //Bandeau bas
-        graphics.fillStyle(0x550055, 1);
-        graphics.fillRect(0,592,1280, 128);
-
-        //Bandeau haut
-        graphics.fillStyle(0x00eeff, 1);
-        graphics.fillRect(0,0,1280, 128);
-       
-        graphics.fillStyle(0xccccff, 1);
-        graphics.fillRect(0, 0, 240, 720);
-        graphics.fillStyle(0xffcccc, 1);
-        graphics.fillRect(240, 0, 240, 720);
-        graphics.fillStyle(0xccffcc, 1);
-        graphics.fillRect(480, 0, 240, 720);
-        graphics.fillStyle(0xffffcc, 1);
-        graphics.fillRect(720, 0, 240, 720);
-      
-
-        graphics.fillStyle(0x000aaa, 1);
-        graphics.fillRect(1184, 32, 64, 64);
-          */
     
         /////////////////////////////////////
 
@@ -126,8 +98,10 @@ export class Lobby extends Phaser.Scene {
 
     //Quitter le jeu
     quit () {
-        //TODO QUITTER
         console.log(this.pseudo + " : Je pars");
+
+        //TODO Envoyer un message de partie quitté
+        this.scene.start("Start", {pseudo : this.pseudo});
     }
 
     //Lancer le jeu
@@ -137,9 +111,50 @@ export class Lobby extends Phaser.Scene {
     }
 
     //Parametre
-    parameter () {
-        //TODO START
+    async parameter () {
+        
         console.log (this.pseudo + " : Parametre !")
+        
+         this.scene.launch('Parametre',
+                {
+                    haut : "",
+                    bas : "",
+                    droite : "",
+                    gauche : "",
+                    attaquer : "",
+                    interagir : "",
+                    prendre : "",
+                    boutique : "",
+                    recueil : "",
+                    chat : "",
+                    previousScene : this
+                }
+                )
+        
+        const response = await fetch(this.serveur_url + "/control?" + "pseudo=" + this.pseudo);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                    //Start le lobby avec le code dans data et le nombre de joueur a 1
+                this.scene.launch('Parametre',
+                {
+                    haut : data.haut,
+                    bas : data.bas,
+                    droite : data.droite,
+                    gauche : data.gauche,
+                    attaquer : data.attaquer,
+                    interagir : data.interagir,
+                    prendre : data.prendre,
+                    boutique : data.boutique,
+                    recueil : data.recueil,
+                    chat : data.chat,
+                    previousScene : this
+                }
+                )
+            } else {
+                console.log("Erreur au chargement des paramètres");
+            }
     }
 
     update() {

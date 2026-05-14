@@ -21,6 +21,10 @@ export class Parametre extends Phaser.Scene {
         this.keys[7] = data.boutique;
         this.keys[8] = data.recueil;
         this.keys[9] = data.chat;
+
+        this.previousScene = data.previousScene;
+
+        this.scene.pause(this.previousScene);
     }
 
 
@@ -28,7 +32,7 @@ export class Parametre extends Phaser.Scene {
 
         var graphics = this.add.graphics();
         
-        graphics.fillStyle(0x000000, 1);
+        graphics.fillStyle(0x000000, 0.8);
         graphics.fillRect(0, 0, 1280, 720);
 
         //Bouton Retour
@@ -101,6 +105,7 @@ export class Parametre extends Phaser.Scene {
         //Si aucune touche a ""
             //Sauvegarder les touches
             //Retour a la fenetre précédente
+            this.scene.resume(this.previousScene);
             this.scene.stop(this);
     }
 

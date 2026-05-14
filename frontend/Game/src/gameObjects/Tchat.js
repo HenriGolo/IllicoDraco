@@ -24,7 +24,7 @@ export default class Tchat {
     this.historique = "";
 
     //this.ws = new WebSocket(serveur_url);
-    this.ws = new WebSocket(`ws://172.22.224.255:8080/chat/${pseudo}`);
+    this.ws = new WebSocket(serveur_url + `chat/${pseudo}`);
     console.log(this.ws);
 
     // géré par le serveur, pas besoin ici
