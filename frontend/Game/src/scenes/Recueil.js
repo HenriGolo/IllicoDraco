@@ -9,30 +9,7 @@ import Monster from '../entities/Monster.js';
 
 export class Recueil extends Phaser.Scene {
 
-    constructor (recipes = [
-        new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Vert", ['j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
-        new Recipe("Mage Rouge", ['j2_guerrier', 'j2_archer', 'j2_pretre'], 'j2_mage', 'j4_mage')
-    ], monsters = [
-        new Monster("Mage Vert", 'j3_mage','j3_mage'),
-        new Monster("Mage Rouge", 'j2_mage','j3_mage'),
-        new Monster("Mage Bleu", 'j1_mage','j3_mage'),
-        new Monster("Mage Jaune", 'j4_mage','j3_mage'),
-        new Monster("Guerrier Vert", 'j3_guerrier','j3_mage'),
-        new Monster("Guerrier Rouge", 'j2_guerrier','j3_mage'),
-        new Monster("Guerrier Bleu", 'j1_guerrier','j3_mage'),
-        new Monster("Guerrier Jaune", 'j4_guerrier','j3_mage'),
-        new Monster("Archer Vert", 'j3_archer','j3_mage'),
-        new Monster("Archer Rouge", 'j2_archer','j3_mage'),
-        new Monster("Archer Bleu", 'j1_archer','j3_mage'),
-        new Monster("Archer Jaune", 'j4_archer','j3_mage'),
-        new Monster("Pretre Vert", 'j3_pretre','j3_mage'),
-        new Monster("Pretre Rouge", 'j2_pretre','j3_mage'),
-        new Monster("Pretre Bleu", 'j1_pretre','j3_mage'),
-        new Monster("Pretre Jaune", 'j4_pretre','j3_mage')
-
-
-    ]) {
+    constructor () {
         super('Recueil');
 
         this.recetteButton;
@@ -44,13 +21,40 @@ export class Recueil extends Phaser.Scene {
         this.monstersPres;
         this.recipesPres;
 
-        this.recipes = recipes;
-        this.monsters = monsters;
-
         this.curPageText;
 
         this.curPage = 0;
-        this.dansRecette = true;
+    }
+
+    init(data =
+    {
+        recipes : [
+            new Recipe("Mage Vert", ['j3_guerrier', 'j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
+            new Recipe("Mage Vert", ['j3_archer', 'j3_pretre'], 'j3_mage', 'j1_mage'),
+            new Recipe("Mage Rouge", ['j2_guerrier', 'j2_archer', 'j2_pretre'], 'j2_mage', 'j4_mage')
+        ], monsters : [
+            new Monster("Mage Vert", 'j3_mage','j3_mage'),
+            new Monster("Mage Rouge", 'j2_mage','j3_mage'),
+            new Monster("Mage Bleu", 'j1_mage','j3_mage'),
+            new Monster("Mage Jaune", 'j4_mage','j3_mage'),
+            new Monster("Guerrier Vert", 'j3_guerrier','j3_mage'),
+            new Monster("Guerrier Rouge", 'j2_guerrier','j3_mage'),
+            new Monster("Guerrier Bleu", 'j1_guerrier','j3_mage'),
+            new Monster("Guerrier Jaune", 'j4_guerrier','j3_mage'),
+            new Monster("Archer Vert", 'j3_archer','j3_mage'),
+            new Monster("Archer Rouge", 'j2_archer','j3_mage'),
+            new Monster("Archer Bleu", 'j1_archer','j3_mage'),
+            new Monster("Archer Jaune", 'j4_archer','j3_mage'),
+            new Monster("Pretre Vert", 'j3_pretre','j3_mage'),
+            new Monster("Pretre Rouge", 'j2_pretre','j3_mage'),
+            new Monster("Pretre Bleu", 'j1_pretre','j3_mage'),
+            new Monster("Pretre Jaune", 'j4_pretre','j3_mage')
+        ],
+        dansRecette : true
+    }) {
+        this.recipes = data.recipes;
+        this.monsters = data.monsters;
+        this.dansRecette = data.dansRecette;
     }
 
     preload() {
@@ -78,7 +82,7 @@ export class Recueil extends Phaser.Scene {
         //Bouton Bestaire
         this.bestiaireButton = this.add.sprite(30 + (24*zoom)/2*5, 10 + (24*zoom)/2, 'bt_bestiaire').setScale(zoom, zoom)
             .setInteractive()
-            .on('pointerdown', () => this.switch_bestaire());
+            .on('pointerdown', () => this.switch_bestiaire());
 
         //Défilement entre les pages
         this.add.sprite(640, 10 + (24*zoom)/2, 'pageNum').setScale(zoom, zoom);
@@ -122,7 +126,11 @@ export class Recueil extends Phaser.Scene {
             }
         }
 
-        this.switch_recette();
+        if (this.dansRecette) {
+            this.switch_recette();
+        } else {
+            this.switch_bestiaire();
+        }
     }
 
     close_window() {
@@ -140,7 +148,7 @@ export class Recueil extends Phaser.Scene {
 
     }
 
-    switch_bestaire() {
+    switch_bestiaire() {
         this.hideRecipePage();
         this.curPage = 0;
         this.bestiaireButton.setTint(0xffffff, 0xffffff, 0xff0000, 0xffffff);

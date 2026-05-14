@@ -1,28 +1,13 @@
 import ASSETS from '../assets.js';
 
 const nom_pc = "localhost"; //n'ayant pas de serveur qui tourne en permanence
-const server_adress = 'ws://' + nom_pc + ':8080/IllicoDraco';
+const server_address = 'ws://' + nom_pc + ':8080/IllicoDraco';
 
 export class Start extends Phaser.Scene {
 
     constructor() {
         super('Start');
         this.pseudo;
-
-        /*
-        this.ws = new WebSocket(server_adress);
-
-
-        
-        this.ws.onmessage = (e) => {
-            console.log('onmessage', { e });
-            const message = JSON.parse(e.data);
-            //TODO s'occuper des messages du serveur
-        };
-        // this.ws.onclose = () => this.send_text(this.pseudo + " vous a abandonné...");
-        this.ws.onerror = () => console.log("Error (avec la wweb socket)");
-        */
-
     }
 
     preload() {
@@ -107,6 +92,8 @@ export class Start extends Phaser.Scene {
             // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
             this.pseudo = this.pseudoContainer.getChildByName('pseudo');
 
+           this.loggin();
+
             console.log("Nom choisi : " + this.pseudo.value);
 
 
@@ -120,6 +107,11 @@ export class Start extends Phaser.Scene {
 
 
         }
+    }
+
+    async loggin() {
+        //On envoie le pseudo au serveur
+        const response = await fetch(server_address + "/loggin?" + "pseudo=" + this.pseudo);
     }
 
     initVariables() {
@@ -241,26 +233,29 @@ export class Start extends Phaser.Scene {
         
     }
 
-    //Envoi le code au joueur
+    //Envoi le code au server et démarre le lobby si la partie existe
     async send_code(event) {
         if (event.target.name === "sendCodeButton") {
             let inputCode = this.gameCodeContainer.getChildByName("gameCode");
             if (inputCode.value !== "") {
                 let code = inputCode.value;
                 
-                const response = await fetch(server_adress + "/join?code=" + code + "&pseudo=" + this.pseudo);
+                const response = await fetch(server_address + "/join?code=" + code + "&pseudo=" + this.pseudo);
 
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
-                    //Start le lobby avec le nombre de joueur dans datz
+                    //Start le lobby avec le nombre de joueur dans data
+                    this.scene.start("Lobby", {
+                        joueur_courant : data.nbJoueur, //A VERIFIER
+                        code : code, 
+                        pseudo : this.pseudo, 
+                        serveur_url : server_address
+                    })
+                    //
                 } else {
                     inputCode.value = "Code Invalide";
                 }
-                /*
-                console.log(JSON.stringify({ code, from: this.pseudo}));
-                this.ws.send(JSON.stringify({mode: "join", code, from: this.pseudo}));
-                */
 
             } else {
                 this.switchCodePopPupVisibility(false);
@@ -278,16 +273,22 @@ export class Start extends Phaser.Scene {
     async on_creer () {
         //... actions sur le serveur pour créer un lobby
         console.log("Créer cliqué");
-        const response = await fetch(server_adress + "/create?" + "pseudo=" + this.pseudo);
+        const response = await fetch(server_address + "/create?" + "pseudo=" + this.pseudo);
 
             if (response.ok) {
                 const data = await response.json();
                 console.log(data);
                     //Start le lobby avec le code dans data et le nombre de joueur a 1
+                this.scene.start("Lobby", {
+                    joueur_courant : 1, 
+                    code : data.code, 
+                    pseudo : this.pseudo, 
+                    serveur_url : server_address
+                })
             } else {
                 console.log("Erreur a la création de la partie");
             }
-        //this.scene.start('Lobby');
+        
     }
 
     on_join () {
@@ -295,38 +296,46 @@ export class Start extends Phaser.Scene {
         console.log("Rejoindre cliqué");
         this.switchCodePopPupVisibility(true);
         this.switchButtonMode(false);
-        //this.scene.start('Lobby');
     }
 
-    on_recette () {
+    async on_recette () {
         //... ouvrir recette
         console.log("Recette cliqué");
     }
 
-    on_bestiaire () {
+    async on_bestiaire () {
         //... ouvrir bestiaire
         console.log("Bestiaire cliqué");
     }
 
-    on_options () {
+    async on_options () {
         //... ouvrir pannel options
-        //TODO Récuperer les touches dans la bd
-        this.scene.launch('Parametre',
-            {
-                haut : "KeyZ",
-                bas : "KeyS",
-                droite : "KeyD",
-                gauche : "KeyQ",
-                attaquer : "Space",
-                interagir : "KeyF",
-                prendre : "KeyA",
-                boutique : "KeyB",
-                recueil : "KeyR",
-                chat : "KeyT"
-            }
-        )
-        //this.scene.remove("Parametre");
         console.log("Options cliqué");
+
+        const response = await fetch(server_address + "/control?" + "pseudo=" + this.pseudo);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                    //Start le lobby avec le code dans data et le nombre de joueur a 1
+                this.scene.launch('Parametre',
+                {
+                    haut : data.haut,
+                    bas : data.bas,
+                    droite : data.droite,
+                    gauche : data.gauche,
+                    attaquer : data.attaquer,
+                    interagir : data.interagir,
+                    prendre : data.prendre,
+                    boutique : data.boutique,
+                    recueil : data.recueil,
+                    chat : data.chat
+                }
+                )
+            } else {
+                console.log("Erreur au chargement des paramètres");
+            }
+        
     }
 
     switchButtonMode(val) {
