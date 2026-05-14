@@ -95,14 +95,16 @@ export class Preloader extends Phaser.Scene {
         frameHeight: 16, 
         });
 
+        this.load.image('logo', 'assets/divers/logo.png');
+
     }
 
     create() {
         //this.scene.start('Game');
         //this.scene.start('GameUI');
  
-        //this.scene.start("Start", {pseudo : ""});
-        
+        this.scene.start("Start", {pseudo : ""});
+        /*
         this.scene.start("Lobby",
             {
                 joueur_courant : 1,
@@ -110,7 +112,7 @@ export class Preloader extends Phaser.Scene {
                 pseudo : "Pseudo", 
                 serveur_url : "ws://localhost:8080/IllicoDraco/chat/"
             }
-        );
+        );*/
 
             /*
             this.scene.start('Boutique', {

@@ -76,7 +76,8 @@ export class Start extends Phaser.Scene {
 
 
         /// Adding logo
-        this.add.rectangle(this.middleX, this.height*0.2, 128*2, 64*2, 0x888); // sera remplacé par le logo
+        //this.add.rectangle(this.middleX, this.height*0.2, 128*2, 64*2, 0x888); // sera remplacé par le logo
+        this.add.sprite(this.middleX, this.height*0.2, 'logo').setScale(4);
 
         this.textInser = this.add.text(this.middleX -80, this.height*0.5, 'Insérez votre pseudo : ', { fontSize: '32px', fill: '#FFF' });
 
