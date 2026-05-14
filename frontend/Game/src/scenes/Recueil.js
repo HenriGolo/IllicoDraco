@@ -50,11 +50,15 @@ export class Recueil extends Phaser.Scene {
             new Monster("Pretre Bleu", 'j1_pretre','j3_mage'),
             new Monster("Pretre Jaune", 'j4_pretre','j3_mage')
         ],
-        dansRecette : true
+        dansRecette : true,
+        previousScene : null
     }) {
         this.recipes = data.recipes;
         this.monsters = data.monsters;
         this.dansRecette = data.dansRecette;
+        this.previousScene = previousScene;
+
+        this.scene.pause(this.previousScene);
     }
 
     preload() {
@@ -134,7 +138,9 @@ export class Recueil extends Phaser.Scene {
     }
 
     close_window() {
-
+        
+        this.scene.resume(this.previousScene);
+        this.scene.stop(this);
     }
 
     switch_recette() {
