@@ -2,14 +2,10 @@ package illicodraco.project.database;
 
 import illicodraco.project.beans.*;
 import illicodraco.project.repositories.*;
-import illicodraco.project.database.FullGame;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.ParameterizedType;
-import java.net.CookieHandler;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
@@ -54,18 +50,18 @@ public class Facade {
   }
 
   @GetMapping("/joueurs")
-  public Joueur getJoueur(@RequestParam("idj") int id_joueur) {
-    return joueur_r.findById(id_joueur).orElseThrow(() -> new EntityNotFound("Joueur inexistant"));
+  public Joueur getJoueur(@RequestParam("pseudo") String pseudo) {
+    return joueur_r.findById(pseudo).orElseThrow(() -> new EntityNotFound("Joueur inexistant"));
   }
 
   @GetMapping("/controles")
-  public Controles getControlesFromJoueur(@RequestParam("idj") int id_joueur) {
-    return getJoueur(id_joueur).getControles();
+  public Controles getControlesFromJoueur(@RequestParam("pseudo") String pseudo) {
+    return getJoueur(pseudo).getControles();
   }
 
   @PostMapping("/controles")
-  public void setControlesOfJoueur(@RequestParam("idj") int id_joueur, @RequestParam("ctrls") Controles ctrls) {
-    Joueur joueur = getJoueur(id_joueur);
+  public void setControlesOfJoueur(@RequestParam("pseudo") String pseudo, @RequestParam("ctrls") Controles ctrls) {
+    Joueur joueur = getJoueur(pseudo);
     joueur.setControles(ctrls);
     joueur_r.save(joueur);
   }
@@ -145,7 +141,7 @@ public class Facade {
 
   @GetMapping("/create")
   public String createGame(@RequestParam("pseudo") String pseudo) {
-    
+
     Random r = new Random();
     Collection<Parametres> params = param_r.findAll();
     boolean nok = true;
@@ -179,24 +175,28 @@ public class Facade {
 
   @GetMapping("/join/")
   public int joinGame(@RequestParam("pseudo") String pseudo, @RequestParam("code") String code) {
-
     Optional<Parametres> params = param_r.findById(code);
     if (params.isPresent()) {
-      Parametres p = params.get();
-      if (p.getNbJoueurs() >= 4) {
+      Parametres partie = params.get();
+      if (partie.getNbJoueurs() >= 4) {
         throw new FullGame("Partie déjà remplie !");
       } else {
-        p.addJoueurs(pseudo);
-        int nbj = p.getNbJoueurs() + 1;
-        p.setNbJoueurs(nbj);
-        param_r.save(p);
+        Optional<Joueur> ojoueur = joueur_r.findById(pseudo);
+        Joueur joueur;
+        if (ojoueur.isPresent()) joueur = ojoueur.get();
+        else {
+          joueur = new Joueur();
+          joueur.setPseudo(pseudo);
+        }
+        partie.addJoueurs(joueur);
+        int nbj = partie.getNbJoueurs() + 1;
+        partie.setNbJoueurs(nbj);
+        param_r.save(partie);
         return nbj;
       }
-      
     } else {
       throw new EntityNotFound("Code invalide !");
     }
   }
-
 
 }

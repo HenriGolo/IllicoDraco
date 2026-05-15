@@ -10,7 +10,6 @@ public class Joueur {
 
   // attributs
   @Id
-  // private int id;             // clef primaire dans la BD
   private String pseudo;      // pseudonyme du joueur (clef primaire dans la BD)
 
   @Transient

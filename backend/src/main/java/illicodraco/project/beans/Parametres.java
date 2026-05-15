@@ -10,9 +10,6 @@ public class Parametres {
 
   // attributs
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;                     // clef primaire dans la BD
-  //private int id;                     // clef primaire dans la BD
   private String code;                // code de la partie
 
   private int nbJoueurs;              // nb de joueurs dans la partie
@@ -66,7 +63,7 @@ public class Parametres {
     return nbJoueurs;
   }
 
-  public Collection<String> getJoueurs() {
+  public Collection<Joueur> getJoueurs() {
     return joueurs;
   }
 
@@ -88,11 +85,11 @@ public class Parametres {
     this.nbJoueurs = nbj;
   }
 
-  public void setJoueurs(Collection<String> js) {
+  public void setJoueurs(Collection<Joueur> js) {
     this.joueurs = js;
   }
 
-  public void addJoueurs(String joueur) {
+  public void addJoueurs(Joueur joueur) {
     this.joueurs.add(joueur);
   }
 
