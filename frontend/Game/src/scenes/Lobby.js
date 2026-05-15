@@ -83,7 +83,7 @@ export class Lobby extends Phaser.Scene {
       .on('pointerdown', () => this.parameter())
 
     //Ajout du tchat
-    this.tchat = new Tchat(this, this.pseudo, 960, 128, 'ws' + this.serveur_url)
+    this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url)
 
   }
 

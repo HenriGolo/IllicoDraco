@@ -11,7 +11,7 @@ import java.util.Collection;
 
 // Classe java gérant l'entité "paramètres"
 @Entity
-public class Parametres {
+public class Partie {
 
   // attributs
   @Id
@@ -36,7 +36,7 @@ public class Parametres {
 
 
   // constructeur
-  public Parametres() {
+  public Partie() {
   }
 
 

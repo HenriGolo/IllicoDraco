@@ -47,11 +47,7 @@ export class Start extends Phaser.Scene {
     this.pseudo = data.pseudo
 
     //Pas besoin de rerentrer le pseudo si on a quitté le lobby
-    if (this.pseudo === '') {
-      this.isTherePseudo = false
-    } else {
-      this.isTherePseudo = true
-    }
+    this.isTherePseudo = this.pseudo !== '';
 
     console.log(this.isTherePseudo)
   }
@@ -107,7 +103,7 @@ export class Start extends Phaser.Scene {
             // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
             this.pseudo = this.pseudoContainer.getChildByName('pseudo').value;
 
-           this.loggin();
+           this.login();
 
       console.log('Nom choisi : ' + this.pseudo.value)
 
@@ -123,11 +119,12 @@ export class Start extends Phaser.Scene {
   }
 
   //Envoyer le pseudo au serveur pour ajout ou connection dans la base de donnée
-  async loggin () {
+  async login () {
     //On envoie le pseudo au serveur
-    const url = new URL('loggin', server_address)
+    const url = new URL('login', server_address)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url)
+    if (response.ok) return await response.json()
   }
 
   initVariables () {
@@ -328,7 +325,7 @@ export class Start extends Phaser.Scene {
     //... ouvrir pannel options
     console.log('Options cliqué')
 
-    const url = new URL('control', server_address)
+    const url = new URL('controles', server_address)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url)
 

@@ -16,47 +16,49 @@ public class Facade {
 
   // attributs
   @Autowired
-  BoutiqueRepository boutique_r;
+  BoutiqueRepository boutiqueRepo;
   @Autowired
-  ClasseRepository classe_r;
+  ClasseRepository classeRepo;
   @Autowired
-  JoueurRepository joueur_r;
+  JoueurRepository joueurRepo;
   @Autowired
-  MonstreRepository monstre_r;
+  MonstreRepository monstreRepo;
   @Autowired
-  OutilRepository outil_r;
+  OutilRepository outilRepo;
   @Autowired
-  ParametresRepository param_r;
+  PartieRepository partieRepo;
   @Autowired
-  ProduitRepository produit_r;
+  ProduitRepository produitRepo;
   @Autowired
-  RecetteRepository recette_r;
+  RecetteRepository recetteRepo;
   @Autowired
-  StatistiquesRepository stats_r;
+  StatistiquesRepository statsRepo;
   @Autowired
-  ControlesRepository controles_r;
+  ControlesRepository controlesRepo;
 
   // méthodes
 
-  @GetMapping("/create_joueur")
-  public Joueur createJoueur(@RequestParam("pseudo") String pseudo) {
-    Controles controles = new Controles();
-    controles_r.save(controles);
-    Joueur joueur = new Joueur();
-    joueur.setPseudo(pseudo);
-    joueur.setControles(controles);
-    joueur_r.save(joueur);
-    return joueur;
+  @GetMapping("/login")
+  public Joueur login(@RequestParam("pseudo") String pseudo) {
+    return joueurRepo.findById(pseudo).orElseGet(() -> {
+      Controles controles = new Controles();
+      controlesRepo.save(controles);
+      Joueur joueur = new Joueur();
+      joueur.setPseudo(pseudo);
+      joueur.setControles(controles);
+      joueurRepo.save(joueur);
+      return joueur;
+    });
   }
 
   @PostMapping("/joueurs")
   public void addJoueur(@RequestBody Joueur joueur) {
-    joueur_r.save(joueur);
+    joueurRepo.save(joueur);
   }
 
   @GetMapping("/joueurs")
   public Joueur getJoueur(@RequestParam("pseudo") String pseudo) {
-    return joueur_r.findById(pseudo).orElseThrow(() -> new EntityNotFound("Joueur inexistant"));
+    return joueurRepo.findById(pseudo).orElseThrow(() -> new EntityNotFound("Joueur inexistant"));
   }
 
   @GetMapping("/controles")
@@ -68,48 +70,48 @@ public class Facade {
   public void setControlesOfJoueur(@RequestParam("pseudo") String pseudo, @RequestParam("ctrls") Controles ctrls) {
     Joueur joueur = getJoueur(pseudo);
     joueur.setControles(ctrls);
-    joueur_r.save(joueur);
+    joueurRepo.save(joueur);
   }
 
-  @GetMapping("/params")
-  public Parametres getParametres(@RequestParam("game_id") String game_id) {
-    return param_r.findById(game_id).orElseThrow(() -> new EntityNotFound("Partie inexistante"));
+  @GetMapping("/partie")
+  public Partie getPartie(@RequestParam("game_id") String game_id) {
+    return partieRepo.findById(game_id).orElseThrow(() -> new EntityNotFound("Partie inexistante"));
   }
 
-  @PostMapping("/params")
-  public void setParametres(@RequestBody Parametres params) {
-    param_r.save(params);
+  @PostMapping("/partie")
+  public void setParametres(@RequestBody Partie partie) {
+    partieRepo.save(partie);
   }
 
   @PostMapping("/achat")
   public Produit achatBoutique(@RequestParam("argent") int argent, @RequestParam("idp") int id_produit) {
-    Optional<Boutique> produitBoutique = boutique_r.findById(id_produit);
+    Optional<Boutique> produitBoutique = boutiqueRepo.findById(id_produit);
     if (produitBoutique.isEmpty()) throw new EntityNotFound("Objet inexistant dans la boutique");
     Boutique boutique = produitBoutique.get();
     Example<Produit> example = Example.of(new Produit(boutique.getNom()));
-    Produit produit = produit_r.findOne(example).orElseThrow(() -> new EntityNotFound("Produit inexistant"));
+    Produit produit = produitRepo.findOne(example).orElseThrow(() -> new EntityNotFound("Produit inexistant"));
     if (argent < boutique.getPrix()) throw new EntityNotFound("Solde insuffisant !");
     return produit;
   }
 
   @GetMapping("/classes")
   public Collection<Classe> getAllClasses() {
-    return classe_r.findAll();
+    return classeRepo.findAll();
   }
 
   @PostMapping("/classes")
   public void ajoutClasse(@RequestBody Classe classe) {
-    classe_r.save(classe);
+    classeRepo.save(classe);
   }
 
   @GetMapping("/monstres")
   public Collection<Monstre> getMonstre() {
-    return monstre_r.findAll();
+    return monstreRepo.findAll();
   }
 
   @GetMapping("/outils")
   public Collection<Outil> getOutils() {
-    return outil_r.findAll();
+    return outilRepo.findAll();
   }
 
   /**
@@ -124,7 +126,7 @@ public class Facade {
       @PathVariable("input") String produit_in_nom,
       @PathVariable("output") String produit_out_nom
   ) {
-    Collection<Recette> recettes = recette_r.findAll();
+    Collection<Recette> recettes = recetteRepo.findAll();
     return recettes.stream().filter(recette ->
         recette.getPlat().getNom().equals(produit_out_nom)
             && recette.getIngredients().stream().anyMatch(ing ->
@@ -141,14 +143,14 @@ public class Facade {
 
   @GetMapping("/stats")
   public Statistiques getStats(@RequestParam("id") int stats_id) {
-    return stats_r.findById(stats_id).orElseThrow(() -> new EntityNotFound("Statistiques inexistantes"));
+    return statsRepo.findById(stats_id).orElseThrow(() -> new EntityNotFound("Statistiques inexistantes"));
   }
 
   @GetMapping("/create")
-  public Parametres createGame(@RequestParam("pseudo") String pseudo) {
+  public Partie createGame(@RequestParam("pseudo") String pseudo) {
 
     Random r = new Random();
-    Collection<Parametres> params = param_r.findAll();
+    Collection<Partie> parties = partieRepo.findAll();
     boolean code_ok = false;
     String code = "XXXXXX";
 
@@ -158,16 +160,16 @@ public class Facade {
       String c2 = r.nextInt(26) + "a";
       code = c1 + c2 + r.nextInt(10) + r.nextInt(10) + r.nextInt(10) + r.nextInt(10);
 
-      for (Parametres p : params) {
+      for (Partie p : parties) {
         if (p.getCode().equals(code)) {
           code_ok = false;
         }
       }
     }
 
-    Joueur joueur = joueur_r.findById(pseudo).orElseGet(() -> createJoueur(pseudo));
+    Joueur joueur = login(pseudo);
 
-    Parametres partie = new Parametres();
+    Partie partie = new Partie();
     partie.setCode(code);
     partie.setArgent(0);
     partie.setNbJoueurs(1);
@@ -175,20 +177,20 @@ public class Facade {
     partie.setSatisfaction(0);
     partie.setTempsEcoule(0);
     partie.setVitesseMonstres(1);
-    param_r.save(partie);
+    partieRepo.save(partie);
 
     return partie;
   }
 
   @GetMapping("/join")
-  public Parametres joinGame(@RequestParam("pseudo") String pseudo, @RequestParam("code") String code) {
-    Optional<Parametres> params = param_r.findById(code);
-    if (params.isPresent()) {
-      Parametres partie = params.get();
+  public Partie joinGame(@RequestParam("pseudo") String pseudo, @RequestParam("code") String code) {
+    Optional<Partie> _partie = partieRepo.findById(code);
+    if (_partie.isPresent()) {
+      Partie partie = _partie.get();
       if (partie.getNbJoueurs() >= 4) {
         throw new FullGame("Partie déjà remplie !");
       } else {
-        Joueur joueur = joueur_r.findById(pseudo).orElseGet(() -> createJoueur(pseudo));
+        Joueur joueur = login(pseudo);
         Collection<Joueur> dejaPresents = partie.getJoueurs();
         for (Joueur _joueur : dejaPresents) {
           if (_joueur.getPseudo().equals(pseudo)) {
@@ -197,7 +199,7 @@ public class Facade {
         }
         partie.addJoueurs(joueur);
         partie.setNbJoueurs(partie.getJoueurs().toArray().length);
-        param_r.save(partie);
+        partieRepo.save(partie);
         return partie;
       }
     } else {
