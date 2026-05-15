@@ -328,7 +328,7 @@ export class Start extends Phaser.Scene {
     //... ouvrir pannel options
     console.log('Options cliqué')
 
-    const url = new URL('control', server_address)
+    const url = new URL('controles', server_address)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url)
 
@@ -338,15 +338,15 @@ export class Start extends Phaser.Scene {
       //Start le lobby avec le code dans data et le nombre de joueur a 1
       this.scene.launch('Parametre',
         {
-          haut: data.haut,
-          bas: data.bas,
-          droite: data.droite,
-          gauche: data.gauche,
+          haut: data.toucheHaut,
+          bas: data.toucheBas,
+          droite: data.toucheDroite,
+          gauche: data.toucheGauche,
           attaquer: data.attaquer,
           interagir: data.interagir,
-          prendre: data.prendre,
-          boutique: data.boutique,
-          recueil: data.recueil,
+          prendre: data.prendreOuPoser,
+          boutique: data.accesBoutique,
+          recueil: data.bestiaireOuLivreRecette,
           chat: data.chat,
           previousScene: this
         }

@@ -2,7 +2,7 @@ export default class Tchat {
 
   constructor (scene, pseudo, x, y, serveur_url) {
 
-    this.serveur_url = serveur_url.replace(/https?:\/\//, '://')
+    this.serveur_url = serveur_url.replace(/https?:\/\//, 'ws://')
     this.pseudo = pseudo
     // Affichage du tchat // 1120 332
     this.tchatOutput = scene.add.dom(x + 160, y + 204).createFromCache('tchatTextOutput')
