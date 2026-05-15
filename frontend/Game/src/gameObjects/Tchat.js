@@ -12,7 +12,7 @@ export default class Tchat {
     this.tchatInput.addListener('click')
     this.tchatInput.on('click', (event) => this.send_enter_text(event))
 
-    this.chatLimit = 99;
+    this.chatLimit = 99
 
     //Compteur de nouveau message
     this.bubble = scene.add.sprite(x + 276, y + 11, 'text_bubble').setScale(3, 3)
@@ -90,8 +90,8 @@ export default class Tchat {
     }
   }
 
-  quitChat(){
-    this.ws.close();
+  quitChat () {
+    this.ws.close()
   }
 
 }
