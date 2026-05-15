@@ -105,7 +105,6 @@ export class Parametre extends Phaser.Scene {
     //Retour a la fenetre précédente
 
     const url = new URL('controles', this.serveur_url)
-    url.searchParams.set('pseudo', this.pseudo)
 
     const request = new Request(url, {
       method: "POST",
