@@ -105,30 +105,26 @@ export class Parametre extends Phaser.Scene {
     //Retour a la fenetre précédente
 
     const url = new URL('controles', this.serveur_url)
-
-    const request = new Request(url, {
-      method: "POST",
-      body:`{"pseudo": "${this.pseudo}",
-      "ctrls" : 
-      {
-        "accesBoutique": "${this.keys[8]}",
-        "attaquer": "${this.keys[4]}",
-        "bestiaireOuLivreRecette": "${this.keys[7]}",
-        "chat": "${this.keys[9]}",
-        "id": "${this.id}",
-        "interagir": "${this.keys[5]}",
-        "prendreOuPoser": "${this.keys[6]}",
-        "toucheBas": "${this.keys[1]}",
-        "toucheDroite": "${this.keys[3]}",
-        "toucheGauche": "${this.keys[2]}",
-        "toucheHaut": "${this.keys[0]}"
-      }
-        }` ,
-      });
-
-    console.log(this.serveur_url)
-    console.log(request) 
-    const response = await fetch(request)
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        pseudo: 'pseudo',
+        ctrls: {
+          toucheHaut: this.keys[0],
+          toucheBas: this.keys[1],
+          toucheDroite: this.keys[3],
+          toucheGauche: this.keys[2],
+          attaquer: this.keys[4],
+          interagir: this.keys[5],
+          prendreOuPoser: this.keys[6],
+          accessBoutique: this.keys[8],
+          bestiaireOuLivreRecette: this.keys[7],
+          chat: this.keys[9],
+          id : this.id
+        }
+      })
+    })
 
     console.log(response) 
 
