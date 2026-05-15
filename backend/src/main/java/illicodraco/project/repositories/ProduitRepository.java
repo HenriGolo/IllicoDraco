@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 // Interface java gérant le repository des Produits
-public interface ProduitRepository extends JpaRepository<Produit, Integer> {
+public interface ProduitRepository extends JpaRepository<Produit, String> {
 
   Produit save(Produit produit);
 
-  Optional<Produit> findById(Integer id);
+  Optional<Produit> findById(String id);
 
   List<Produit> findAll();
 
