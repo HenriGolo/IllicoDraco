@@ -104,10 +104,10 @@ export class Start extends Phaser.Scene {
       this.isTherePseudo = true
       console.log('Entrée pressée.')
 
-      // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
-      this.pseudo = this.pseudoContainer.getChildByName('pseudo')
+            // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
+            this.pseudo = this.pseudoContainer.getChildByName('pseudo').value;
 
-      this.loggin()
+           this.loggin();
 
       console.log('Nom choisi : ' + this.pseudo.value)
 
@@ -289,7 +289,6 @@ export class Start extends Phaser.Scene {
     console.log('Créer cliqué')
     const url = new URL('create', server_address)
     url.searchParams.set('pseudo', this.pseudo)
-    console.log({ url, server_address })
     const response = await fetch(url)
     console.log(response)
     if (response.ok) {
