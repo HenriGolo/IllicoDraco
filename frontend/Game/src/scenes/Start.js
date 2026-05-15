@@ -104,7 +104,7 @@ export class Start extends Phaser.Scene {
 
       this.login()
 
-      console.log('Nom choisi : ' + this.pseudo.value)
+      console.log('Nom choisi : ' + this.pseudo)
 
       // On cache la demande de pseudo
       this.textInser.visible = false
