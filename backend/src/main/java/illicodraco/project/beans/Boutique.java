@@ -18,6 +18,8 @@ public class Boutique {
 
   private int prix;       // prix de l'objet dans la boutique
 
+  private String type_;
+
 
   // constructeur
   public Boutique() {
@@ -37,6 +39,10 @@ public class Boutique {
     return prix;
   }
 
+  public String getType_() {
+    return type_;
+  }
+
 
   // setters
   public void setId(int id) {
@@ -49,6 +55,10 @@ public class Boutique {
 
   public void setPrix(int prix) {
     this.prix = prix;
+  }
+
+  public void setType_(String type_) {
+    this.type_ = type_;
   }
 
 }
