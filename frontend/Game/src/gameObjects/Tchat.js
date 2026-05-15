@@ -23,8 +23,9 @@ export default class Tchat {
     //Historique de la conversation
     this.historique = "";
 
+    console.log("chat addresse :" + serveur_url + "/chat/" + this.pseudo);
     //this.ws = new WebSocket(serveur_url);
-    this.ws = new WebSocket(serveur_url + `chat/${pseudo}`);
+    this.ws = new WebSocket(serveur_url + "/chat/" + this.pseudo);
     console.log(this.ws);
 
     // géré par le serveur, pas besoin ici
@@ -32,7 +33,7 @@ export default class Tchat {
     this.ws.onmessage = (e) => {
       console.log('onmessage', { e });
       const message = JSON.parse(e.data);
-      this.add_text_to_tchat(`${message.from} : ${message.content}`);
+      this.add_text_to_tchat(message.system ? message.content : '${message.from} : ${message.content} ');
     };
     // this.ws.onclose = () => this.send_text(this.pseudo + " vous a abandonné...");
     this.ws.onerror = () => this.add_text_to_tchat(this.pseudo + " : Une erreur s'est produite");

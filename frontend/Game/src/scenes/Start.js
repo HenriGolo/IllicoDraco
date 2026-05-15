@@ -107,11 +107,11 @@ export class Start extends Phaser.Scene {
             console.log("Entrée pressée.");
 
             // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
-            this.pseudo = this.pseudoContainer.getChildByName('pseudo');
+            let pseudoCont = this.pseudoContainer.getChildByName('pseudo');
+            this.pseudo = pseudoCont.value ;           
+            this.loggin();
 
-           this.loggin();
-
-            console.log("Nom choisi : " + this.pseudo.value);
+            console.log("Nom choisi : " + this.pseudo);
 
 
             // On cache la demande de pseudo
@@ -292,7 +292,11 @@ export class Start extends Phaser.Scene {
     async on_creer () {
         //... actions sur le serveur pour créer un lobby
         console.log("Créer cliqué");
-        const response = await fetch("http" + server_address + "/create?" + "pseudo=" + this.pseudo);
+        const response = await fetch("http" + server_address + "/create?" + "pseudo=" + this.pseudo
+           /*{
+             method: 'GET'
+           } */
+        );
             console.log(response);
             if (response.ok) {
                 const data = await response.json();
