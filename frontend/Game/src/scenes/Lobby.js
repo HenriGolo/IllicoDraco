@@ -146,16 +146,7 @@ export class Lobby extends Phaser.Scene {
       //Start le lobby avec le code dans data et le nombre de joueur a 1
       this.scene.launch('Parametre',
         {
-          haut: data.haut,
-          bas: data.bas,
-          droite: data.droite,
-          gauche: data.gauche,
-          attaquer: data.attaquer,
-          interagir: data.interagir,
-          prendre: data.prendre,
-          boutique: data.boutique,
-          recueil: data.recueil,
-          chat: data.chat,
+          ...data,
           previousScene: this
         }
       )

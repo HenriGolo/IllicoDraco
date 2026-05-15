@@ -67,10 +67,12 @@ public class Facade {
   }
 
   @PostMapping("/controles")
-  public void setControlesOfJoueur(@RequestParam("pseudo") String pseudo, @RequestParam("ctrls") Controles ctrls) {
+  public Controles setControlesOfJoueur(@RequestParam("pseudo") String pseudo, @RequestBody Controles controls) {
     Joueur joueur = getJoueur(pseudo);
-    joueur.setControles(ctrls);
+    joueur.setControles(controls);
+    controlesRepo.save(controls);
     joueurRepo.save(joueur);
+    return controls;
   }
 
   @GetMapping("/partie")
