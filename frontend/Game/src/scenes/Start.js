@@ -1,7 +1,7 @@
 import ASSETS from '../assets.js';
 
-const nom_pc = "172.22.224.255"; //n'ayant pas de serveur qui tourne en permanence
-const server_address = 'ws://' + nom_pc + ':8080/';
+const nom_pc = "172.22.232.58"; //n'ayant pas de serveur qui tourne en permanence
+const server_address = 'ws://' + nom_pc + ':8080/IllicoDraco';
 export class Start extends Phaser.Scene {
 
     constructor() {
