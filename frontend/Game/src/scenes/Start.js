@@ -47,11 +47,7 @@ export class Start extends Phaser.Scene {
     this.pseudo = data.pseudo
 
     //Pas besoin de rerentrer le pseudo si on a quitté le lobby
-    if (this.pseudo === '') {
-      this.isTherePseudo = false
-    } else {
-      this.isTherePseudo = true
-    }
+    this.isTherePseudo = this.pseudo !== '';
 
     console.log(this.isTherePseudo)
   }
