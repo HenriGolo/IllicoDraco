@@ -1,7 +1,7 @@
 import ASSETS from '../assets.js';
 
 const nom_pc = "172.22.232.58"; //n'ayant pas de serveur qui tourne en permanence
-const server_address = 'ws://' + nom_pc + ':8080/IllicoDraco';
+const server_address = '://' + nom_pc + ':8080/IllicoDraco';
 export class Start extends Phaser.Scene {
 
     constructor() {
@@ -258,7 +258,8 @@ export class Start extends Phaser.Scene {
             if (inputCode.value !== "") {
                 let code = inputCode.value;
                 
-                const response = await fetch(server_address + "/join?code=" + code + "&pseudo=" + this.pseudo);
+                console.log("http" + server_address + "/join?code=" + code + "&pseudo=" + this.pseudo);
+                const response = await fetch("http" + server_address + "/join?code=" + code + "&pseudo=" + this.pseudo);
 
                 if (response.ok) {
                     const data = await response.json();
