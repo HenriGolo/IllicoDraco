@@ -120,14 +120,14 @@ public class Facade {
    */
   @GetMapping("/recettes/{input}/{output}")
   public Collection<Recette> getRecettes(
-      @PathVariable("input") int produit_in_id,
-      @PathVariable("output") int produit_out_id
+      @PathVariable("input") String produit_in_id,
+      @PathVariable("output") String produit_out_id
   ) {
     Collection<Recette> recettes = recette_r.findAll();
     return recettes.stream().filter(recette ->
-        recette.getPlat().getId() == produit_out_id
+        recette.getPlat().getId().equals(produit_out_id)
             && recette.getIngredients().stream().anyMatch(ing ->
-            ing.getId() == produit_in_id)).toList();
+            ing.getId().equals(produit_in_id))).toList();
   }
 
   /**
