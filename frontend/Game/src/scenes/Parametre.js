@@ -21,7 +21,12 @@ export class Parametre extends Phaser.Scene {
     this.keys[8] = data.recueil
     this.keys[9] = data.chat
 
+    this.id = data.id
     this.previousScene = data.previousScene
+
+    this.serveur_url = data.serveur_url
+
+    this.pseudo = data.pseudo
 
     this.scene.pause(this.previousScene)
   }
@@ -94,10 +99,40 @@ export class Parametre extends Phaser.Scene {
 
   }
 
-  close_window () {
+  async close_window () {
     //Si aucune touche a ""
     //Sauvegarder les touches
     //Retour a la fenetre précédente
+
+    const url = new URL('controles', this.serveur_url)
+    url.searchParams.set('pseudo', this.pseudo)
+
+    const request = new Request(url, {
+      method: "POST",
+      body:`{"pseudo": "${this.pseudo}",
+      "ctrls" : 
+      {
+        "accesBoutique": "${this.keys[8]}",
+        "attaquer": "${this.keys[4]}",
+        "bestiaireOuLivreRecette": "${this.keys[7]}",
+        "chat": "${this.keys[9]}",
+        "id": "${this.id}",
+        "interagir": "${this.keys[5]}",
+        "prendreOuPoser": "${this.keys[6]}",
+        "toucheBas": "${this.keys[1]}",
+        "toucheDroite": "${this.keys[3]}",
+        "toucheGauche": "${this.keys[2]}",
+        "toucheHaut": "${this.keys[0]}"
+      }
+        }` ,
+      });
+
+    console.log(this.serveur_url)
+    console.log(request) 
+    const response = await fetch(request)
+
+    console.log(response) 
+
     this.scene.resume(this.previousScene)
     this.scene.stop(this)
   }

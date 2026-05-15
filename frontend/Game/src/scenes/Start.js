@@ -107,7 +107,7 @@ export class Start extends Phaser.Scene {
             // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
             this.pseudo = this.pseudoContainer.getChildByName('pseudo').value;
 
-           this.loggin();
+           this.login();
 
       console.log('Nom choisi : ' + this.pseudo)
 
@@ -123,7 +123,7 @@ export class Start extends Phaser.Scene {
   }
 
   //Envoyer le pseudo au serveur pour ajout ou connection dans la base de donnée
-  async loggin () {
+  async login () {
     //On envoie le pseudo au serveur
     const url = new URL('login', server_address)
     url.searchParams.set('pseudo', this.pseudo)
@@ -348,7 +348,10 @@ export class Start extends Phaser.Scene {
           boutique: data.accesBoutique,
           recueil: data.bestiaireOuLivreRecette,
           chat: data.chat,
-          previousScene: this
+          previousScene: this,
+          serveur_url : server_address,
+          pseudo : this.pseudo,
+          id : data.id
         }
       )
     } else {

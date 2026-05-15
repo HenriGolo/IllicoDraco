@@ -89,7 +89,7 @@ export class Preloader extends Phaser.Scene {
     })
 
     //PlayerTest
-    this.load.spritesheet('player', 'assets/players/3_archer.png', {
+    this.load.spritesheet('player', 'assets/players/archer_3.png', {
       frameWidth: 16,
       frameHeight: 16,
     })
