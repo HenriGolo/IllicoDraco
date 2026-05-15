@@ -109,7 +109,7 @@ export class Start extends Phaser.Scene {
 
            this.loggin();
 
-      console.log('Nom choisi : ' + this.pseudo.value)
+      console.log('Nom choisi : ' + this.pseudo)
 
       // On cache la demande de pseudo
       this.textInser.visible = false
@@ -125,7 +125,7 @@ export class Start extends Phaser.Scene {
   //Envoyer le pseudo au serveur pour ajout ou connection dans la base de donnée
   async loggin () {
     //On envoie le pseudo au serveur
-    const url = new URL('loggin', server_address)
+    const url = new URL('login', server_address)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url)
   }
