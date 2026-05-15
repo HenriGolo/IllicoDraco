@@ -27,7 +27,7 @@ public class Joueur {
 
   @ManyToMany(mappedBy = "joueurs", fetch = FetchType.EAGER)
   @JsonBackReference
-  private Collection<Parametres> parties;
+  private Collection<Partie> parties;
 
   // constructeur
   public Joueur() {
@@ -81,11 +81,11 @@ public class Joueur {
     this.controles = controles;
   }
 
-  public Collection<Parametres> getParties() {
+  public Collection<Partie> getParties() {
     return parties;
   }
 
-  public void setParties(Collection<Parametres> parties) {
+  public void setParties(Collection<Partie> parties) {
     this.parties = parties;
   }
 
