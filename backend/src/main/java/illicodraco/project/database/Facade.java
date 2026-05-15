@@ -14,35 +14,29 @@ import java.util.Random;
 public class Facade {
 
   // attributs
-
-  @Autowired
-  BoutiqueRepository boutique_r;
-
-  @Autowired
-  ClasseRepository classe_r;
-
-  @Autowired
-  JoueurRepository joueur_r;
-
-  @Autowired
-  MonstreRepository monstre_r;
-
-  @Autowired
-  OutilRepository outil_r;
-
-  @Autowired
-  ParametresRepository param_r;
-
-  @Autowired
-  ProduitRepository produit_r;
-
-  @Autowired
-  RecetteRepository recette_r;
-
-  @Autowired
-  StatistiquesRepository stats_r;
+  @Autowired BoutiqueRepository boutique_r;
+  @Autowired ClasseRepository classe_r;
+  @Autowired JoueurRepository joueur_r;
+  @Autowired MonstreRepository monstre_r;
+  @Autowired OutilRepository outil_r;
+  @Autowired ParametresRepository param_r;
+  @Autowired ProduitRepository produit_r;
+  @Autowired RecetteRepository recette_r;
+  @Autowired StatistiquesRepository stats_r;
+  @Autowired ControlesRepository controles_r;
 
   // méthodes
+
+  @GetMapping("/create_joueur")
+  public Joueur createJoueur(@RequestParam("pseudo") String pseudo) {
+    Controles controles = new Controles();
+    controles_r.save(controles);
+    Joueur joueur = new Joueur();
+    joueur.setPseudo(pseudo);
+    joueur.setControles(controles);
+    joueur_r.save(joueur);
+    return joueur;
+  }
 
   @PostMapping("/joueurs")
   public void addJoueur(@RequestBody Joueur joueur) {
@@ -140,59 +134,60 @@ public class Facade {
   }
 
   @GetMapping("/create")
-  public String createGame(@RequestParam("pseudo") String pseudo) {
+  public Parametres createGame(@RequestParam("pseudo") String pseudo) {
 
     Random r = new Random();
     Collection<Parametres> params = param_r.findAll();
-    boolean nok = true;
+    boolean code_ok = false;
     String code = "XXXXXX";
 
-    while (nok) {
-
-      nok = false;
-      String c1 = Integer.toString(r.nextInt(26)) + "a";
-      String c2 = Integer.toString(r.nextInt(26)) + "a";
-      code = c1 + c2 + Integer.toString(r.nextInt(10)) + Integer.toString(r.nextInt(10)) + Integer.toString(r.nextInt(10)) + Integer.toString(r.nextInt(10));
+    while (!code_ok) {
+      code_ok = true;
+      String c1 = r.nextInt(26) + "a";
+      String c2 = r.nextInt(26) + "a";
+      code = c1 + c2 + r.nextInt(10) + r.nextInt(10) + r.nextInt(10) + r.nextInt(10);
 
       for (Parametres p : params) {
         if (p.getCode().equals(code)) {
-          nok = true;
+          code_ok = false;
         }
       }
     }
 
-    Parametres parametres = new Parametres();
-    parametres.setArgent(0);
-    parametres.setCode(code);
-    parametres.setNbJoueurs(1);
-    parametres.setSatisfaction(0);
-    parametres.setTempsEcoule(0);
-    parametres.setVitesseMonstres(1);
-    param_r.save(parametres);
+    Joueur joueur = joueur_r.findById(pseudo).orElseGet(() -> createJoueur(pseudo));
 
-    return code;
+    Parametres partie = new Parametres();
+    partie.setCode(code);
+    partie.setArgent(0);
+    partie.setNbJoueurs(1);
+    partie.addJoueurs(joueur);
+    partie.setSatisfaction(0);
+    partie.setTempsEcoule(0);
+    partie.setVitesseMonstres(1);
+    param_r.save(partie);
+
+    return partie;
   }
 
-  @GetMapping("/join/")
-  public int joinGame(@RequestParam("pseudo") String pseudo, @RequestParam("code") String code) {
+  @GetMapping("/join")
+  public Parametres joinGame(@RequestParam("pseudo") String pseudo, @RequestParam("code") String code) {
     Optional<Parametres> params = param_r.findById(code);
     if (params.isPresent()) {
       Parametres partie = params.get();
       if (partie.getNbJoueurs() >= 4) {
         throw new FullGame("Partie déjà remplie !");
       } else {
-        Optional<Joueur> ojoueur = joueur_r.findById(pseudo);
-        Joueur joueur;
-        if (ojoueur.isPresent()) joueur = ojoueur.get();
-        else {
-          joueur = new Joueur();
-          joueur.setPseudo(pseudo);
+        Joueur joueur = joueur_r.findById(pseudo).orElseGet(() -> createJoueur(pseudo));
+        Collection<Joueur> dejaPresents = partie.getJoueurs();
+        for (Joueur _joueur : dejaPresents) {
+          if (_joueur.getPseudo().equals(pseudo)) {
+            return partie;
+          }
         }
         partie.addJoueurs(joueur);
-        int nbj = partie.getNbJoueurs() + 1;
-        partie.setNbJoueurs(nbj);
+        partie.setNbJoueurs(partie.getJoueurs().toArray().length);
         param_r.save(partie);
-        return nbj;
+        return partie;
       }
     } else {
       throw new EntityNotFound("Code invalide !");

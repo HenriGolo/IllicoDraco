@@ -18,6 +18,8 @@ public class Produit {
 
   private String path;    // path vers la texture du produit
 
+  private int prix;
+
 
   // constructeur
   public Produit() {
@@ -57,4 +59,11 @@ public class Produit {
   }
 
 
+  public int getPrix() {
+    return prix;
+  }
+
+  public void setPrix(int prix) {
+    this.prix = prix;
+  }
 }

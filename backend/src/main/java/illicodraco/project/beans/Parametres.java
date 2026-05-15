@@ -1,7 +1,12 @@
 package illicodraco.project.beans;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 // Classe java gérant l'entité "paramètres"
@@ -14,7 +19,8 @@ public class Parametres {
 
   private int nbJoueurs;              // nb de joueurs dans la partie
 
-  @OneToMany
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JsonManagedReference
   private Collection<Joueur> joueurs; // joueurs connectés dans la partie
 
   private float vitesseMonstres;      // facteur multiplicatif de la vitesse des monstres
@@ -90,6 +96,7 @@ public class Parametres {
   }
 
   public void addJoueurs(Joueur joueur) {
+    if (joueurs == null) joueurs = new ArrayList<>();
     this.joueurs.add(joueur);
   }
 
