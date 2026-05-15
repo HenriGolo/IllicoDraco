@@ -1,6 +1,9 @@
 package illicodraco.project.beans;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 // Classe java gérant l'entité "controles"
 @Entity
@@ -11,26 +14,18 @@ public class Controles {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;                    // clef primaire dans la BD
 
-  private String toucheHaut = "Z";   // touche pour se déplacer vers le haut
+  // PHASER EST EN QWERTY
+  private String haut = "KeyW"; // touche pour se déplacer vers le haut
+  private String gauche = "KeyA"; // touche pour se déplacer vers la gauche
+  private String bas = "KeyS"; // touche pour se déplacer vers le bas
+  private String droite = "KeyD"; // touche pour se déplacer vers la droite
+  private String attaquer = "Space"; // touche pour attaquer
+  private String interagir = "KeyF"; // touche pour intéragir
+  private String prendre = "KeyQ"; // touche pour prendre / poser un produit
+  private String boutique = "KeyB"; // touche pour accéder à la boutique
+  private String recueil = "KeyR"; // touche pour ouvrir le bestiaire / livre de recettes
+  private String chat = "KeyT"; // touche pour ouvrir le chat
 
-  private String toucheGauche = "Q"; // touche pour se déplacer vers la gauche
-
-  private String toucheBas = "S";   // touche pour se déplacer vers le bas
-
-  private String toucheDroite = "D"; // touche pour se déplacer vers la droite
-
-  private String attaquer = "SpaceBar"; // touche pour attaquer
-
-  private String interagir = "F"; // touche pour intéragir
-
-  private String prendreOuPoser = "A"; // touche pour prendre / poser un produit
-
-  private String accesBoutique = "B"; // touche pour accéder à la boutique
-
-  private String bestiaireOuLivreRecette = "R"; // touche pour ouvrir le bestiaire / livre de recettes
-
-  private String chat = "T"; // touche pour ouvrir le chat
-  
   // constructeur
   public Controles() {
   }
@@ -41,20 +36,20 @@ public class Controles {
     return id;
   }
 
-  public String getToucheHaut() {
-    return toucheHaut;
+  public String getHaut() {
+    return haut;
   }
 
-  public String getToucheGauche() {
-    return toucheGauche;
+  public String getGauche() {
+    return gauche;
   }
 
-  public String getToucheBas() {
-    return toucheBas;
+  public String getBas() {
+    return bas;
   }
 
-  public String getToucheDroite() {
-    return toucheDroite;
+  public String getDroite() {
+    return droite;
   }
 
   public String getAttaquer() {
@@ -65,16 +60,16 @@ public class Controles {
     return interagir;
   }
 
-  public String getPrendreOuPoser() {
-    return prendreOuPoser;
+  public String getPrendre() {
+    return prendre;
   }
 
-  public String getAccesBoutique() {
-    return accesBoutique;
+  public String getBoutique() {
+    return boutique;
   }
 
-  public String getBestiaireOuLivreRecette() {
-    return bestiaireOuLivreRecette;
+  public String getRecueil() {
+    return recueil;
   }
 
   public String getChat() {
@@ -88,23 +83,23 @@ public class Controles {
   }
 
 
-  public void setToucheHaut(String toucheHaut) {
-    this.toucheHaut = toucheHaut;
+  public void setHaut(String toucheHaut) {
+    this.haut = toucheHaut;
   }
 
 
-  public void setToucheGauche(String toucheGauche) {
-    this.toucheGauche = toucheGauche;
+  public void setGauche(String toucheGauche) {
+    this.gauche = toucheGauche;
   }
 
 
-  public void setToucheBas(String toucheBas) {
-    this.toucheBas = toucheBas;
+  public void setBas(String toucheBas) {
+    this.bas = toucheBas;
   }
 
 
-  public void setToucheDroite(String toucheDroite) {
-    this.toucheDroite = toucheDroite;
+  public void setDroite(String toucheDroite) {
+    this.droite = toucheDroite;
   }
 
 
@@ -118,18 +113,18 @@ public class Controles {
   }
 
 
-  public void setPrendreOuPoser(String prendreOuPoser) {
-    this.prendreOuPoser = prendreOuPoser;
+  public void setPrendre(String prendreOuPoser) {
+    this.prendre = prendreOuPoser;
   }
 
 
-  public void setAccesBoutique(String accesBoutique) {
-    this.accesBoutique = accesBoutique;
+  public void setBoutique(String accesBoutique) {
+    this.boutique = accesBoutique;
   }
 
 
-  public void setBestiaireOuLivreRecette(String bestiaireOuLivreRecette) {
-    this.bestiaireOuLivreRecette = bestiaireOuLivreRecette;
+  public void setRecueil(String bestiaireOuLivreRecette) {
+    this.recueil = bestiaireOuLivreRecette;
   }
 
 

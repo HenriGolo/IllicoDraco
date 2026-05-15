@@ -47,7 +47,7 @@ export class Start extends Phaser.Scene {
     this.pseudo = data.pseudo
 
     //Pas besoin de rerentrer le pseudo si on a quitté le lobby
-    this.isTherePseudo = this.pseudo !== '';
+    this.isTherePseudo = this.pseudo !== ''
 
     console.log(this.isTherePseudo)
   }
@@ -72,14 +72,13 @@ export class Start extends Phaser.Scene {
     //this.add.rectangle(this.middleX, this.height*0.2, 128*2, 64*2, 0x888); // sera remplacé par le logo
     this.add.sprite(this.middleX, this.height * 0.2, 'logo').setScale(4)
 
-    this.textInser = this.add.text(this.middleX - 80, this.height * 0.5, 'Insérez votre pseudo : ', {
+    this.textInser = this.add.text(this.middleX, this.height * 0.5, 'Insérez votre pseudo : ', {
       fontSize: '32px',
-      fill: '#FFF'
-    })
+      fill: '#FFF',
+      align: 'center'
+    }).setOrigin(0.5)
 
-    let form = `
-        <input type="text" name="pseudo" placeholder="Votre pseudo">
-        `
+    let form = `<input type="text" name="pseudo" placeholder="Votre pseudo">`
     this.pseudoContainer = this.add.dom(this.middleX, this.height * 0.6).createFromHTML(form, 'form')
 
     this.keyEntree = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
@@ -100,10 +99,10 @@ export class Start extends Phaser.Scene {
       this.isTherePseudo = true
       console.log('Entrée pressée.')
 
-            // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
-            this.pseudo = this.pseudoContainer.getChildByName('pseudo').value;
+      // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
+      this.pseudo = this.pseudoContainer.getChildByName('pseudo').value
 
-           this.login();
+      this.login()
 
       console.log('Nom choisi : ' + this.pseudo.value)
 
@@ -327,7 +326,23 @@ export class Start extends Phaser.Scene {
 
     const url = new URL('controles', server_address)
     url.searchParams.set('pseudo', this.pseudo)
-    const response = await fetch(url)
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        id: 1,
+        haut: 'KeyW',
+        bas: 'KeyS',
+        droite: 'KeyD',
+        gauche: 'KeyQ',
+        attaquer: 'Space',
+        interagir: 'KeyF',
+        prendre: 'KeyX',
+        boutique: 'KeyB',
+        recueil: 'KeyR',
+        chat: 'KeyT'
+      })
+    })
 
     if (response.ok) {
       const data = await response.json()
@@ -335,16 +350,7 @@ export class Start extends Phaser.Scene {
       //Start le lobby avec le code dans data et le nombre de joueur a 1
       this.scene.launch('Parametre',
         {
-          haut: data.haut,
-          bas: data.bas,
-          droite: data.droite,
-          gauche: data.gauche,
-          attaquer: data.attaquer,
-          interagir: data.interagir,
-          prendre: data.prendre,
-          boutique: data.boutique,
-          recueil: data.recueil,
-          chat: data.chat,
+          ...data,
           previousScene: this
         }
       )

@@ -8,9 +8,10 @@ export default class Tchat {
     this.tchatOutput = scene.add.dom(x + 160, y + 204).createFromCache('tchatTextOutput')
     // Entrée texte // 1120 560
     this.tchatInput = scene.add.dom(x + 160, y + 432).createFromCache('tchatTextInput')
-
     this.tchatInput.addListener('click')
-    this.tchatInput.on('click', (event) => this.send_enter_text(event))
+    this.tchatInput.on('click', (event) => event.target.name === 'sendToTchatButton' && this.send_enter_text())
+    this.tchatInput.addListener('keydown')
+    this.tchatInput.on('keydown', (event) => event.key === 'Enter' && this.tchatOutput.visible && this.send_enter_text())
 
     this.chatLimit = 99
 
@@ -41,16 +42,14 @@ export default class Tchat {
   }
 
   // récupère le texte entré et l'envoie au tchat
-  send_enter_text (event) {
-    console.log({ event })
-    // TODO Envoyer le texte au serveur
-    if (event.target.name === 'sendToTchatButton') {
-      let inputText = this.tchatInput.getChildByName('textField')
-      if (inputText.value !== '') {
-        let text = inputText.value
-        inputText.value = '' // reset HTML
-        this.send_text(text)
-      }
+  send_enter_text () {
+    let inputText = this.tchatInput.getChildByName('textField')
+    console.log({ inputText })
+    if (inputText.value !== '') {
+      let text = inputText.value
+      console.log({ text })
+      inputText.value = '' // reset HTML
+      this.send_text(text)
     }
   }
 
