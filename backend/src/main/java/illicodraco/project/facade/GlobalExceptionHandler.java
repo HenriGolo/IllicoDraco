@@ -1,4 +1,4 @@
-package illicodraco.project.database;
+package illicodraco.project.facade;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

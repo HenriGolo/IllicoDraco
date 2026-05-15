@@ -1,4 +1,4 @@
-package illicodraco.project.database;
+package illicodraco.project.facade;
 
 import illicodraco.project.beans.*;
 import illicodraco.project.repositories.*;
@@ -82,7 +82,7 @@ public class Facade {
   }
 
   @PostMapping("/achat")
-  public Produit achatBoutique(@RequestParam("argent") int argent, @RequestParam("idp") String id_produit) {
+  public Produit achatBoutique(@RequestParam("argent") int argent, @RequestParam("idp") int id_produit) {
     Optional<Boutique> produitBoutique = boutique_r.findById(id_produit);
     if (produitBoutique.isEmpty()) throw new EntityNotFound("Objet inexistant dans la boutique");
     Boutique boutique = produitBoutique.get();
@@ -115,28 +115,28 @@ public class Facade {
   /**
    * Récupère uniquement les produits qui possèdent un certain ingrédient en entrée ou en sortie
    *
-   * @param produit_in_id  id d'un {@link Produit ingrédient} d'entrée à chercher
-   * @param produit_out_id id d'un {@link Produit ingrédient} de sortie à chercher
+   * @param produit_in_nom  id d'un {@link Produit ingrédient} d'entrée à chercher
+   * @param produit_out_nom id d'un {@link Produit ingrédient} de sortie à chercher
    * @return une {@link Collection<Recette>} qui vérifie le critère de recherche
    */
   @GetMapping("/recettes/{input}/{output}")
   public Collection<Recette> getRecettes(
-      @PathVariable("input") String produit_in_id,
-      @PathVariable("output") String produit_out_id
+      @PathVariable("input") String produit_in_nom,
+      @PathVariable("output") String produit_out_nom
   ) {
     Collection<Recette> recettes = recette_r.findAll();
     return recettes.stream().filter(recette ->
-        recette.getPlat().getId().equals(produit_out_id)
+        recette.getPlat().getNom().equals(produit_out_nom)
             && recette.getIngredients().stream().anyMatch(ing ->
-            ing.getId().equals(produit_in_id))).toList();
+            ing.getNom().equals(produit_in_nom))).toList();
   }
 
   /**
-   * @see #getRecettes(int, int)
+   * @see #getRecettes(String, String)
    */
   @GetMapping("/recettes/{input}")
-  public Collection<Recette> getRecettes(@PathVariable("input") int id) {
-    return getRecettes(id, id);
+  public Collection<Recette> getRecettes(@PathVariable("input") String nom) {
+    return getRecettes(nom, nom);
   }
 
   @GetMapping("/stats")
