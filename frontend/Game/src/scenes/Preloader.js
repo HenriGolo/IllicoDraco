@@ -103,14 +103,14 @@ export class Preloader extends Phaser.Scene {
         //this.scene.start('Game');
         //this.scene.start('GameUI');
  
-        this.scene.start("Start", {pseudo : ""});
+        this.scene.start("Start", {pseudo : "Julie"});
         /*
         this.scene.start("Lobby",
             {
                 joueur_courant : 1,
                 code : 1234, 
                 pseudo : "Pseudo", 
-                serveur_url : "ws://localhost:8080/IllicoDraco/chat/"
+                serveur_url : "ws://172.22.232.58:8080/IllicoDraco/"
             }
         );*/
 
