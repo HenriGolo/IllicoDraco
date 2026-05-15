@@ -90,4 +90,8 @@ export default class Tchat {
     }
   }
 
+  quitChat(){
+    this.ws.close();
+  }
+
 }

@@ -21,6 +21,12 @@ export class Lobby extends Phaser.Scene {
         this.joueur_courant = data.joueur_courant;
         this.pseudo = data.pseudo;
         this.code = data.code;
+
+        console.log("server_url : " + this.serveur_url +
+            "\npseudo : " + this.pseudo +
+            "\ncode : " + this.code +
+            "\njoueur_courant : " + this.joueur_courant
+        )
     }
 
     preload() {
@@ -101,6 +107,7 @@ export class Lobby extends Phaser.Scene {
         console.log(this.pseudo + " : Je pars");
 
         //TODO Envoyer un message de partie quitté
+        this.tchat.quitChat();
         this.scene.start("Start", {pseudo : this.pseudo});
     }
 
