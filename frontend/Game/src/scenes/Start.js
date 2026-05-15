@@ -266,7 +266,7 @@ export class Start extends Phaser.Scene {
                     console.log(data);
                     //Start le lobby avec le nombre de joueur dans data
                     this.scene.start("Lobby", {
-                        joueur_courant : data.nbJoueur, //A VERIFIER
+                        joueur_courant : data.nbJoueurs, //A VERIFIER
                         code : code, 
                         pseudo : this.pseudo, 
                         serveur_url : server_address

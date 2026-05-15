@@ -33,7 +33,7 @@ export default class Tchat {
     this.ws.onmessage = (e) => {
       console.log('onmessage', { e });
       const message = JSON.parse(e.data);
-      this.add_text_to_tchat(message.system ? message.content : '${message.from} : ${message.content} ');
+      this.add_text_to_tchat(message.system ? message.content :`${message.from} : ${message.content}`);
     };
     // this.ws.onclose = () => this.send_text(this.pseudo + " vous a abandonné...");
     this.ws.onerror = () => this.add_text_to_tchat(this.pseudo + " : Une erreur s'est produite");
@@ -68,6 +68,7 @@ export default class Tchat {
 
   // Ajoute le texte sur le tchat
   add_text_to_tchat(text) {
+    console.log("Message : " + text);
     let textout = document.getElementById("tchat_output");
     this.historique += text + "\n";
     textout.innerText = this.historique;
@@ -98,5 +99,9 @@ export default class Tchat {
       
     }
   }
+
+  quitChat(){
+    this.ws.close();
+  }  
 
 }
