@@ -10,20 +10,31 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
 
+@CrossOrigin(origins = "*")
 @RestController("Facade")
 public class Facade {
 
   // attributs
-  @Autowired BoutiqueRepository boutique_r;
-  @Autowired ClasseRepository classe_r;
-  @Autowired JoueurRepository joueur_r;
-  @Autowired MonstreRepository monstre_r;
-  @Autowired OutilRepository outil_r;
-  @Autowired ParametresRepository param_r;
-  @Autowired ProduitRepository produit_r;
-  @Autowired RecetteRepository recette_r;
-  @Autowired StatistiquesRepository stats_r;
-  @Autowired ControlesRepository controles_r;
+  @Autowired
+  BoutiqueRepository boutique_r;
+  @Autowired
+  ClasseRepository classe_r;
+  @Autowired
+  JoueurRepository joueur_r;
+  @Autowired
+  MonstreRepository monstre_r;
+  @Autowired
+  OutilRepository outil_r;
+  @Autowired
+  ParametresRepository param_r;
+  @Autowired
+  ProduitRepository produit_r;
+  @Autowired
+  RecetteRepository recette_r;
+  @Autowired
+  StatistiquesRepository stats_r;
+  @Autowired
+  ControlesRepository controles_r;
 
   // méthodes
 
