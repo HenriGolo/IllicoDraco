@@ -81,7 +81,7 @@ public class Facade {
   }
 
   @PostMapping("/achat")
-  public Produit achatBoutique(@RequestParam("argent") int argent, @RequestParam("idp") int id_produit) {
+  public Produit achatBoutique(@RequestParam("argent") int argent, @RequestParam("idp") String id_produit) {
     Optional<Boutique> produitBoutique = boutique_r.findById(id_produit);
     if (produitBoutique.isEmpty()) throw new EntityNotFound("Objet inexistant dans la boutique");
     Boutique boutique = produitBoutique.get();
