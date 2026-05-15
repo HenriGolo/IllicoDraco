@@ -292,8 +292,8 @@ export class Start extends Phaser.Scene {
     async on_creer () {
         //... actions sur le serveur pour créer un lobby
         console.log("Créer cliqué");
-        const response = await fetch(server_address + "/create?" + "pseudo=" + this.pseudo);
-
+        const response = await fetch("http" + server_address + "/create?" + "pseudo=" + this.pseudo);
+            console.log(response);
             if (response.ok) {
                 const data = await response.json();
                 console.log(data);
