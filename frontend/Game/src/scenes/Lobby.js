@@ -6,57 +6,24 @@ const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
 export class Lobby extends Phaser.Scene {
 
 
-    constructor(joueur_courant = 4,code = 1234, pseudo = "Pseudo", serveur_url = "test") {
+    constructor() {
         super('Lobby');
-
-        this.serveur_url = serveur_url;
-
-        this.joueur_courant = joueur_courant;
-        this.pseudo = pseudo;
-        this.code = code;
 
         this.joueurs;
         this.tchat;
         
     }
 
+    init(data) {
+
+        this.serveur_url = data.serveur_url;
+
+        this.joueur_courant = data.joueur_courant;
+        this.pseudo = data.pseudo;
+        this.code = data.code;
+    }
+
     preload() {
-
-        //Tile map d'arrière plan
-        this.load.image('tiles', 'assets/tileMaps/Tile-Sheet.png');
-
-        //Image des joueurs
-        this.load.image('j1_pretre', 'assets/blue_pretre_idle.png');
-        this.load.image('j1_guerrier', 'assets/blue_guerrier_idle.png');
-        this.load.image('j1_mage', 'assets/blue_mage_idle.png');
-        this.load.image('j1_archer', 'assets/blue_archer_idle.png');
-
-        this.load.image('j2_pretre', 'assets/red_pretre_idle.png');
-        this.load.image('j2_guerrier', 'assets/red_guerrier_idle.png');
-        this.load.image('j2_mage', 'assets/red_mage_idle.png');
-        this.load.image('j2_archer', 'assets/red_archer_idle.png');
-
-        this.load.image('j3_pretre', 'assets/green_pretre_idle.png');
-        this.load.image('j3_guerrier', 'assets/green_guerrier_idle.png');
-        this.load.image('j3_mage', 'assets/green_mage_idle.png');
-        this.load.image('j3_archer', 'assets/green_archer_idle.png');
-
-        this.load.image('j4_pretre', 'assets/yellow_pretre_idle.png');
-        this.load.image('j4_guerrier', 'assets/yellow_guerrier_idle.png');
-        this.load.image('j4_mage', 'assets/yellow_mage_idle.png');
-        this.load.image('j4_archer', 'assets/yellow_archer_idle.png');
-
-        //Image des boutons
-        this.load.image('bt_quitter', 'assets/button/quitButton.png');
-        this.load.image('bt_parametre', 'assets/button/parameterButton.png');
-        this.load.image('bt_lancer_partie', 'assets/button/startGameButton.png');
-
-
-        //Pour le tchat
-        this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html');
-        this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html');
-        
-        
     }
 
     create() {
@@ -68,28 +35,6 @@ export class Lobby extends Phaser.Scene {
         //Bandeau Tchat
         graphics.fillStyle(0x555555, 1);
         graphics.fillRect(960, 128, 320, 464);
- /*
-        //Bandeau bas
-        graphics.fillStyle(0x550055, 1);
-        graphics.fillRect(0,592,1280, 128);
-
-        //Bandeau haut
-        graphics.fillStyle(0x00eeff, 1);
-        graphics.fillRect(0,0,1280, 128);
-       
-        graphics.fillStyle(0xccccff, 1);
-        graphics.fillRect(0, 0, 240, 720);
-        graphics.fillStyle(0xffcccc, 1);
-        graphics.fillRect(240, 0, 240, 720);
-        graphics.fillStyle(0xccffcc, 1);
-        graphics.fillRect(480, 0, 240, 720);
-        graphics.fillStyle(0xffffcc, 1);
-        graphics.fillRect(720, 0, 240, 720);
-      
-
-        graphics.fillStyle(0x000aaa, 1);
-        graphics.fillRect(1184, 32, 64, 64);
-          */
     
         /////////////////////////////////////
 
@@ -132,9 +77,6 @@ export class Lobby extends Phaser.Scene {
         //Ajout du tchat
         this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url);
         
-
-        this.switch_class(0);
- 
     }
 
 
@@ -156,8 +98,10 @@ export class Lobby extends Phaser.Scene {
 
     //Quitter le jeu
     quit () {
-        //TODO QUITTER
         console.log(this.pseudo + " : Je pars");
+
+        //TODO Envoyer un message de partie quitté
+        this.scene.start("Start", {pseudo : this.pseudo});
     }
 
     //Lancer le jeu
@@ -167,9 +111,50 @@ export class Lobby extends Phaser.Scene {
     }
 
     //Parametre
-    parameter () {
-        //TODO START
+    async parameter () {
+        
         console.log (this.pseudo + " : Parametre !")
+        
+         this.scene.launch('Parametre',
+                {
+                    haut : "",
+                    bas : "",
+                    droite : "",
+                    gauche : "",
+                    attaquer : "",
+                    interagir : "",
+                    prendre : "",
+                    boutique : "",
+                    recueil : "",
+                    chat : "",
+                    previousScene : this
+                }
+                )
+        
+        const response = await fetch(this.serveur_url + "/control?" + "pseudo=" + this.pseudo);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                    //Start le lobby avec le code dans data et le nombre de joueur a 1
+                this.scene.launch('Parametre',
+                {
+                    haut : data.haut,
+                    bas : data.bas,
+                    droite : data.droite,
+                    gauche : data.gauche,
+                    attaquer : data.attaquer,
+                    interagir : data.interagir,
+                    prendre : data.prendre,
+                    boutique : data.boutique,
+                    recueil : data.recueil,
+                    chat : data.chat,
+                    previousScene : this
+                }
+                )
+            } else {
+                console.log("Erreur au chargement des paramètres");
+            }
     }
 
     update() {

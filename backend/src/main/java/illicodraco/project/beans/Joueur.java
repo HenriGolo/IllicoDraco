@@ -1,5 +1,6 @@
 package illicodraco.project.beans;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -10,20 +11,23 @@ public class Joueur {
 
   // attributs
   @Id
-  // private int id;             // clef primaire dans la BD
   private String pseudo;      // pseudonyme du joueur (clef primaire dans la BD)
 
-  @Transient
-  private Avatar avatar;      // Avatar du joueur
+  //@Transient
+  //private Avatar avatar;      // Avatar du joueur
 
   @OneToOne
   private Controles controles;      // controles du joueur
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   private Collection<Monstre> bestiaire;   // bestiaire du joueur
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   private Collection<Recette> livreRecettes;   // livre de recettes du joueur
+
+  @ManyToMany(mappedBy = "joueurs", fetch = FetchType.EAGER)
+  @JsonBackReference
+  private Collection<Parametres> parties;
 
   // constructeur
   public Joueur() {
@@ -51,9 +55,9 @@ public class Joueur {
     return controles;
   }
 
-  public Avatar getAvatar() {
+  /*public Avatar getAvatar() {
     return avatar;
-  }
+  }*/
 
 
   // setters
@@ -77,8 +81,16 @@ public class Joueur {
     this.controles = controles;
   }
 
-  public void setAvatar(Avatar avatar) {
-    this.avatar = avatar;
+  public Collection<Parametres> getParties() {
+    return parties;
   }
+
+  public void setParties(Collection<Parametres> parties) {
+    this.parties = parties;
+  }
+
+  /*public void setAvatar(Avatar avatar) {
+    this.avatar = avatar;
+  }*/
 
 }

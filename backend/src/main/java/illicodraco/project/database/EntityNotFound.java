@@ -1,7 +1,16 @@
 package illicodraco.project.database;
 
-public class EntityNotFound extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class EntityNotFound extends WebRenderedException {
+
   public EntityNotFound(String message) {
     super(message);
   }
+
+  @Override
+  public HttpStatus getStatus() {
+    return HttpStatus.NOT_FOUND;
+  }
+
 }
