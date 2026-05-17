@@ -116,7 +116,6 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    this.player = this.physics.add.sprite(this.middleX, this.middleY, 'j2_archer')
     this.playerCur = new Player(this, this.middleX+16, this.middleY, 1, 'mage')
 
     this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)

@@ -20,6 +20,7 @@ export class Lobby extends Phaser.Scene {
     this.joueur_courant = data.joueur_courant
     this.pseudo = data.pseudo
     this.code = data.code
+    this.nb_joueur = 0
 
     console.log('server_url : ' + this.serveur_url +
       '\npseudo : ' + this.pseudo +
@@ -85,20 +86,86 @@ export class Lobby extends Phaser.Scene {
     //Ajout du tchat
     this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url)
 
+
+    //WebSocket pour la gestion des interactions du lobby
+    const url = new URL(`?/${this.pseudo}`, this.serveur_url)
+    this.ws = new WebSocket(url);
+    console.log(this.ws)
+
+    this.ws.onmessage = (event) => this.on_message(event)
+    this.ws.onerror = () => console.log('Erreur dans le lobby')
+
+    //TEST
+    this.disconnect_player(2)
+    this.connect_player(2)
+    this.connect_player(3)  
+    this.switch_class(3, "pretre")
+
   }
 
-  //Permet d'afficher le joueur numéro num (num entre 1 et 4)
+  //Gestion des messages de la webSocket
+  on_message(event) {
+    const message = JSON.parse(event.data)
+
+    switch (message.type) {
+      case "player_disconnect" : {
+        this.disconnect_player(message.num) //num = 1,2,3 ou 4
+        break;
+      }
+      case "player_join" : {
+        this.connect_player(this.nb_joueur)
+        break;
+      }
+      case "player_switch_class" : {
+        this.switch_class((message.num-1), message.classe) //num = 1,2,3 ou 4, classe = 'mage', 'guerrier'...
+        break;
+      }
+      default : {
+        console.log("Requête inconnue")
+      }
+
+    }
+
+  }
+
+  //Permet d'afficher le joueur numéro num (num entre 0 et 3)
   connect_player (num) {
+    this.nb_joueur += 1
     let x = 120 + 240 * num
-    this.joueurs.push(this.add.sprite(x, 360, ('j' + (num + 1) + '_' + joueur_classe[0])).setScale(zoom, zoom))
+    let joueur = this.add.sprite(x, 360, ('j' + (num + 1) + '_' + joueur_classe[0])).setScale(zoom, zoom)
+    this.joueurs[num] = joueur
     this.joueurs[num].setState(0)
     this.joueurs[num].setName('j' + (num + 1))
   }
 
-  //Changer l'avatar d'un joueur pour le prochain
-  switch_class (num) {
+  //Deconnecte le player num et met l'affichage a jour (décale les joueurs en conséquence)
+  //num entre 1 et 4
+  disconnect_player(num) {
+    
+    if (num < this.joueur_courant) {
+ 
+      this.joueurs[this.joueur_courant - 1].setActive(false)
+
+      this.joueur_courant -= 1
+      
+      this.joueurs[this.joueur_courant - 1].setInteractive()
+      this.joueurs[this.joueur_courant - 1].on('pointerdown', function (pointer) {
+        this.setState((this.state + 1) % 4)
+        this.setTexture(this.name + '_' + joueur_classe[this.state])
+
+      })
+    }
+
+    this.nb_joueur -= 1
+    this.joueurs[this.nb_joueur].destroy()
+
+  }
+
+  //Changer l'avatar d'un joueur 
+  //num entre 0 et 3
+  switch_class (num, classe) {
     let o = this.joueurs[num]
-    o.setState((o.state + 1) % 4)
+    o.setState(joueur_classe.findIndex((element) => element === classe ))
     o.setTexture(o.name + '_' + joueur_classe[o.state])
   }
 
