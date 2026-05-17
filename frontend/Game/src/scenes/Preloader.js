@@ -6,25 +6,54 @@ export class Preloader extends Phaser.Scene {
   preload () {
 
     //Avatars
-    this.load.image('j1_pretre', 'assets/blue_pretre_idle.png')
-    this.load.image('j1_guerrier', 'assets/blue_guerrier_idle.png')
-    this.load.image('j1_mage', 'assets/blue_mage_idle.png')
-    this.load.image('j1_archer', 'assets/blue_archer_idle.png')
+    //jx_classe_anim
+    let avatars = ["guerrier", "mage", "archer", "pretre"] 
+    for (let i = 0; i < 4; i++){ //Num Classe
+      for (let j = 1; j <= 4; j++){ //Num Joueur
+        
+        let name = 'j' + j + "_" + avatars[i]
+        this.load.spritesheet(name, 'assets/players/'+ avatars[i] +'_'+ j +'.png', {
+          frameWidth: 16,
+          frameHeight: 16,
+        })
 
-    this.load.image('j2_pretre', 'assets/red_pretre_idle.png')
-    this.load.image('j2_guerrier', 'assets/red_guerrier_idle.png')
-    this.load.image('j2_mage', 'assets/red_mage_idle.png')
-    this.load.image('j2_archer', 'assets/red_archer_idle.png')
+        this.anims.create({
+          key: name+'_left',
+          frames: this.anims.generateFrameNumbers(name, { start: 3, end: 4 }),
+          frameRate: 10,
+          repeat: -1
+        })
 
-    this.load.image('j3_pretre', 'assets/green_pretre_idle.png')
-    this.load.image('j3_guerrier', 'assets/green_guerrier_idle.png')
-    this.load.image('j3_mage', 'assets/green_mage_idle.png')
-    this.load.image('j3_archer', 'assets/green_archer_idle.png')
+        this.anims.create({
+          key: name+'_right',
+          frames: this.anims.generateFrameNumbers(name, { start: 5, end: 6 }),
+          frameRate: 10,
+          repeat: -1
+        })
 
-    this.load.image('j4_pretre', 'assets/yellow_pretre_idle.png')
-    this.load.image('j4_guerrier', 'assets/yellow_guerrier_idle.png')
-    this.load.image('j4_mage', 'assets/yellow_mage_idle.png')
-    this.load.image('j4_archer', 'assets/yellow_archer_idle.png')
+        this.anims.create({
+          key: name+'_up',
+          frames: this.anims.generateFrameNumbers(name, { start: 1, end: 2 }),
+          frameRate: 10,
+          repeat: -1
+        })
+
+        this.anims.create({
+            key: name + '_down',
+            frames: this.anims.generateFrameNumbers(name, { start: 7, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: name+'_idle',
+            frames: [ { key: name, frame:  0} ],
+            frameRate: 10,
+            
+        })
+    }
+  } 
+ 
 
     //Bouton partagé
     this.load.image('bt_retour', 'assets/button/retourButton.png')
@@ -88,11 +117,11 @@ export class Preloader extends Phaser.Scene {
       frameHeight: 32,
     })
 
-    //PlayerTest
+    /*//PlayerTest
     this.load.spritesheet('player', 'assets/players/archer_3.png', {
       frameWidth: 16,
       frameHeight: 16,
-    })
+    })*/
 
     this.load.image('logo', 'assets/divers/logo.png')
 
@@ -102,8 +131,8 @@ export class Preloader extends Phaser.Scene {
     //this.scene.start('Game');
     //this.scene.start('GameUI');
 
-    this.scene.start('Start', { pseudo: '' })
-    /*
+    //this.scene.start('Start', { pseudo: '' })
+    
     this.scene.start("Lobby",
         {
             joueur_courant : 1,
@@ -111,7 +140,7 @@ export class Preloader extends Phaser.Scene {
             pseudo : "Pseudo",
             serveur_url : "ws://172.22.232.58:8080/IllicoDraco/"
         }
-    );*/
+    );
 
     /*
     this.scene.start('Boutique', {
