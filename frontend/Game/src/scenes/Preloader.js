@@ -87,6 +87,15 @@ export class Preloader extends Phaser.Scene {
 
     this.load.image('logo', 'assets/divers/logo.png')
 
+    //charger les ingrédients
+    let ingredients = ["beurre", "carotte", "carotte_coupee", "cut_navet", "eau", "farine", "gigot_dragon",
+    "killer_chicken_leg", "lait", "lampe_genie", "levure", "monster_eye", "nugget", "riz",
+    "salade", "saucisse", "sel_poivre", "slime_piece"]
+
+    for (let i = 0; i < ingredients.length; i++) {
+      this.load.image(ingredients[i], 'assets/ingredients/'+ ingredients[i] +'.png')
+    }
+
   }
 
 
@@ -142,11 +151,11 @@ export class Preloader extends Phaser.Scene {
 
     this.createAnims();
 
-    //this.scene.start('Game');
-    //this.scene.start('GameUI');
+    this.scene.start('Game');
+    this.scene.start('GameUI');
 
     //this.scene.start('Start', { pseudo: '' })
-    
+    /*
     this.scene.start("Lobby",
         {
             joueur_courant : 3,
@@ -155,7 +164,7 @@ export class Preloader extends Phaser.Scene {
             serveur_url : "ws://172.22.232.58:8080/IllicoDraco/",
             start_class : ["mage", "archer", "guerrier"]
         }
-    );
+    );*/
 
     /*
     this.scene.start('Boutique', {
