@@ -118,7 +118,7 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    this.player = this.physics.add.sprite(this.middleX, this.middleY, 'perso')
+    this.player = this.physics.add.sprite(this.middleX, this.middleY, 'j2_archer')
 
     this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
     this.cameras.main.startFollow(this.player, true)
@@ -141,75 +141,14 @@ export class Game extends Phaser.Scene {
 
     this.player.body.setSize(16, 16, false)
 
-    this.createAnims()
 
     this.createInteractiveObjects()
 
     //////////////////////////////////////////////////////////////////////UI
-    /*
-    this.ui = this.add.layer();
-
-    this.graphics = this.add.graphics();
-
-    //Barre d'informations
-    this.graphics.lineStyle(4, 0xc1c1c1, 1.0);
-    this.graphics.fillStyle(0x6b4b34, 1);
-    this.graphics.fillRect(0, 0, 1280, 50);
-    this.graphics.strokeRect(2, 2, 1276, 48);
-
-    this.infosText = this.add.text(0, 16, 'Temps : XX | Argent : XX', { fontSize: '24px', fill: '#ffffff' })
-    .setFixedSize(1280, 32)
-    .setAlign('center');
-
-    //Bouton Boutique / Receuil
-    this.add.sprite(10 + (24*zoom)/2, 60 + (24*zoom)/2, 'bt_boutique').setScale(zoom, zoom)
-        .setInteractive()
-        .on('pointerdown', () => this.open_boutique());
-
-    this.add.sprite(10 + (24*zoom)/2, 70 + (24*zoom)/2*3, 'bt_receuil').setScale(zoom, zoom)
-        .setInteractive()
-        .on('pointerdown', () => this.open_receuil());
-
-    //Bouton Parametre
-    this.add.sprite(1270 - (24*zoom)/2, 60 + (24*zoom)/2, 'bt_parametre').setScale(zoom, zoom)
-        .setInteractive()
-        .on('pointerdown', () => this.open_parameter());
-
-    //Ajout du tchat
-    this.tchat = new Tchat(this, this.pseudo, 960, 158, this.serveur_url);
-    this.tchat.switch_visibility();
-
-    //Initialiser les touches du jeu
-    this.input.keyboard.on('keyup', (event) => this.handle_key(event));
-    */
+   
 
   }
 
-  open_boutique () {
-    this.tchat.add_text_to_tchat('boutique')
-    //TODO
-  }
-
-  open_receuil () {
-    this.tchat.add_text_to_tchat('receuil')
-    //TODO
-  }
-
-  open_parameter () {
-    this.tchat.add_text_to_tchat('parameter')
-    //TODO
-  }
-
-  handle_key (event) {
-
-    switch (event.key) {
-      case 't' : {
-        this.tchat.switch_visibility()
-        break
-      }
-    }
-
-  }
 
   update () {
 
@@ -217,23 +156,23 @@ export class Game extends Phaser.Scene {
 
     if (cursors.left.isDown) {
       this.player.setVelocityX(-100)
-      this.player.anims.play('left', true)
+      this.player.anims.play('j2_archer_left', true)
 
     } else if (cursors.right.isDown) {
       this.player.setVelocityX(100)
-      this.player.anims.play('right', true)
+      this.player.anims.play('j2_archer_right', true)
 
     } else if (cursors.up.isDown) {
       this.player.setVelocityY(-100)
-      this.player.anims.play('up', true)
+      this.player.anims.play('j2_archer_down', true)
 
     } else if (cursors.down.isDown) {
       this.player.setVelocityY(100)
-      this.player.anims.play('down', true)
+      this.player.anims.play('j2_archer_up', true)
 
     } else {
       this.player.setVelocity(0)
-      this.player.anims.play('idle', true)
+      this.player.anims.play('j2_archer_idle', true)
     }
 
     if (this.interactText) {
@@ -269,43 +208,6 @@ export class Game extends Phaser.Scene {
         }
       }
     }
-
-  }
-
-  createAnims () {
-
-    this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('player', { start: 3, end: 4 }),
-      frameRate: 10,
-      repeat: -1
-    })
-    this.anims.create({
-      key: 'right',
-      frames: this.anims.generateFrameNumbers('player', { start: 5, end: 6 }),
-      frameRate: 10,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'up',
-      frames: this.anims.generateFrameNumbers('player', { start: 7, end: 8 }),
-      frameRate: 10,
-      repeat: -1
-    })
-    this.anims.create({
-      key: 'down',
-      frames: this.anims.generateFrameNumbers('player', { start: 1, end: 2 }),
-      frameRate: 10,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'idle',
-      frames: [{ key: 'player', frame: 0 }],
-      frameRate: 10,
-      repeat: -1
-    })
 
   }
 
