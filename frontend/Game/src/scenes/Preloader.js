@@ -152,7 +152,8 @@ export class Preloader extends Phaser.Scene {
             joueur_courant : 3,
             code : 1234,
             pseudo : "Pseudo",
-            serveur_url : "ws://172.22.232.58:8080/IllicoDraco/"
+            serveur_url : "ws://172.22.232.58:8080/IllicoDraco/",
+            start_class : ["mage", "archer", "guerrier"]
         }
     );
 

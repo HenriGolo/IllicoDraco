@@ -22,6 +22,8 @@ export class Lobby extends Phaser.Scene {
     this.code = data.code
     this.nb_joueur = 0
 
+    this.start_class = data.start_class
+
     console.log('server_url : ' + this.serveur_url +
       '\npseudo : ' + this.pseudo +
       '\ncode : ' + this.code +
@@ -57,15 +59,12 @@ export class Lobby extends Phaser.Scene {
     this.joueurs = []
     for (var i = 0; i < this.joueur_courant; i++) {
       this.connect_player(i)
+      this.switch_class(i, this.start_class[i])
     }
 
     //Permettre au joueur de changer son perso
     this.joueurs[this.joueur_courant - 1].setInteractive()
-    this.joueurs[this.joueur_courant - 1].on('pointerdown', function (pointer) {
-      this.setState((this.state + 1) % 4)
-      this.setTexture(this.name + '_' + joueur_classe[this.state])
-
-    })
+    this.joueurs[this.joueur_courant - 1].on('pointerdown', () => this.switch_class_cur_player())
 
     //Créer le bouton seulement si c'est le joueur 1 (lancer partie)
     if (this.joueur_courant == 1) {
@@ -88,7 +87,8 @@ export class Lobby extends Phaser.Scene {
 
 
     //WebSocket pour la gestion des interactions du lobby
-    const url = new URL(`?/${this.pseudo}`, this.serveur_url)
+    let ws_url = serveur_url.replace(/.*:\/\//, 'ws://')
+    const url = new URL(`?/${this.pseudo}`, ws_url)
     this.ws = new WebSocket(url);
     console.log(this.ws)
 
@@ -96,10 +96,6 @@ export class Lobby extends Phaser.Scene {
     this.ws.onerror = () => console.log('Erreur dans le lobby')
 
     //TEST
-    this.disconnect_player(2)
-    this.connect_player(2)
-    this.connect_player(3)  
-    this.switch_class(3, "pretre")
 
   }
 
@@ -142,22 +138,40 @@ export class Lobby extends Phaser.Scene {
   //num entre 1 et 4
   disconnect_player(num) {
     
+    for (let i = num; i < this.nb_joueur; i++) {
+      this.switch_class((i-1), joueur_classe[this.joueurs[i].state])
+    }
+
     if (num < this.joueur_courant) {
  
-      this.joueurs[this.joueur_courant - 1].setActive(false)
+      console.log(this.joueur_courant);
+      this.joueurs[this.joueur_courant - 1].disableInteractive()
 
       this.joueur_courant -= 1
       
       this.joueurs[this.joueur_courant - 1].setInteractive()
-      this.joueurs[this.joueur_courant - 1].on('pointerdown', function (pointer) {
-        this.setState((this.state + 1) % 4)
-        this.setTexture(this.name + '_' + joueur_classe[this.state])
-
-      })
+      this.joueurs[this.joueur_courant - 1].on('pointerdown', () => this.switch_class_cur_player())
     }
 
     this.nb_joueur -= 1
     this.joueurs[this.nb_joueur].destroy()
+
+  }
+
+  async switch_class_cur_player() {
+      let o = this.joueurs[this.joueur_courant - 1]
+      o.setState((o.state + 1) % 4)
+      o.setTexture(o.name + '_' + joueur_classe[o.state])
+
+      const url = new URL('switch_class', this.serveur_url)
+      url.searchParams.set('codePartie', this.code)
+      url.searchParams.set('numJoueur', this.joueur_courant)
+      url.searchParams.set('newClass', joueur_classe[o.state])
+      const response = await fetch(url)
+
+      if (!response.ok) {
+        console.log("Il y a eu une erreur en changeant de classe") 
+      }
 
   }
 
@@ -170,10 +184,20 @@ export class Lobby extends Phaser.Scene {
   }
 
   //Quitter le jeu
-  quit () {
+  async quit () {
     console.log(this.pseudo + ' : Je pars')
 
-    //TODO Envoyer un message de partie quitté
+    //Signaler au serveur qu'on est partie
+    const url = new URL('quit_lobby', this.serveur_url)
+    url.searchParams.set('codePartie', this.code)
+    url.searchParams.set('numJoueur', this.joueur_courant)
+    const response = await fetch(url)
+
+    if (!response.ok) {
+      console.log("Il y a eu une erreur en quittant le lobby") 
+    }
+
+    this.ws.close()
     this.tchat.quitChat()
     this.scene.start('Start', { pseudo: this.pseudo })
   }
