@@ -1,4 +1,5 @@
 import Tchat from '../gameObjects/Tchat.js'
+import Player from '../gameObjects/Player.js'
 
 const zoom = 3
 
@@ -89,9 +90,6 @@ export class Game extends Phaser.Scene {
     this.joueur_courant = joueur_courant
     this.pseudo = pseudo
 
-    this.tchat
-    this.infosText //Affichage des informations
-
   }
 
   preload () {
@@ -119,28 +117,27 @@ export class Game extends Phaser.Scene {
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
     this.player = this.physics.add.sprite(this.middleX, this.middleY, 'j2_archer')
+    this.playerCur = new Player(this, this.middleX+16, this.middleY, 1, 'mage')
 
     this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
-    this.cameras.main.startFollow(this.player, true)
+    this.cameras.main.startFollow(this.playerCur.getPlayer(), true)
     this.cameras.main.setFollowOffset(
-      -this.player.width / 2,
-      -this.player.height / 2
+      -this.playerCur.getWidth() / 2,
+      -this.playerCur.getHeight() / 2
+
+    
     )
 
     //Cacher le joueur ou monstre qui passe sous un tronc/arche
-    caches.setDepth(this.player.depth + 1)
+    caches.setDepth(this.playerCur.getDepth() + 1)
 
     // Collisions :
 
     obstacles.setCollisionByProperty({ collision: true })
-    this.physics.add.collider(this.player, obstacles)
+    this.physics.add.collider(this.playerCur.getPlayer(), obstacles)
 
     this.physics.world.setBounds(0, 0, this.width, this.height)
     this.physics.world.setBoundsCollision()
-    this.player.setCollideWorldBounds()
-
-    this.player.body.setSize(16, 16, false)
-
 
     this.createInteractiveObjects()
 
@@ -152,31 +149,10 @@ export class Game extends Phaser.Scene {
 
   update () {
 
-    const cursors = this.input.keyboard.createCursorKeys()
-
-    if (cursors.left.isDown) {
-      this.player.setVelocityX(-100)
-      this.player.anims.play('j2_archer_left', true)
-
-    } else if (cursors.right.isDown) {
-      this.player.setVelocityX(100)
-      this.player.anims.play('j2_archer_right', true)
-
-    } else if (cursors.up.isDown) {
-      this.player.setVelocityY(-100)
-      this.player.anims.play('j2_archer_down', true)
-
-    } else if (cursors.down.isDown) {
-      this.player.setVelocityY(100)
-      this.player.anims.play('j2_archer_up', true)
-
-    } else {
-      this.player.setVelocity(0)
-      this.player.anims.play('j2_archer_idle', true)
-    }
+    this.playerCur.handleKey()
 
     if (this.interactText) {
-      this.interactText.setPosition(this.player.x, this.player.y - 20)
+      this.interactText.setPosition(this.playerCur.getX(), this.playerCur.getY() - 20)
     }
 
     // this.effect = this.marmite.preFX.addGlow(0xff00ff, 10, 0).setActive(false);
@@ -196,7 +172,7 @@ export class Game extends Phaser.Scene {
       const zone = this.objetInteract.hitZone
 
       if (!Phaser.Geom.Intersects.RectangleToRectangle(
-        this.player.body,
+        this.playerCur.getPlayer().body,
         zone.body
       )) {
 
@@ -222,9 +198,9 @@ export class Game extends Phaser.Scene {
     this.hitZoneMarmite = this.add.rectangle(16 * 10, 37 * 16, 64, 64, 0x0000ff).setVisible(debug)
     this.hitZoneBar = this.add.rectangle(13 * 16 + 8, 40 * 16 + 8, 32, 16, 0x0000ff).setVisible(debug)
 
-    this.player.setAbove(this.hitZoneMarmite)
-    this.player.setAbove(this.hitZoneCoffre)
-    this.player.setAbove(this.hitZoneTable)
+    this.playerCur.getPlayer().setAbove(this.hitZoneMarmite)
+    this.playerCur.getPlayer().setAbove(this.hitZoneCoffre)
+    this.playerCur.getPlayer().setAbove(this.hitZoneTable)
 
     this.hitZoneMarmite.setInteractive()
     this.physics.world.enable(this.hitZoneMarmite)
@@ -272,21 +248,21 @@ export class Game extends Phaser.Scene {
     console.log(this.hitZoneCoffre.body.x) // must be true
     console.log(this.hitZoneMarmite.body.enable)  // must be true
 
-    this.physics.add.overlap(this.player, this.hitZoneCoffre, () => this.zoneInteract(this.coffre), null, this)
-    this.physics.add.overlap(this.player, this.hitZoneTable, () => this.zoneInteract(this.table))
-    this.physics.add.overlap(this.player, this.hitZoneMarmite, () => this.zoneInteract(this.marmite))
-    this.physics.add.overlap(this.player, this.hitZoneBar, () => this.zoneInteract(this.bar))
+    this.physics.add.overlap(this.playerCur.getPlayer(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre), null, this)
+    this.physics.add.overlap(this.playerCur.getPlayer(), this.hitZoneTable, () => this.zoneInteract(this.table))
+    this.physics.add.overlap(this.playerCur.getPlayer(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite))
+    this.physics.add.overlap(this.playerCur.getPlayer(), this.hitZoneBar, () => this.zoneInteract(this.bar))
 
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
 
     //const truc = this.marmite.preFX.addGlow(0xffffff, 100, 0, false);
 
-    this.player.setBounce(0.2)
-    this.physics.add.collider(this.marmite, this.player, null, null, this)
+    this.playerCur.getPlayer().setBounce(0.2)
+    this.physics.add.collider(this.marmite, this.playerCur.getPlayer(), null, null, this)
 
-    this.physics.add.collider(this.coffre, this.player, null, null, this)
-    this.physics.add.collider(this.bar, this.player, null, null, this)
-    this.physics.add.collider(this.table, this.player, null, null, this)
+    this.physics.add.collider(this.coffre, this.playerCur.getPlayer(), null, null, this)
+    this.physics.add.collider(this.bar, this.playerCur.getPlayer(), null, null, this)
+    this.physics.add.collider(this.table, this.playerCur.getPlayer(), null, null, this)
 
     // Préparation des interactions :
 
