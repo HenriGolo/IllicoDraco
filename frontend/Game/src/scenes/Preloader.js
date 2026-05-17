@@ -11,46 +11,13 @@ export class Preloader extends Phaser.Scene {
     for (let i = 0; i < 4; i++){ //Num Classe
       for (let j = 1; j <= 4; j++){ //Num Joueur
         
-        let name = 'j' + j + "_" + avatars[i]
+        let name = 'j' + j + '_' + avatars[i]
+
         this.load.spritesheet(name, 'assets/players/'+ avatars[i] +'_'+ j +'.png', {
           frameWidth: 16,
           frameHeight: 16,
         })
 
-        this.anims.create({
-          key: name+'_left',
-          frames: this.anims.generateFrameNumbers(name, { start: 3, end: 4 }),
-          frameRate: 10,
-          repeat: -1
-        })
-
-        this.anims.create({
-          key: name+'_right',
-          frames: this.anims.generateFrameNumbers(name, { start: 5, end: 6 }),
-          frameRate: 10,
-          repeat: -1
-        })
-
-        this.anims.create({
-          key: name+'_up',
-          frames: this.anims.generateFrameNumbers(name, { start: 1, end: 2 }),
-          frameRate: 10,
-          repeat: -1
-        })
-
-        this.anims.create({
-            key: name + '_down',
-            frames: this.anims.generateFrameNumbers(name, { start: 7, end: 8 }),
-            frameRate: 10,
-            repeat: -1
-        })
-
-        this.anims.create({
-            key: name+'_idle',
-            frames: [ { key: name, frame:  0} ],
-            frameRate: 10,
-            
-        })
     }
   } 
  
@@ -117,22 +84,69 @@ export class Preloader extends Phaser.Scene {
       frameHeight: 32,
     })
 
-    /*//PlayerTest
-    this.load.spritesheet('player', 'assets/players/archer_3.png', {
-      frameWidth: 16,
-      frameHeight: 16,
-    })*/
 
     this.load.image('logo', 'assets/divers/logo.png')
 
   }
 
+
+  createAnims(){
+    let avatars = ["guerrier", "mage", "archer", "pretre"] 
+    for (let i = 0; i < 4; i++){ //Num Classe
+      for (let j = 1; j <= 4; j++){ //Num Joueur
+        
+        let name = 'j' + j + '_' + avatars[i]
+
+        this.anims.create({
+          key: name+'_left',
+          frames: this.anims.generateFrameNumbers(name, { start: 3, end: 4 }),
+          frameRate: 10,
+          repeat: -1
+        })
+
+        this.anims.create({
+          key: name+'_right',
+          frames: this.anims.generateFrameNumbers(name, { start: 5, end: 6 }),
+          frameRate: 10,
+          repeat: -1
+        })
+
+        this.anims.create({
+          key: name+'_up',
+          frames: this.anims.generateFrameNumbers(name, { start: 1, end: 2 }),
+          frameRate: 10,
+          repeat: -1
+        })
+        
+        this.anims.create({
+            key: name + '_down',
+            frames: this.anims.generateFrameNumbers(name, { start: 7, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: name+'_idle',
+            frames: [ { key: name, frame:  0} ],
+            frameRate: 10,
+            repeat: -1
+            
+        })
+        
+    }
+  } 
+
+  }   
+
   create () {
-    //this.scene.start('Game');
+
+    this.createAnims();
+
+    this.scene.start('Game');
     //this.scene.start('GameUI');
 
     //this.scene.start('Start', { pseudo: '' })
-    
+    /*
     this.scene.start("Lobby",
         {
             joueur_courant : 1,
@@ -140,7 +154,7 @@ export class Preloader extends Phaser.Scene {
             pseudo : "Pseudo",
             serveur_url : "ws://172.22.232.58:8080/IllicoDraco/"
         }
-    );
+    );*/
 
     /*
     this.scene.start('Boutique', {
