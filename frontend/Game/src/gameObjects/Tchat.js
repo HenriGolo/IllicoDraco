@@ -28,7 +28,7 @@ export default class Tchat {
 
     //this.ws = new WebSocket(serveur_url);
     const url = new URL(`chat/${pseudo}`, this.serveur_url)
-    this.ws = new WebSocket(url);
+    this.ws = new WebSocket(url)
     console.log(this.ws)
 
     this.ws.onmessage = (event) => {

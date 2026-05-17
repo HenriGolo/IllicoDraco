@@ -117,7 +117,7 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    this.playerCur = new Player(this, this.middleX+16, this.middleY, 1, 'mage')
+    this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage')
 
     this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
     this.cameras.main.startFollow(this.playerCur.getPlayer(), true)
@@ -125,7 +125,6 @@ export class Game extends Phaser.Scene {
       -this.playerCur.getWidth() / 2,
       -this.playerCur.getHeight() / 2
     )
-
 
     //Cacher le joueur ou monstre qui passe sous un tronc/arche
     caches.setDepth(this.playerCur.getDepth() + 1)
@@ -141,15 +140,13 @@ export class Game extends Phaser.Scene {
     this.createInteractiveObjects()
 
     this.ingredientsContainer = new IngredientsContainer(this, this.playerCur)
-    this.ingredientsContainer.add_ingredient(this.middleX+32, this.middleY, 'slime_piece')
-    this.ingredientsContainer.add_ingredient(this.middleX+64, this.middleY, 'lait')
+    this.ingredientsContainer.add_ingredient(this.middleX + 32, this.middleY, 'slime_piece')
+    this.ingredientsContainer.add_ingredient(this.middleX + 64, this.middleY, 'lait')
 
     console.log(this.ingredientsContainer.get_overlap_object())
     //////////////////////////////////////////////////////////////////////UI
-   
 
   }
-
 
   update () {
 
@@ -299,8 +296,8 @@ export class Game extends Phaser.Scene {
 
   }
 
-  getIngredientsContainer() {
-    return this.ingredientsContainer;
+  getIngredientsContainer () {
+    return this.ingredientsContainer
   }
 
 }

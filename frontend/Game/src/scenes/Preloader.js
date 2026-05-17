@@ -7,20 +7,19 @@ export class Preloader extends Phaser.Scene {
 
     //Avatars
     //jx_classe_anim
-    let avatars = ["guerrier", "mage", "archer", "pretre"] 
-    for (let i = 0; i < 4; i++){ //Num Classe
-      for (let j = 1; j <= 4; j++){ //Num Joueur
-        
+    let avatars = ['guerrier', 'mage', 'archer', 'pretre']
+    for (let i = 0; i < 4; i++) { //Num Classe
+      for (let j = 1; j <= 4; j++) { //Num Joueur
+
         let name = 'j' + j + '_' + avatars[i]
 
-        this.load.spritesheet(name, 'assets/players/'+ avatars[i] +'_'+ j +'.png', {
+        this.load.spritesheet(name, 'assets/players/' + avatars[i] + '_' + j + '.png', {
           frameWidth: 16,
           frameHeight: 16,
         })
 
+      }
     }
-  } 
- 
 
     //Bouton partagé
     this.load.image('bt_retour', 'assets/button/retourButton.png')
@@ -84,75 +83,73 @@ export class Preloader extends Phaser.Scene {
       frameHeight: 32,
     })
 
-
     this.load.image('logo', 'assets/divers/logo.png')
 
     //charger les ingrédients
-    let ingredients = ["beurre", "carotte", "carotte_coupee", "cut_navet", "eau", "farine", "gigot_dragon",
-    "killer_chicken_leg", "lait", "lampe_genie", "levure", "monster_eye", "nugget", "riz",
-    "salade", "saucisse", "sel_poivre", "slime_piece"]
+    let ingredients = ['beurre', 'carotte', 'carotte_coupee', 'cut_navet', 'eau', 'farine', 'gigot_dragon',
+      'killer_chicken_leg', 'lait', 'lampe_genie', 'levure', 'monster_eye', 'nugget', 'riz',
+      'salade', 'saucisse', 'sel_poivre', 'slime_piece']
 
     for (let i = 0; i < ingredients.length; i++) {
-      this.load.image(ingredients[i], 'assets/ingredients/'+ ingredients[i] +'.png')
+      this.load.image(ingredients[i], 'assets/ingredients/' + ingredients[i] + '.png')
     }
 
   }
 
+  createAnims () {
+    let avatars = ['guerrier', 'mage', 'archer', 'pretre']
+    for (let i = 0; i < 4; i++) { //Num Classe
+      for (let j = 1; j <= 4; j++) { //Num Joueur
 
-  createAnims(){
-    let avatars = ["guerrier", "mage", "archer", "pretre"] 
-    for (let i = 0; i < 4; i++){ //Num Classe
-      for (let j = 1; j <= 4; j++){ //Num Joueur
-        
         let name = 'j' + j + '_' + avatars[i]
 
         this.anims.create({
-          key: name+'_left',
+          key: name + '_left',
           frames: this.anims.generateFrameNumbers(name, { start: 3, end: 4 }),
           frameRate: 10,
           repeat: -1
         })
 
         this.anims.create({
-          key: name+'_right',
+          key: name + '_right',
           frames: this.anims.generateFrameNumbers(name, { start: 5, end: 6 }),
           frameRate: 10,
           repeat: -1
         })
 
         this.anims.create({
-          key: name+'_up',
+          key: name + '_up',
           frames: this.anims.generateFrameNumbers(name, { start: 1, end: 2 }),
           frameRate: 10,
           repeat: -1
         })
-        
+
         this.anims.create({
-            key: name + '_down',
-            frames: this.anims.generateFrameNumbers(name, { start: 7, end: 8 }),
-            frameRate: 10,
-            repeat: -1
+          key: name + '_down',
+          frames: this.anims.generateFrameNumbers(name, { start: 7, end: 8 }),
+          frameRate: 10,
+          repeat: -1
         })
 
         this.anims.create({
-            key: name+'_idle',
-            frames: [ { key: name, frame:  0} ],
-            frameRate: 10,
-            repeat: -1
-            
+          key: name + '_idle',
+          frames: [{ key: name, frame: 0 }],
+          frameRate: 10,
+          repeat: -1
+
         })
-        
+
+      }
     }
-  } 
 
-  }   
+  }
 
   create () {
 
-    this.createAnims();
+    this.createAnims()
 
-    this.scene.start('Game');
-    this.scene.start('GameUI');
+    this.scene.start('Game')
+    this.scene.start('GameUI')
 
     //this.scene.start('Start', { pseudo: '' })
     /*

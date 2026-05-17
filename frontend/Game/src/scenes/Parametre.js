@@ -121,11 +121,11 @@ export class Parametre extends Phaser.Scene {
         accessBoutique: this.keys[8],
         bestiaireOuLivreRecette: this.keys[7],
         chat: this.keys[9],
-        id : this.id
+        id: this.id
       })
     })
 
-    console.log(response) 
+    console.log(response)
 
     this.scene.resume(this.previousScene)
     this.scene.stop(this)

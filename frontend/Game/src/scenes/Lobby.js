@@ -87,8 +87,8 @@ export class Lobby extends Phaser.Scene {
 
 
     //WebSocket pour la gestion des interactions du lobby
-    let ws_url = serveur_url.replace(/.*:\/\//, 'ws://')
-    const url = new URL(`?/${this.pseudo}`, ws_url)
+    let ws_url = this.serveur_url.replace(/.*:\/\//, 'ws://')
+    const url = new URL(`game/${this.code}/${this.pseudo}`, ws_url)
     this.ws = new WebSocket(url);
     console.log(this.ws)
 
