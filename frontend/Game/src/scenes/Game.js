@@ -1,5 +1,6 @@
 import Tchat from '../gameObjects/Tchat.js'
 import Player from '../gameObjects/Player.js'
+import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
 
 const zoom = 3
 
@@ -123,9 +124,8 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setFollowOffset(
       -this.playerCur.getWidth() / 2,
       -this.playerCur.getHeight() / 2
-
-    
     )
+
 
     //Cacher le joueur ou monstre qui passe sous un tronc/arche
     caches.setDepth(this.playerCur.getDepth() + 1)
@@ -140,6 +140,11 @@ export class Game extends Phaser.Scene {
 
     this.createInteractiveObjects()
 
+    this.ingredientsContainer = new IngredientsContainer(this, this.playerCur)
+    this.ingredientsContainer.add_ingredient(this.middleX+32, this.middleY, 'slime_piece')
+    this.ingredientsContainer.add_ingredient(this.middleX+64, this.middleY, 'lait')
+
+    console.log(this.ingredientsContainer.get_overlap_object())
     //////////////////////////////////////////////////////////////////////UI
    
 
@@ -292,6 +297,10 @@ export class Game extends Phaser.Scene {
       }
     }
 
+  }
+
+  getIngredientsContainer() {
+    return this.ingredientsContainer;
   }
 
 }

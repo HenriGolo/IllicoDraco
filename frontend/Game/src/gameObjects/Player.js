@@ -10,8 +10,12 @@ export default class Player {
         this.player.body.setSize(16, 16, false)
         this.player.setCollideWorldBounds()
 
-        this.cursors = this.parent_scene.input.keyboard.createCursorKeys();
+        this.carried_object = this.parent_scene.add.sprite(x, y-this.player.height, "")
+        this.carried_object.setVisible(false)
 
+        //Touche
+        this.cursors = this.parent_scene.input.keyboard.createCursorKeys();
+        this.prendreKey = this.parent_scene.input.keyboard.addKey("e")
     }
 
     //Gere les appuies touches du joueurs
@@ -33,12 +37,24 @@ export default class Player {
             this.move(0, 0)
         }
 
+        if (this.prendreKey.isDown) {
+            let ic = this.parent_scene.getIngredientsContainer();
+            let key = ic.get_overlap_object();
+            console.log(key)
+            if (key != null) {
+                this.setCarriedObject(key);
+            }
+        }
+
     }
 
     //Move and play the right animation
     move(x, y) {
         this.player.setVelocityX(x)
         this.player.setVelocityY(y)
+
+        this.carried_object.setX(this.player.x)
+        this.carried_object.setY(this.player.y-this.player.height)
 
         if (x < 0) {
             this.player.anims.play(this.name+'_left', true)
@@ -55,6 +71,24 @@ export default class Player {
         
     }
 
+    setCarriedObject(texture) {
+        if (texture === ""){
+            this.carried_object.setVisible(false)
+        } else {
+            this.carried_object.setVisible(true)
+            this.carried_object.setTexture(texture)
+        }
+            
+    }
+
+    //Retourne null si aucun objet est porté sinon retourne la texture de l'objet
+    getCarriedObject() {
+        if (this.carried_object.visible){
+            return this.carried_object.texture.key
+        }
+        return null
+        
+    }
 
     getPlayer(){
         return this.player
