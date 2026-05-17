@@ -1,4 +1,4 @@
-package illicodraco.project.chat;
+package illicodraco.project.game.chat;
 
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
