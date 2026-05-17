@@ -37,12 +37,22 @@ export default class Player {
             this.move(0, 0)
         }
 
-        if (this.prendreKey.isDown) {
+        //Prendre / Poser un objet
+        if (Phaser.Input.Keyboard.JustDown(this.prendreKey)) {
             let ic = this.parent_scene.getIngredientsContainer();
             let key = ic.get_overlap_object();
             console.log(key)
             if (key != null) {
+                if (this.objectIsCarried()) {
+                    let old = this.getCarriedObject()
+                    ic.add_ingredient(this.getX(), this.getY(), old)
+                }
+
                 this.setCarriedObject(key);
+            } else if (this.objectIsCarried()){
+                let old = this.getCarriedObject()
+                ic.add_ingredient(this.getX(), this.getY(), old)
+                this.setCarriedObject("")
             }
         }
 
@@ -72,12 +82,8 @@ export default class Player {
     }
 
     setCarriedObject(texture) {
-        if (texture === ""){
-            this.carried_object.setVisible(false)
-        } else {
-            this.carried_object.setVisible(true)
-            this.carried_object.setTexture(texture)
-        }
+        this.carried_object.setVisible(texture !== "")
+        this.carried_object.setTexture(texture)
             
     }
 
@@ -88,6 +94,11 @@ export default class Player {
         }
         return null
         
+    }
+
+    //Est ce qu'un objet est tenu
+    objectIsCarried() {
+        return this.carried_object.visible
     }
 
     getPlayer(){
