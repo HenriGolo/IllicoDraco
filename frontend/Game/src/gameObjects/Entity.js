@@ -38,7 +38,7 @@ export default class Entity {
             this.pv = 0
             this.is_dead = true
         }
-        this.lifeBar.setSize(3, 4)
+        this.lifeBar.setSize((this.pv*16)/this.max_pv, 4)
 
         
 

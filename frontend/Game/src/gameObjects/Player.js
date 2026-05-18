@@ -33,7 +33,8 @@ export default class Player extends Entity {
 
   // Gere les appuies touches du joueurs
   handleKey () {
-    const isDown = (key) => Phaser.Input.Keyboard.JustDown(this.controles[key])
+    const isDown = (key) => this.controles[key].isDown
+    const isJustDown = (key) => Phaser.Input.Keyboard.JustDown(this.controles[key])
     let dx = 0, dy = 0
     if (this.cursors.left.isDown || isDown('gauche')) dx -= 100
     if (this.cursors.right.isDown || isDown('droite')) dx += 100
@@ -42,7 +43,7 @@ export default class Player extends Entity {
     this.move(dx, dy)
 
     // Prendre / Poser un objet
-    if (isDown('prendre')) {
+    if (isJustDown('prendre')) {
       let ic = this.parent_scene.getIngredientsContainer()
       let key = ic.get_overlap_object()
       console.log(key)
@@ -57,7 +58,11 @@ export default class Player extends Entity {
         ic.add_ingredient(this.getX(), this.getY(), old)
         this.setCarriedObject('')
       }
-    }
+      //TEST NE PAS RETIRER TANT QUE LES TESTS NE SONT PAS FINI
+      this.take_damage(20)
+    } 
+
+    
 
   }
 
