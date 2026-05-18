@@ -35,7 +35,9 @@ export class QueueClient {
 
   removeClient() {
     this.clientsGroup.shiftPosition(1133, 1654, 0);
-    return this.clientsQueue.shift();
+    var c = this.clientsQueue.shift();
+    c.killAndHide();
+    return c;
     //return this.isEmpty() ? null : this.clients.shift();
   }
 
