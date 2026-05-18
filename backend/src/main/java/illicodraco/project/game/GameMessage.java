@@ -16,10 +16,9 @@ public class GameMessage {
   /// Déplacements du joueur
   private int deltaX;
   private int deltaY;
-  
-  // TODO transférer depuis Facade : /switch_class et les parties associées dans /create et /join
-  // TODO utiliser GameEndpoint
-  // TODO si possible aussi aller faire la logique dans les websocket front (sinon je m'en charge)
+  /// JSON au besoin
+  private String jsonData;
+  private String code;
 
   public boolean isSystem() {
     return system;
@@ -82,4 +81,19 @@ public class GameMessage {
     this.deltaY = deltaY;
   }
 
+  public String getJsonData() {
+    return jsonData;
+  }
+
+  public void setJsonData(String jsonData) {
+    this.jsonData = jsonData;
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
 }

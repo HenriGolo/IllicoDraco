@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Predicate;
 
@@ -19,6 +21,7 @@ public class GameEndpoint {
 
   private static final Set<GameEndpoint> ENDPOINTS = new CopyOnWriteArraySet<>();
   private static final Map<String, String> USERS = new HashMap<>();
+  private static final ConcurrentMap<String, String[]> CLASSES = new ConcurrentHashMap<>();
 
   private Session session;
   private String code;
@@ -31,13 +34,25 @@ public class GameEndpoint {
     USERS.put(session.getId(), username);
 
     List<String> joueurs = GameState.JOUEURS.getOrDefault(code, new ArrayList<>());
+    System.out.println(joueurs.getClass().getTypeName());
     if (joueurs.size() < GameState.NB_JOUEURS_MAX) {
       joueurs.add(username);
       GameState.JOUEURS.put(code, joueurs);
 
       GameMessage message = new GameMessage();
+      message.setType("join");
       message.setSystem(true);
       message.setContent(username + " arrive en renfort !");
+      System.out.println(username);
+      // Gestion des classes dans le lobby
+      int num = joueurs.size();
+      message.setCode(code);
+      message.setNum(num);
+      System.out.println("avant " + Arrays.toString(CLASSES.get(code)));
+      switch_class(num, GameState.START_CLASS);
+      message.setJsonData(getJsonDataClasses());
+      System.out.println("après " + Arrays.toString(CLASSES.get(code)));
+      message.setClasse(GameState.START_CLASS);
       broadcast(message);
     } else {
       GameMessage message = new GameMessage();
@@ -51,7 +66,9 @@ public class GameEndpoint {
   @OnMessage
   public void onMessage(Session session, GameMessage message) throws IOException, EncodeException {
     message.setNum(getPlayerNumber(USERS.get(session.getId())));
+    message.setCode(code);
     message.setSystem(false);
+    if (message.getType().equals("switch_class")) switch_class(message.getNum(), message.getClasse());
     broadcast(message, endpoint -> !USERS.get(endpoint.session.getId()).equals(session.getId()));
   }
 
@@ -61,6 +78,8 @@ public class GameEndpoint {
     GameMessage message = new GameMessage();
     message.setSystem(true);
     message.setNum(getPlayerNumber(USERS.get(session.getId())));
+    message.setType("leave");
+    message.setCode(code);
     broadcast(message);
     collapseOnLeave(USERS.get(session.getId()));
   }
@@ -92,7 +111,12 @@ public class GameEndpoint {
   }
 
   private int getPlayerNumber(String username) {
-    return (int) GameState.JOUEURS.get(code).stream().filter(username::equals).toArray()[0] + 1;
+    for (int i = 0; i < GameState.JOUEURS.get(code).toArray().length; i++) {
+      if (GameState.JOUEURS.get(code).get(i).equals(username)) {
+        return i + 1;
+      }
+    }
+    return -1;
   }
 
   private void collapseOnLeave(String username) {
@@ -100,6 +124,20 @@ public class GameEndpoint {
         GameState.JOUEURS.get(code).stream().filter(_username ->
                 !username.equals(_username))
             .toList());
+  }
+
+  public void switch_class(int numeroJoueur, String classe) {
+    String[] classes = CLASSES.getOrDefault(code, new String[GameState.NB_JOUEURS_MAX]);
+    classes[numeroJoueur - 1] = classe;
+    CLASSES.put(code, classes);
+  }
+
+  public String[] getClasses() {
+    return CLASSES.get(code);
+  }
+
+  private String getJsonDataClasses() {
+    return Arrays.toString(Arrays.stream(getClasses()).filter(Objects::nonNull).toArray());
   }
 
 }
