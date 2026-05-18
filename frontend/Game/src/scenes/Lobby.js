@@ -33,6 +33,7 @@ export class Lobby extends Phaser.Scene {
     // Background pour l'organisation générale :
     var graphics = this.add.graphics()
 
+    
     // Bandeau Tchat
     graphics.fillStyle(0x555555, 1)
     graphics.fillRect(960, 128, 320, 464)
@@ -41,7 +42,7 @@ export class Lobby extends Phaser.Scene {
     graphics.fillStyle(0x550055, 1);
     graphics.fillRect(0,592,1280, 128);
     */
-
+/*
     //Bandeau haut
     graphics.fillStyle(0x00eeff, 1)
     graphics.fillRect(0, 0, 1280, 128)
@@ -57,7 +58,7 @@ export class Lobby extends Phaser.Scene {
 
     graphics.fillStyle(0x000aaa, 1)
     graphics.fillRect(1184, 32, 64, 64)
-
+    */
     /////////////////////////////////////
 
     // Affichage du titre et code
@@ -225,22 +226,8 @@ export class Lobby extends Phaser.Scene {
   async parameter () {
 
     console.log(this.pseudo + ' : Parametre !')
+    console.log(this.serveur_url)
 
-    this.scene.launch('Parametre',
-      {
-        haut: '',
-        bas: '',
-        droite: '',
-        gauche: '',
-        attaquer: '',
-        interagir: '',
-        prendre: '',
-        boutique: '',
-        recueil: '',
-        chat: '',
-        previousScene: this
-      }
-    )
 
     const url = new URL('controles', this.serveur_url)
     url.searchParams.set('pseudo', this.pseudo)
@@ -249,7 +236,7 @@ export class Lobby extends Phaser.Scene {
       const data = await response.json()
       console.log(data)
       // Start le lobby avec le code dans data et le nombre de joueur a 1
-      this.scene.launch('Parametre', { ...data, previousScene: this }
+      this.scene.launch('Parametre', { ...data, previousScene: this, serveur_url : this.serveur_url}
       )
     } else {
       console.log('Erreur au chargement des paramètres')

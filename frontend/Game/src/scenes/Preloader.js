@@ -1,5 +1,5 @@
 // TODO garder à jour cette URL
-const nom_pc = '172.22.232.105:8080'
+const nom_pc = 'aw.313f.fr:8080'
 export const SERVER_URL = `http://${nom_pc}/IllicoDraco/`
 
 export class Preloader extends Phaser.Scene {
@@ -165,8 +165,8 @@ export class Preloader extends Phaser.Scene {
 
     this.createAnims()
 
-    this.scene.start('Game')
-    this.scene.start('GameUI')
+    //this.scene.start('Game')
+    //this.scene.start('GameUI')
     /*
     this.scene.start('Game', {
       joueur_courant: 4,
@@ -177,7 +177,7 @@ export class Preloader extends Phaser.Scene {
     this.scene.start('GameUI')
     // */
 
-    //this.scene.start('Start', { pseudo: '' })
+    this.scene.start('Start', { pseudo: '' })
     /*
     this.scene.start("Lobby",
         {
