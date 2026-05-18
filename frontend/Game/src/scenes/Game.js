@@ -456,7 +456,7 @@ export class Game extends Phaser.Scene {
 
         const monsterSprite = this.monsters.getFirstDead(true, x, y, nom, 0, true );
 
-        const monster = new Monster(nom, monsterSprite, stats.produit, stats.vie, stats.attaque, stats.defense, stats.vitesse);
+        const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque,  stats.vitesse, monsterSprite, stats.produit);
         monster.moveTimer = this.time.addEvent({
             delay : Phaser.Math.Between(10000,20000)/stats.vitesse,
             callback : (monster) => {

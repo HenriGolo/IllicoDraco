@@ -1,13 +1,11 @@
-export default class Monster {
+import Entity from '../entities/Entity.js';
+export default class Monster extends Entity {
 
-    constructor(name, image, produit, vie = 0, attaque = 0, defense = 0, vitesse = 0) {
+    constructor(scene, name, vie = 0, defense = 0, attaque = 0, init_x, init_y, vitesse = 0, image, produit,) {
         
-        this.name = name;
+        super(scene, name, vie, defense, attaque, init_x, init_y);
         this.image = image;
         this.produit = produit;
-        this.vie = vie;
-        this.attaque = attaque;
-        this.defense = defense;
         this.vitesse = vitesse;
 
     }
