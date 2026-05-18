@@ -36,7 +36,7 @@ export class Preloader extends Phaser.Scene {
     this.load.image('male_poussin', 'assets/monsters/male_poussin.png')
     this.load.image('minotaure', 'assets/monsters/minotaure.png')
     this.load.image('navet', 'assets/monsters/navet.png')
-    this.load.image('onigiri', 'assets/monsters/onigiri.png')
+    this.load.image('onigiri', 'assets/monsters/onigiri_monster.png')
     this.load.image('slime', 'assets/monsters/slime.png')
 
     //Bouton partagé
