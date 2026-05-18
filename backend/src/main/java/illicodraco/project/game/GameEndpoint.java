@@ -68,12 +68,16 @@ public class GameEndpoint {
     message.setNum(getPlayerNumber(USERS.get(session.getId())));
     message.setCode(code);
     message.setSystem(false);
-    if (message.getType().equals("switch_class")) switch_class(message.getNum(), message.getClasse());
+    if (message.getType().equals("switch_class")) {
+      switch_class(message.getNum(), message.getClasse());
+      message.setJsonData(getJsonDataClasses());
+    }
     broadcast(message, endpoint -> !USERS.get(endpoint.session.getId()).equals(session.getId()));
   }
 
   @OnClose
   public void onClose(Session session) {
+    System.out.println("avant collapse " + GameState.JOUEURS.get(code));
     ENDPOINTS.remove(this);
     GameMessage message = new GameMessage();
     message.setSystem(true);
@@ -82,6 +86,7 @@ public class GameEndpoint {
     message.setCode(code);
     broadcast(message);
     collapseOnLeave(USERS.get(session.getId()));
+    System.out.println("après collapse " + GameState.JOUEURS.get(code));
   }
 
   @OnError
@@ -120,10 +125,28 @@ public class GameEndpoint {
   }
 
   private void collapseOnLeave(String username) {
+    List<String> usernames = GameState.JOUEURS.get(code);
+    List<Integer> indices = new ArrayList<>();
+    int _i = 0;
+    for (String _username : usernames) {
+      if (_username.equals(username)) {
+        indices.add(_i);
+      }
+      _i++;
+    }
     GameState.JOUEURS.put(code,
         GameState.JOUEURS.get(code).stream().filter(_username ->
                 !username.equals(_username))
             .toList());
+    String[] old = CLASSES.get(code);
+    String[] rebuilt = new String[CLASSES.get(code).length];
+    int pos = 0;
+    for (int i = 0; i < rebuilt.length; i++) {
+      if (!indices.contains(i)) {
+        rebuilt[pos++] = old[i];
+      }
+    }
+    CLASSES.put(code, rebuilt);
   }
 
   public void switch_class(int numeroJoueur, String classe) {
@@ -137,7 +160,11 @@ public class GameEndpoint {
   }
 
   private String getJsonDataClasses() {
-    return Arrays.toString(Arrays.stream(getClasses()).filter(Objects::nonNull).toArray());
+    return Arrays.toString(
+        Arrays.stream(getClasses())
+            .filter(Objects::nonNull)
+            .map(classe -> "\"" + classe + "\"")
+            .toArray());
   }
 
 }

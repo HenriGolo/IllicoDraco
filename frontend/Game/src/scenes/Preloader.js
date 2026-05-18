@@ -1,7 +1,3 @@
-// TODO garder à jour cette URL
-const nom_pc = 'aw.313f.fr:8080'
-export const SERVER_URL = `http://${nom_pc}/IllicoDraco/`
-
 export class Preloader extends Phaser.Scene {
   constructor () {
     super('Preloader')
@@ -184,7 +180,7 @@ export class Preloader extends Phaser.Scene {
             joueur_courant : 3,
             code : 1234,
             pseudo : "Pseudo",
-            serveur_url : "ws://172.22.232.58:8080/IllicoDraco/",
+            serveur_url : SERVER_URL,
             start_class : ["mage", "archer", "guerrier"]
         }
     );*/

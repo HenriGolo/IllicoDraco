@@ -1,5 +1,5 @@
 import ASSETS from '../assets.js'
-import { SERVER_URL } from './Preloader.js'
+import { SERVER_URL } from '../utils.js'
 
 export class Start extends Phaser.Scene {
 
@@ -248,37 +248,25 @@ export class Start extends Phaser.Scene {
         let url = new URL('join', SERVER_URL)
         url.searchParams.set('code', code)
         url.searchParams.set('pseudo', this.pseudo)
-        let response = await fetch(url)
-
+        const response = await fetch(url)
         if (response.ok) {
           const { nbJoueurs, code } = await response.json()
-          url = new URL('switch_class', SERVER_URL)
-          url.searchParams.set('code', code)
-          url.searchParams.set('num', nbJoueurs)
-          url.searchParams.set('nouvelle_classe', 'guerrier')
-          response = await fetch(url, { method: 'POST' })
-          if (response.ok) {
-            console.log(response)
-            const start_class = await response.json()
-            // Start le lobby avec le nombre de joueurs dans data
-            this.scene.start('Lobby', {
-              joueur_courant: nbJoueurs, // A VERIFIER
-              code: code,
-              pseudo: this.pseudo,
-              start_class: start_class,
-              serveur_url: SERVER_URL
-            })
-          }
-        } else {
-          inputCode.value = 'Code Invalide'
+          // Start le lobby avec le nombre de joueurs dans data
+          this.scene.start('Lobby', {
+            joueur_courant: nbJoueurs, // A VERIFIER
+            code: code,
+            pseudo: this.pseudo,
+            serveur_url: SERVER_URL
+          })
         }
-
       } else {
-        this.switchCodePopPupVisibility(false)
-        this.switchButtonMode(true)
+        inputCode.value = 'Code Invalide'
       }
-    }
 
+    } else {
+      this.switchCodePopPupVisibility(false)
+      this.switchButtonMode(true)
+    }
   }
 
   switchCodePopPupVisibility (val) {
@@ -360,7 +348,7 @@ export class Start extends Phaser.Scene {
         {
           ...data,
           previousScene: this,
-          serveur_url : SERVER_URL
+          serveur_url: SERVER_URL
         }
       )
     } else {

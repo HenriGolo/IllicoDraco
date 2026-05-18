@@ -18,6 +18,7 @@ public class GameMessage {
   private int deltaY;
   /// JSON au besoin
   private String jsonData;
+  /// code de la partie (debug)
   private String code;
 
   public boolean isSystem() {
