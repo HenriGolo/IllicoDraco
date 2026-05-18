@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
@@ -173,6 +174,10 @@ public class Facade {
       }
     }
 
+    String[] classes = new String[4];
+    classes[0] = "guerrier";
+    CLASSES.put(code, classes);
+
     Joueur joueur = login(pseudo);
 
     Partie partie = new Partie();
@@ -221,6 +226,15 @@ public class Facade {
   ) {
     String[] classes = CLASSES.getOrDefault(code, new String[4]);
     classes[numeroJoueur - 1] = classe;
+    CLASSES.put(code, classes);
+    return getClasses(code);
+  }
+
+  @GetMapping("/classes/{code}")
+  public String[] getClasses(@PathVariable String code) {
+    System.out.println("Accès aux classes du code " + code);
+    String[] classes = CLASSES.getOrDefault(code, new String[4]);
+    System.out.println(Arrays.toString(classes));
     return classes;
   }
 
