@@ -238,4 +238,19 @@ public class Facade {
     return classes;
   }
 
+  @PostMapping("/plat_random")
+  public Produit getPlatRandom(){
+    Collection<Recette> recettes = this.recetteRepo.findAll();
+    int taille = recettes.size();
+    Random r = new Random();
+    int indice = r.nextInt(taille);
+    int i = 0;
+    for (Recette rct : recettes) {
+      if (i == indice) {
+        return rct.getPlat();
+      }
+      i++;
+    } 
+  }  
+
 }
