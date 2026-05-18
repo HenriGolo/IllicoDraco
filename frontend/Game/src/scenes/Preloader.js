@@ -161,7 +161,7 @@ export class Preloader extends Phaser.Scene {
 
     this.createAnims()
 
-    //this.scene.start('Game')
+    this.scene.start('Game')
     //this.scene.start('GameUI')
     /*
     this.scene.start('Game', {
@@ -173,7 +173,7 @@ export class Preloader extends Phaser.Scene {
     this.scene.start('GameUI')
     // */
 
-    this.scene.start('Start', { pseudo: '' })
+    //this.scene.start('Start', { pseudo: '' })
     /*
     this.scene.start("Lobby",
         {
