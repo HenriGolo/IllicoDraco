@@ -126,7 +126,7 @@ export class Game extends Phaser.Scene {
     fetch(controles_url)
       .then(response => response.json())
       .then(controles => {
-        this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', controles)
+        this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 10, 3, controles)
       })
 
     this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)

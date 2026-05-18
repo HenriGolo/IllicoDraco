@@ -1,11 +1,14 @@
-export default class Player {
+import Entity from './Entity.js'
 
-  constructor (scene, x, y, num, classe, controles = {}) {
+export default class Player extends Entity {
 
-    this.parent_scene = scene // Scene du jeu
-    this.name = 'j' + num + '_' + classe // Nom du sprite : jx_classe
+  constructor (scene, x, y, num, classe, pv, def, atq, controles = {}) {
+    super(scene, 'j' + num + '_' + classe, pv, def, atq, x, y)
 
-    // Créer le sprite du joueur
+    this.parent_scene = scene //Scene du jeu
+    //this.name = 'j' + num + '_' + classe //Nom du sprite : jx_classe
+
+    //Créer le sprite du joueur
     this.player = this.parent_scene.physics.add.sprite(x, y, this.name)
     this.player.body.setSize(16, 16, false)
     this.player.setCollideWorldBounds()
@@ -77,6 +80,7 @@ export default class Player {
     } else {
       this.player.anims.play(this.name + '_idle', true)
     }
+    super.move(this.getX(), this.getY())
 
   }
 
