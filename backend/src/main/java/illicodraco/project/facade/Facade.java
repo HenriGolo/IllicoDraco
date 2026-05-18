@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @CrossOrigin(origins = "*")
 @RestController("Facade")
 public class Facade {
+
+  private static final ConcurrentMap<String, String[]> CLASSES = new ConcurrentHashMap<>();
 
   // attributs
   @Autowired
@@ -207,6 +211,17 @@ public class Facade {
     } else {
       throw new EntityNotFound("Code invalide !");
     }
+  }
+
+  @PostMapping("/switch_class")
+  public String[] switch_class(
+      @RequestParam("code") String code,
+      @RequestParam("num") int numeroJoueur,
+      @RequestParam("nouvelle_classe") String classe
+  ) {
+    String[] classes = CLASSES.getOrDefault(code, new String[4]);
+    classes[numeroJoueur - 1] = classe;
+    return classes;
   }
 
 }

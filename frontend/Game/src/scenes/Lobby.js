@@ -159,13 +159,12 @@ export class Lobby extends Phaser.Scene {
     o.setTexture(o.name + '_' + joueur_classe[o.state])
 
     const url = new URL('switch_class', this.serveur_url)
-    url.searchParams.set('codePartie', this.code)
-    url.searchParams.set('numJoueur', this.joueur_courant)
-    url.searchParams.set('newClass', joueur_classe[o.state])
-    const response = await fetch(url)
-
+    url.searchParams.set('code', this.code)
+    url.searchParams.set('num', this.joueur_courant)
+    url.searchParams.set('nouvelle_classe', joueur_classe[o.state])
+    const response = await fetch(url, { method: 'POST' })
     if (!response.ok) {
-      console.log('Il y a eu une erreur en changeant de classe')
+      console.error('Il y a eu une erreur en changeant de classe')
     }
 
   }

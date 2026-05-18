@@ -245,7 +245,7 @@ export class Start extends Phaser.Scene {
       if (inputCode.value !== '') {
         let code = inputCode.value
 
-        const url = URL('join', SERVER_URL)
+        const url = new URL('join', SERVER_URL)
         url.searchParams.set('code', code)
         url.searchParams.set('pseudo', this.pseudo)
         const response = await fetch(url)

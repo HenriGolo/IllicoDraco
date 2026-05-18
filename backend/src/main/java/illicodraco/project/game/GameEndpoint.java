@@ -62,6 +62,7 @@ public class GameEndpoint {
     message.setSystem(true);
     message.setNum(getPlayerNumber(USERS.get(session.getId())));
     broadcast(message);
+    collapseOnLeave(USERS.get(session.getId()));
   }
 
   @OnError
@@ -92,6 +93,13 @@ public class GameEndpoint {
 
   private int getPlayerNumber(String username) {
     return (int) GameState.JOUEURS.get(code).stream().filter(username::equals).toArray()[0] + 1;
+  }
+
+  private void collapseOnLeave(String username) {
+    GameState.JOUEURS.put(code,
+        GameState.JOUEURS.get(code).stream().filter(_username ->
+                !username.equals(_username))
+            .toList());
   }
 
 }

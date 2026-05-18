@@ -1,4 +1,5 @@
-const nom_pc = '172.22.224.215:8080'
+// TODO garder à jour cette URL
+const nom_pc = '172.22.232.105:8080'
 export const SERVER_URL = `http://${nom_pc}/IllicoDraco/`
 
 export class Preloader extends Phaser.Scene {
