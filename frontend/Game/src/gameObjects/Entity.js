@@ -39,9 +39,38 @@ export default class Entity {
             this.is_dead = true
         }
         this.lifeBar.setSize((this.pv*16)/this.max_pv, 4)
+    }
 
-        
+    getDef() {
+        return this.def
+    }
 
+    getAtq() {
+        return this.atq
+    }
+
+    getPV() {
+        return this.pv
+    }
+
+    getMaxPV() {
+        return this.max_pv
+    }
+
+    setDef(def) {
+        this.def = def
+    }
+
+    setAtq(atq) {
+        this.atq = atq
+    }
+
+    setPV(pv) {
+        this.pv = pv
+    }
+
+    setMaxPV(max_pv) {
+        this.max_pv = max_pv
     }
 
 }
