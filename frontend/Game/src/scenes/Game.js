@@ -1,11 +1,12 @@
 import Tchat from '../gameObjects/Tchat.js'
 import Player from '../gameObjects/Player.js'
 import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
+import { SERVER_URL } from './Preloader.js'
 
 const zoom = 3
 
 export class GameUI extends Phaser.Scene {
-  constructor (joueur_courant = 4, pseudo = 'Pseudo', serveur_url = 'http://localhost:8080/IllicoDraco/chat/') {
+  constructor (joueur_courant = 4, pseudo = 'Pseudo', serveur_url = SERVER_URL) {
     super({ key: 'GameUI' })
 
     this.serveur_url = serveur_url
@@ -84,7 +85,11 @@ export class GameUI extends Phaser.Scene {
 
 export class Game extends Phaser.Scene {
 
-  constructor (joueur_courant = 4, pseudo = 'Pseudo', serveur_url = 'ws://localhost:8080/IllicoDraco/chat/') {
+  constructor (
+    joueur_courant = 4,
+    pseudo = 'Pseudo',
+    serveur_url = SERVER_URL
+  ) {
     super('Game')
 
     this.serveur_url = serveur_url
@@ -117,7 +122,12 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage')
+    const controles_url = new URL('controles', this.serveur_url)
+    fetch(controles_url)
+      .then(response => response.json())
+      .then(controles => {
+        this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', controles)
+      })
 
     this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
     this.cameras.main.startFollow(this.playerCur.getPlayer(), true)
@@ -150,7 +160,7 @@ export class Game extends Phaser.Scene {
 
   update () {
 
-    this.playerCur.handleKey()
+    this.playerCur?.handleKey()
 
     if (this.interactText) {
       this.interactText.setPosition(this.playerCur.getX(), this.playerCur.getY() - 20)
@@ -281,7 +291,7 @@ export class Game extends Phaser.Scene {
       this.objetInteract = objet
 
       if (!this.interactText) {
-        this.interactText = this.add.text(0, 0, 'Appuyez sur E', {
+        this.interactText = this.add.text(0, 0, `Appuyez sur E`, {
           fontSize: '20px',
           color: '#ffffff'
         }).setOrigin(0.5).setScale(0.5)

@@ -1,6 +1,6 @@
 export default class Player {
 
-  constructor (scene, x, y, num, classe, parametre = null) {
+  constructor (scene, x, y, num, classe, controles = {}) {
 
     this.parent_scene = scene // Scene du jeu
     this.name = 'j' + num + '_' + classe // Nom du sprite : jx_classe
@@ -15,33 +15,31 @@ export default class Player {
 
     // Touche
     this.cursors = this.parent_scene.input.keyboard.createCursorKeys()
-    this.prendreKey = this.parent_scene.input.keyboard.addKey('e')
+    const toKey = (key) => {
+      console.log({ key })
+      return key
+    }
+    this.controles = Object.fromEntries(
+      Object.entries(controles)
+        .map(([key, value]) =>
+          key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
+        )
+    )
+    console.log({ controles })
   }
 
   // Gere les appuies touches du joueurs
   handleKey () {
-
+    const isDown = (key) => Phaser.Input.Keyboard.JustDown(this.controles[key])
     let dx = 0, dy = 0
-
-    if (this.cursors.left.isDown) {
-      dx -= 100
-
-    }
-    if (this.cursors.right.isDown) {
-      dx += 100
-
-    }
-    if (this.cursors.up.isDown) {
-      dy -= 100
-
-    }
-    if (this.cursors.down.isDown) {
-      dy += 100
-    }
+    if (this.cursors.left.isDown || isDown('gauche')) dx -= 100
+    if (this.cursors.right.isDown || isDown('droite')) dx += 100
+    if (this.cursors.up.isDown || isDown('haut')) dy -= 100
+    if (this.cursors.down.isDown || isDown('bas')) dy += 100
     this.move(dx, dy)
 
     // Prendre / Poser un objet
-    if (Phaser.Input.Keyboard.JustDown(this.prendreKey)) {
+    if (isDown('prendre')) {
       let ic = this.parent_scene.getIngredientsContainer()
       let key = ic.get_overlap_object()
       console.log(key)
@@ -50,7 +48,6 @@ export default class Player {
           let old = this.getCarriedObject()
           ic.add_ingredient(this.getX(), this.getY(), old)
         }
-
         this.setCarriedObject(key)
       } else if (this.objectIsCarried()) {
         let old = this.getCarriedObject()

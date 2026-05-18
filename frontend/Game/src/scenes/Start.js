@@ -1,7 +1,5 @@
 import ASSETS from '../assets.js'
-
-const nom_pc = 'aw.313f.fr:8080' //n'ayant pas de serveur qui tourne en permanence
-const server_address = `http://${nom_pc}/IllicoDraco/`
+import { SERVER_URL } from './Preloader.js'
 
 export class Start extends Phaser.Scene {
 
@@ -120,7 +118,7 @@ export class Start extends Phaser.Scene {
   //Envoyer le pseudo au serveur pour ajout ou connection dans la base de donnée
   async login () {
     //On envoie le pseudo au serveur
-    const url = new URL('login', server_address)
+    const url = new URL('login', SERVER_URL)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url)
     if (response.ok) return await response.json()
@@ -247,7 +245,7 @@ export class Start extends Phaser.Scene {
       if (inputCode.value !== '') {
         let code = inputCode.value
 
-        const url = URL('join', server_address)
+        const url = URL('join', SERVER_URL)
         url.searchParams.set('code', code)
         url.searchParams.set('pseudo', this.pseudo)
         const response = await fetch(url)
@@ -261,8 +259,8 @@ export class Start extends Phaser.Scene {
             joueur_courant: data.nbJoueurs, //A VERIFIER
             code: code,
             pseudo: this.pseudo,
-            serveur_url: server_address,
-            start_class: start_class
+            start_class: start_class,
+            serveur_url: SERVER_URL
           })
           //
         } else {
@@ -285,8 +283,9 @@ export class Start extends Phaser.Scene {
   async on_creer () {
     //... actions sur le serveur pour créer un lobby
     console.log('Créer cliqué')
-    const url = new URL('create', server_address)
+    const url = new URL('create', SERVER_URL)
     url.searchParams.set('pseudo', this.pseudo)
+    console.log(url)
     const response = await fetch(url)
     console.log(response)
     if (response.ok) {
@@ -297,7 +296,7 @@ export class Start extends Phaser.Scene {
         joueur_courant: 1,
         code: data.code,
         pseudo: this.pseudo,
-        serveur_url: server_address,
+        serveur_url: SERVER_URL,
         start_class : ['guerrier']
       })
     } else {
@@ -327,23 +326,23 @@ export class Start extends Phaser.Scene {
     //... ouvrir pannel options
     console.log('Options cliqué')
 
-    const url = new URL('controles', server_address)
+    const url = new URL('controles', SERVER_URL)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         id: 1,
-        haut: 'KeyW',
-        bas: 'KeyS',
-        droite: 'KeyD',
-        gauche: 'KeyQ',
+        haut: 'w',
+        bas: 's',
+        droite: 'd',
+        gauche: 'q',
         attaquer: 'Space',
-        interagir: 'KeyF',
-        prendre: 'KeyX',
-        boutique: 'KeyB',
-        recueil: 'KeyR',
-        chat: 'KeyT'
+        interagir: 'f',
+        prendre: 'e',
+        boutique: 'b',
+        recueil: 'r',
+        chat: 't'
       })
     })
 

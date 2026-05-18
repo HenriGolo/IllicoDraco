@@ -1,3 +1,6 @@
+const nom_pc = '172.22.224.215:8080'
+export const SERVER_URL = `http://${nom_pc}/IllicoDraco/`
+
 export class Preloader extends Phaser.Scene {
   constructor () {
     super('Preloader')
@@ -150,6 +153,15 @@ export class Preloader extends Phaser.Scene {
 
     //this.scene.start('Game')
     //this.scene.start('GameUI')
+    /*
+    this.scene.start('Game', {
+      joueur_courant: 4,
+      code: 1234,
+      pseudo: 'Pseudo',
+      serveur_url: SERVER_URL
+    })
+    this.scene.start('GameUI')
+    // */
 
     this.scene.start('Start', { pseudo: '' })
     /*
@@ -162,6 +174,17 @@ export class Preloader extends Phaser.Scene {
             start_class : ["mage", "archer", "guerrier"]
         }
     );*/
+    this.scene.start('Start', { pseudo: '' })
+
+    /*this.scene.start('Lobby',
+      {
+        joueur_courant: 3,
+        code: 1234,
+        pseudo: 'Pseudo',
+        serveur_url: SERVER_URL,
+        start_class: ['mage', 'archer', 'guerrier']
+      }
+    )*/
 
     /*
     this.scene.start('Boutique', {
@@ -174,16 +197,16 @@ export class Preloader extends Phaser.Scene {
 
 this.scene.start('Parametre',
     {
-        haut : "KeyZ",
-        bas : "KeyS",
-        droite : "KeyD",
-        gauche : "KeyQ",
+        haut : "z",
+        bas : "s",
+        droite : "d",
+        gauche : "q",
         attaquer : "Space",
-        interagir : "KeyF",
-        prendre : "KeyA",
-        boutique : "KeyB",
-        recueil : "KeyR",
-        chat : "KeyT"
+        interagir : "f",
+        prendre : "a",
+        boutique : "b",
+        recueil : "r",
+        chat : "t"
     }
 )*/
   }

@@ -8,7 +8,7 @@ import { Parametre } from './scenes/Parametre.js'
 
 const config = {
   type: Phaser.AUTO,
-  title: 'Overlord Rising',
+  title: 'Illico Draco',
   description: '',
   parent: 'game-container',
   width: 1280,
