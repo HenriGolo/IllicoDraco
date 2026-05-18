@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.management.RuntimeErrorException;
+
 @CrossOrigin(origins = "*")
 @RestController("Facade")
 public class Facade {
@@ -250,6 +252,16 @@ public class Facade {
         return rct.getPlat();
       }
       i++;
+    } 
+  }
+
+  @PostMapping("/coffre/{code}")
+  public Collection<Produit> getCoffre(@PathVariable String code) {
+    Optional<Partie> partie = this.partieRepo.findById(code);
+    if (partie.isPresent()) { 
+      return partie.get().getCoffre();
+    } else {
+      throw new EntityNotFound("Partie inexistante");
     } 
   }  
 
