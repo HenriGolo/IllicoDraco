@@ -6,18 +6,10 @@ export default class Monster extends Entity {
 
     super(scene, name, vie, defense, attaque, init_x, init_y)
 
-    this.name = name
     this.image = image
     this.produit = produit
-    this.vie = vie
-    this.attaque = attaque
-    this.defense = defense
     this.vitesse = vitesse
 
-  }
-
-  getName () {
-    return this.name
   }
 
   getImage () {
@@ -26,18 +18,6 @@ export default class Monster extends Entity {
 
   getProduit () {
     return this.produit
-  }
-
-  getVie () {
-    return this.vie
-  }
-
-  getAttaque () {
-    return this.attaque
-  }
-
-  getDefense () {
-    return this.defense
   }
 
   getVitesse () {

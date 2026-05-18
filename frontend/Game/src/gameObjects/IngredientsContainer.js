@@ -21,7 +21,7 @@ export default class IngredientsContainer {
 
     for (let i = 0; i < this.ingredients.length; i++) {
 
-      if (this.parent_scene.physics.world.overlap(this.player.getPlayer(), this.ingredients[i])) {
+      if (this.parent_scene.physics.world.overlap(this.player.getSprite(), this.ingredients[i])) {
         let key = this.ingredients[i].texture.key
 
         this.ingredients[i].destroy()

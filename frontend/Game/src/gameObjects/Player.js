@@ -1,4 +1,4 @@
-import Entity from './Entity.js'
+import Entity from '../entities/Entity.js'
 
 export default class Player extends Entity {
 
@@ -9,11 +9,11 @@ export default class Player extends Entity {
     //this.name = 'j' + num + '_' + classe //Nom du sprite : jx_classe
 
     //Créer le sprite du joueur
-    this.player = this.parent_scene.physics.add.sprite(x, y, this.name)
-    this.player.body.setSize(16, 16, false)
-    this.player.setCollideWorldBounds()
+    this.sprite = this.parent_scene.physics.add.sprite(x, y, this.name)
+    this.sprite.body.setSize(16, 16, false)
+    this.sprite.setCollideWorldBounds()
 
-    this.carried_object = this.parent_scene.add.sprite(x, y - this.player.height, '')
+    this.carried_object = this.parent_scene.add.sprite(x, y - this.sprite.height, '')
     this.carried_object.setVisible(false)
 
     // Touche
@@ -58,8 +58,6 @@ export default class Player extends Entity {
         ic.add_ingredient(this.getX(), this.getY(), old)
         this.setCarriedObject('')
       }
-      //TEST NE PAS RETIRER TANT QUE LES TESTS NE SONT PAS FINI
-      this.take_damage(20)
     } 
 
     
@@ -68,22 +66,22 @@ export default class Player extends Entity {
 
   // Move and play the right animation
   move (x, y) {
-    this.player.setVelocityX(x)
-    this.player.setVelocityY(y)
+    this.sprite.setVelocityX(x)
+    this.sprite.setVelocityY(y)
 
-    this.carried_object.setX(this.player.x)
-    this.carried_object.setY(this.player.y - this.player.height)
+    this.carried_object.setX(this.sprite.x)
+    this.carried_object.setY(this.sprite.y - this.sprite.height)
 
     if (x < 0) {
-      this.player.anims.play(this.name + '_left', true)
+      this.sprite.anims.play(this.name + '_left', true)
     } else if (x > 0) {
-      this.player.anims.play(this.name + '_right', true)
+      this.sprite.anims.play(this.name + '_right', true)
     } else if (y < 0) {
-      this.player.anims.play(this.name + '_down', true)
+      this.sprite.anims.play(this.name + '_down', true)
     } else if (y > 0) {
-      this.player.anims.play(this.name + '_up', true)
+      this.sprite.anims.play(this.name + '_up', true)
     } else {
-      this.player.anims.play(this.name + '_idle', true)
+      this.sprite.anims.play(this.name + '_idle', true)
     }
     super.move(this.getX(), this.getY())
 
@@ -109,28 +107,28 @@ export default class Player extends Entity {
     return this.carried_object.visible
   }
 
-  getPlayer () {
-    return this.player
+  getSprite () {
+    return this.sprite
   }
 
   getDepth () {
-    return this.player.depth
+    return this.sprite.depth
   }
 
   getX () {
-    return this.player.x
+    return this.sprite.x
   }
 
   getY () {
-    return this.player.y
+    return this.sprite.y
   }
 
   getWidth () {
-    return this.player.width
+    return this.sprite.width
   }
 
   getHeight () {
-    return this.player.height
+    return this.sprite.height
   }
 
 }

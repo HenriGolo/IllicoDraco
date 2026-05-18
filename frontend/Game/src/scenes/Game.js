@@ -1,7 +1,7 @@
 import Tchat from '../gameObjects/Tchat.js'
 import Player from '../gameObjects/Player.js'
 import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
-import { SERVER_URL } from './Preloader.js'
+import { SERVER_URL } from '../utils.js'
 import Monster from '../entities/Monster.js'
 
 const zoom = 3
@@ -38,7 +38,7 @@ export class GameUI extends Phaser.Scene {
       .setInteractive()
       .on('pointerdown', () => this.open_boutique())
 
-    this.add.sprite(10 + (24 * zoom) / 2, 70 + (24 * zoom) / 2 * 3, 'bt_receuil').setScale(zoom, zoom)
+    this.add.sprite(10 + (24 * zoom) / 2, 70 + (24 * zoom) / 2 * 3, 'bt_recueil').setScale(zoom, zoom)
       .setInteractive()
       .on('pointerdown', () => this.open_recueil())
 
@@ -95,14 +95,15 @@ export class Game extends Phaser.Scene {
     this.serveur_url = serveur_url
     this.joueur_courant = joueur_courant
     this.pseudo = pseudo
-    this.tchat
-    this.infosText //Affichage des informations
   }
 
   preload () {
   }
 
   create () {
+
+    this.monstersData = []
+    this.getMonsters()
 
     //TILE MAP
 
@@ -121,42 +122,43 @@ export class Game extends Phaser.Scene {
 
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
-    /*
+
     const controles_url = new URL('controles', this.serveur_url)
     controles_url.searchParams.set('pseudo', this.pseudo)
     fetch(controles_url)
       .then(response => response.json())
       .then(controles => {
+        console.log({ controles })
         this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 10, 3, controles)
-      })*/
-    //TO REMOVE
-    this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 50, 3, {
-      gauche: 'Q',
-      bas: 'S',
-      droite: 'D',
-      haut: 'Z',
-      prendre: 'E'
-    })
-    this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
-    this.cameras.main.startFollow(this.playerCur.getPlayer(), true)
-    this.cameras.main.setFollowOffset(
-      -this.playerCur.getWidth() / 2,
-      -this.playerCur.getHeight() / 2
-    )
+        console.log({ player: this.playerCur })
+        /*/TO REMOVE
+        this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 50, 3, {
+          gauche: 'Q',
+          bas: 'S',
+          droite: 'D',
+          haut: 'Z',
+          prendre: 'E'
+        })//*/
+        this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
+        this.cameras.main.startFollow(this.playerCur.getPlayer(), true)
+        this.cameras.main.setFollowOffset(
+          -this.playerCur.getWidth() / 2,
+          -this.playerCur.getHeight() / 2
+        )
+      })
 
     //Cacher le joueur ou monstre qui passe sous un tronc/arche
-    caches.setDepth(this.playerCur.getDepth() + 1)
+    caches.setDepth(this.playerCur?.getDepth() + 1)
 
     // Collisions :
     obstacles.setCollisionByProperty({ collision: true })
-    this.physics.add.collider(this.playerCur.getPlayer(), obstacles)
+    this.physics.add.collider(this.playerCur?.getPlayer(), obstacles)
 
     this.physics.world.setBounds(0, 0, this.width, this.height)
     this.physics.world.setBoundsCollision()
-    this.player.sprite.setCollideWorldBounds()
+    this.playerCur?.sprite.setCollideWorldBounds()
     this.createInteractiveObjects()
-    this.createAnims()
-    this.ingredientsContainer = new IngredientsContainer(this, this.playerCur)
+    this.ingredientsContainer = new IngredientsContainer(this, this.player)
     this.ingredientsContainer.add_ingredient(this.middleX + 32, this.middleY, 'slime_piece')
     this.ingredientsContainer.add_ingredient(this.middleX + 64, this.middleY, 'lait')
     console.log(this.ingredientsContainer.get_overlap_object())
@@ -184,38 +186,12 @@ export class Game extends Phaser.Scene {
 
   }
 
-  open_boutique () {
-    this.tchat.add_text_to_tchat('boutique')
-    //TODO
-  }
-
-  open_recueil () {
-    this.tchat.add_text_to_tchat('recueil')
-    //TODO
-  }
-
-  open_parameter () {
-    this.tchat.add_text_to_tchat('parameter')
-    //TODO
-  }
-
-  handle_key (event) {
-
-    switch (event.key) {
-      case 't' : {
-        this.tchat.switch_visibility()
-        break
-      }
-    }
-
-  }
-
   update () {
 
-    this.playerCur?.handleKey()
+    this.player?.handleKey()
     if (this.interactText) {
       if (this.interactText) {
-        this.interactText.setPosition(this.playerCur.getX(), this.playerCur.getY() - 20)
+        this.interactText.setPosition(this.playerCur?.getX(), this.playerCur?.getY() - 20)
       }
 
       // this.effect = this.marmite.preFX.addGlow(0xff00ff, 10, 0).setActive(false);
@@ -235,7 +211,7 @@ export class Game extends Phaser.Scene {
         const zone = this.objetInteract.hitZone
 
         if (!Phaser.Geom.Intersects.RectangleToRectangle(
-          this.playerCur.getPlayer().body,
+          this.playerCur?.getPlayer().body,
           zone.body
         )) {
 
@@ -248,43 +224,6 @@ export class Game extends Phaser.Scene {
         }
       }
 
-      createAnims()
-      {
-
-        this.anims.create({
-          key: 'left',
-          frames: this.anims.generateFrameNumbers('player', { start: 3, end: 4 }),
-          frameRate: 10,
-          repeat: -1
-        })
-        this.anims.create({
-          key: 'right',
-          frames: this.anims.generateFrameNumbers('player', { start: 5, end: 6 }),
-          frameRate: 10,
-          repeat: -1
-        })
-
-        this.anims.create({
-          key: 'up',
-          frames: this.anims.generateFrameNumbers('player', { start: 7, end: 8 }),
-          frameRate: 10,
-          repeat: -1
-        })
-        this.anims.create({
-          key: 'down',
-          frames: this.anims.generateFrameNumbers('player', { start: 1, end: 2 }),
-          frameRate: 10,
-          repeat: -1
-        })
-
-        this.anims.create({
-          key: 'idle',
-          frames: [{ key: 'player', frame: 0 }],
-          frameRate: 10,
-          repeat: -1
-        })
-
-      }
     }
   }
 
@@ -298,9 +237,9 @@ export class Game extends Phaser.Scene {
     this.hitZoneMarmite = this.add.rectangle(16 * 10, 37 * 16, 64, 64, 0x0000ff).setVisible(debug)
     this.hitZoneBar = this.add.rectangle(13 * 16 + 8, 40 * 16 + 8, 32, 16, 0x0000ff).setVisible(debug)
     this.hitZoneMarmite.setInteractive()
-    this.playerCur.getPlayer().setAbove(this.hitZoneMarmite)
-    this.playerCur.getPlayer().setAbove(this.hitZoneCoffre)
-    this.playerCur.getPlayer().setAbove(this.hitZoneTable)
+    this.playerCur?.getPlayer().setAbove(this.hitZoneMarmite)
+    this.playerCur?.getPlayer().setAbove(this.hitZoneCoffre)
+    this.playerCur?.getPlayer().setAbove(this.hitZoneTable)
     this.hitZoneMarmite.setInteractive()
     this.physics.world.enable(this.hitZoneMarmite)
 
@@ -343,20 +282,20 @@ export class Game extends Phaser.Scene {
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
     console.log(this.hitZoneCoffre.body.x) // must be true
     console.log(this.hitZoneMarmite.body.enable)  // must be true
-    this.physics.add.overlap(this.playerCur.getPlayer(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre), null, this)
-    this.physics.add.overlap(this.playerCur.getPlayer(), this.hitZoneTable, () => this.zoneInteract(this.table))
-    this.physics.add.overlap(this.playerCur.getPlayer(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite))
-    this.physics.add.overlap(this.playerCur.getPlayer(), this.hitZoneBar, () => this.zoneInteract(this.bar))
+    this.physics.add.overlap(this.playerCur?.getPlayer(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre), null, this)
+    this.physics.add.overlap(this.playerCur?.getPlayer(), this.hitZoneTable, () => this.zoneInteract(this.table))
+    this.physics.add.overlap(this.playerCur?.getPlayer(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite))
+    this.physics.add.overlap(this.playerCur?.getPlayer(), this.hitZoneBar, () => this.zoneInteract(this.bar))
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
 
     //const truc = this.marmite.preFX.addGlow(0xffffff, 100, 0, false);
 
-    this.playerCur.getPlayer().setBounce(0.2)
-    this.physics.add.collider(this.marmite, this.playerCur.getPlayer(), null, null, this)
+    this.playerCur?.getPlayer().setBounce(0.2)
+    this.physics.add.collider(this.marmite, this.playerCur?.getPlayer(), null, null, this)
     // Préparation des interactions :
-    this.physics.add.collider(this.coffre, this.playerCur.getPlayer(), null, null, this)
-    this.physics.add.collider(this.bar, this.playerCur.getPlayer(), null, null, this)
-    this.physics.add.collider(this.table, this.playerCur.getPlayer(), null, null, this)
+    this.physics.add.collider(this.coffre, this.playerCur?.getPlayer(), null, null, this)
+    this.physics.add.collider(this.bar, this.playerCur?.getPlayer(), null, null, this)
+    this.physics.add.collider(this.table, this.playerCur?.getPlayer(), null, null, this)
 
     // Préparation des interactions :
 
@@ -390,14 +329,18 @@ export class Game extends Phaser.Scene {
 
   async getMonsters () {
 
-    const response = await fetch('http://' + ip + '/illicodraco/monsters')
+    const response = await fetch('http://' + this.serveur_url + '/illicodraco/monsters')
     if (response.ok) {
-      this.monstersData = await response.json()
+      let data = await response.json()
+      this.monstersData = data.monstersData
       console.log('Data des monstres reçu')
       console.log(data)
     } else {
       console.error('Erreur HTTP : ', response.status)
+
     }
+
+    console.log('>>>>>>>>>>>>' + this.monstersData)
 
   }
 
@@ -421,33 +364,35 @@ export class Game extends Phaser.Scene {
 
   createEnnemy () {
 
-    const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length)
-    // listJson.filter({id} => id === indiceVoulu)[0]
-    const chosenMonster = this.monstersData.filter(({ id }) => id === chosenMonsterId)[0]
+    if (this.monstersData.length) {
+      const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length)
+      // listJson.filter({id} => id === indiceVoulu)[0]
+      const chosenMonster = this.monstersData.filter(({ id }) => id === chosenMonsterId)[0]
 
-    const nom = chosenMonster.name
-    console.log('Monstre spawn : ' + nom)
+      const nom = chosenMonster.name
+      console.log('Monstre spawn : ' + nom)
 
-    const stats = chosenMonster.stats
-    const x = Phaser.Math.Between(0, tilemap.width * 16)
-    const y = 16
+      const stats = chosenMonster.stats
+      const x = Phaser.Math.Between(0, tilemap.width * 16)
+      const y = 16
 
-    const monsterSprite = this.monsters.getFirstDead(true, x, y, nom, 0, true)
+      const monsterSprite = this.monsters.getFirstDead(true, x, y, nom, 0, true)
 
-    const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, stats.vitesse, monsterSprite, stats.produit)
-    monster.moveTimer = this.time.addEvent({
-      delay: Phaser.Math.Between(10000, 20000) / stats.vitesse,
-      callback: (monster) => {
-        this.physics.moveTo(monster.sprite, monster.sprite.x, monster.sprite.y - 16, 50)
-      },
-      callbackScope: this,
-      loop: true
+      const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, stats.vitesse, monsterSprite, stats.produit)
+      monster.moveTimer = this.time.addEvent({
+        delay: Phaser.Math.Between(10000, 20000) / stats.vitesse,
+        callback: (monster) => {
+          this.physics.moveTo(monster.sprite, monster.sprite.x, monster.sprite.y - 16, 50)
+        },
+        callbackScope: this,
+        loop: true
 
-    })
-    this.monsterObjects.push(monster)
+      })
+      this.monsterObjects.push(monster)
 
-    console.log('Enemy spawned at x: ' + x + ', y: ' + y)
-    console.log('x: ' + this.player.sprite.x + ' y: ' + this.player.sprite.y)
+      console.log('Enemy spawned at x: ' + x + ', y: ' + y)
+      console.log('x: ' + this.playerCur?.getWidth() + ' y: ' + this.playerCur?.getHeight())
+    }
   }
 
   getIngredientsContainer () {

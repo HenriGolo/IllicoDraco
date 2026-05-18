@@ -1,4 +1,5 @@
 import Tchat from '../gameObjects/Tchat.js'
+import { httpToWs } from '../utils.js'
 
 const zoom = 10
 const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
@@ -7,6 +8,8 @@ export class Lobby extends Phaser.Scene {
 
   constructor () {
     super('Lobby')
+
+    this.setup_done = false
 
     this.joueurs
     this.tchat
@@ -20,7 +23,18 @@ export class Lobby extends Phaser.Scene {
     this.code = data.code
     this.nb_joueur = 0
 
-    this.start_class = data.start_class
+    const url = new URL(`game/${this.code}/${this.pseudo}`, httpToWs(this.serveur_url))
+    this.ws = new WebSocket(url)
+    console.log(this.ws)
+
+    this.ws.onmessage = (event) => {
+      const message = JSON.parse(event.data)
+      this.start_class = JSON.parse(message.jsonData)
+      this.setup_done = true
+    }
+    this.ws.onerror = (error) => {
+      console.error('Erreur dans le lobby', error)
+    }
 
     console.log(data)
   }
@@ -29,6 +43,13 @@ export class Lobby extends Phaser.Scene {
   }
 
   create () {
+    if (!this.setup_done) {
+      this.createTimeout = setTimeout(() => {
+        console.log('timeout')
+        this.create()
+      }, 0.5)
+      return
+    }
 
     // Background pour l'organisation générale :
     var graphics = this.add.graphics()
@@ -37,28 +58,28 @@ export class Lobby extends Phaser.Scene {
     graphics.fillStyle(0x555555, 1)
     graphics.fillRect(960, 128, 320, 464)
     /*
-    //Bandeau bas
+    // Bandeau bas
     graphics.fillStyle(0x550055, 1);
     graphics.fillRect(0,592,1280, 128);
     */
+    /*
+        // Bandeau haut
+        graphics.fillStyle(0x00eeff, 1)
+        graphics.fillRect(0, 0, 1280, 128)
 
-    //Bandeau haut
-    graphics.fillStyle(0x00eeff, 1)
-    graphics.fillRect(0, 0, 1280, 128)
+        graphics.fillStyle(0xccccff, 1)
+        graphics.fillRect(0, 0, 240, 720)
+        graphics.fillStyle(0xffcccc, 1)
+        graphics.fillRect(240, 0, 240, 720)
+        graphics.fillStyle(0xccffcc, 1)
+        graphics.fillRect(480, 0, 240, 720)
+        graphics.fillStyle(0xffffcc, 1)
+        graphics.fillRect(720, 0, 240, 720)
 
-    graphics.fillStyle(0xccccff, 1)
-    graphics.fillRect(0, 0, 240, 720)
-    graphics.fillStyle(0xffcccc, 1)
-    graphics.fillRect(240, 0, 240, 720)
-    graphics.fillStyle(0xccffcc, 1)
-    graphics.fillRect(480, 0, 240, 720)
-    graphics.fillStyle(0xffffcc, 1)
-    graphics.fillRect(720, 0, 240, 720)
-
-    graphics.fillStyle(0x000aaa, 1)
-    graphics.fillRect(1184, 32, 64, 64)
-
-    /////////////////////////////////////
+        graphics.fillStyle(0x000aaa, 1)
+        graphics.fillRect(1184, 32, 64, 64)
+        */
+    // // // // // // // // // // // // // // // // // // /
 
     // Affichage du titre et code
     this.add.text(0, 16, 'En attente de joueur ...', {
@@ -82,7 +103,7 @@ export class Lobby extends Phaser.Scene {
     this.joueurs[this.joueur_courant - 1].on('pointerdown', () => this.switch_class_cur_player())
 
     // Créer le bouton seulement si c'est le joueur 1 (lancer partie)
-    if (this.joueur_courant == 1) {
+    if (this.joueur_courant === 1) {
       this.add.sprite(480, 656, 'bt_lancer_partie').setScale(3, 3)
         .setInteractive()
         .on('pointerdown', () => this.start_game())
@@ -100,12 +121,6 @@ export class Lobby extends Phaser.Scene {
     // Ajout du tchat
     this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url)
 
-    // WebSocket pour la gestion des interactions du lobby
-    let ws_url = this.serveur_url.replace(/.*:\/\//, 'ws://')
-    const url = new URL(`game/${this.code}/${this.pseudo}`, ws_url)
-    this.ws = new WebSocket(url)
-    console.log(this.ws)
-
     this.ws.onmessage = (event) => this.on_message(event)
     this.ws.onerror = () => console.log('Erreur dans le lobby')
 
@@ -116,24 +131,19 @@ export class Lobby extends Phaser.Scene {
   // Gestion des messages de la webSocket
   on_message (event) {
     const message = JSON.parse(event.data)
-
+    console.log({ message })
     switch (message.type) {
-      case 'player_disconnect' : {
+      case 'leave' :
         this.disconnect_player(message.num) // num = 1,2,3 ou 4
         break
-      }
-      case 'player_join' : {
-        this.connect_player(this.nb_joueur)
+      case 'join' :
+        this.connect_player(message.num - 1)
         break
-      }
-      case 'player_switch_class' : {
-        this.switch_class((message.num - 1), message.classe) // num = 1,2,3 ou 4, classe = 'mage', 'guerrier'...
+      case 'switch_class' :
+        this.switch_class(message.num - 1, message.classe) // num = 1,2,3 ou 4, classe = 'mage', 'guerrier'...
         break
-      }
-      default : {
+      default :
         console.log('Requête inconnue')
-      }
-
     }
 
   }
@@ -142,8 +152,7 @@ export class Lobby extends Phaser.Scene {
   connect_player (num) {
     this.nb_joueur += 1
     let x = 120 + 240 * num
-    let joueur = this.add.sprite(x, 360, ('j' + (num + 1) + '_' + joueur_classe[0])).setScale(zoom, zoom)
-    this.joueurs[num] = joueur
+    this.joueurs[num] = this.add.sprite(x, 360, ('j' + (num + 1) + '_' + joueur_classe[0])).setScale(zoom, zoom)
     this.joueurs[num].setState(0)
     this.joueurs[num].setName('j' + (num + 1))
   }
@@ -153,7 +162,7 @@ export class Lobby extends Phaser.Scene {
   disconnect_player (num) {
 
     for (let i = num; i < this.nb_joueur; i++) {
-      this.switch_class((i - 1), joueur_classe[this.joueurs[i].state])
+      this.switch_class(i - 1, joueur_classe[this.joueurs[i].state])
     }
 
     if (num < this.joueur_courant) {
@@ -177,15 +186,11 @@ export class Lobby extends Phaser.Scene {
     o.setState((o.state + 1) % 4)
     o.setTexture(o.name + '_' + joueur_classe[o.state])
 
-    const url = new URL('switch_class', this.serveur_url)
-    url.searchParams.set('code', this.code)
-    url.searchParams.set('num', this.joueur_courant)
-    url.searchParams.set('nouvelle_classe', joueur_classe[o.state])
-    const response = await fetch(url, { method: 'POST' })
-    if (!response.ok) {
-      console.error('Il y a eu une erreur en changeant de classe')
-    }
-
+    this.ws.send(JSON.stringify({
+      type: 'switch_class',
+      num: this.joueur_courant,
+      classe: joueur_classe[o.state]
+    }))
   }
 
   // Changer l'avatar d'un joueur
@@ -199,16 +204,6 @@ export class Lobby extends Phaser.Scene {
   // Quitter le jeu
   async quit () {
     console.log(this.pseudo + ' : Je pars')
-
-    // Signaler au serveur qu'on est partie
-    const url = new URL('quit_lobby', this.serveur_url)
-    url.searchParams.set('codePartie', this.code)
-    url.searchParams.set('numJoueur', this.joueur_courant)
-    const response = await fetch(url)
-
-    if (!response.ok) {
-      console.log('Il y a eu une erreur en quittant le lobby')
-    }
 
     this.ws.close()
     this.tchat.quitChat()
@@ -225,22 +220,7 @@ export class Lobby extends Phaser.Scene {
   async parameter () {
 
     console.log(this.pseudo + ' : Parametre !')
-
-    this.scene.launch('Parametre',
-      {
-        haut: '',
-        bas: '',
-        droite: '',
-        gauche: '',
-        attaquer: '',
-        interagir: '',
-        prendre: '',
-        boutique: '',
-        recueil: '',
-        chat: '',
-        previousScene: this
-      }
-    )
+    console.log(this.serveur_url)
 
     const url = new URL('controles', this.serveur_url)
     url.searchParams.set('pseudo', this.pseudo)
@@ -249,7 +229,7 @@ export class Lobby extends Phaser.Scene {
       const data = await response.json()
       console.log(data)
       // Start le lobby avec le code dans data et le nombre de joueur a 1
-      this.scene.launch('Parametre', { ...data, previousScene: this }
+      this.scene.launch('Parametre', { ...data, previousScene: this, serveur_url: this.serveur_url }
       )
     } else {
       console.log('Erreur au chargement des paramètres')

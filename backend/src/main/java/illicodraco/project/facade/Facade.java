@@ -6,18 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 @CrossOrigin(origins = "*")
 @RestController("Facade")
 public class Facade {
 
-  private static final ConcurrentMap<String, String[]> CLASSES = new ConcurrentHashMap<>();
 
   // attributs
   @Autowired
@@ -174,10 +170,6 @@ public class Facade {
       }
     }
 
-    String[] classes = new String[4];
-    classes[0] = "guerrier";
-    CLASSES.put(code, classes);
-
     Joueur joueur = login(pseudo);
 
     Partie partie = new Partie();
@@ -216,26 +208,6 @@ public class Facade {
     } else {
       throw new EntityNotFound("Code invalide !");
     }
-  }
-
-  @PostMapping("/switch_class")
-  public String[] switch_class(
-      @RequestParam("code") String code,
-      @RequestParam("num") int numeroJoueur,
-      @RequestParam("nouvelle_classe") String classe
-  ) {
-    String[] classes = CLASSES.getOrDefault(code, new String[4]);
-    classes[numeroJoueur - 1] = classe;
-    CLASSES.put(code, classes);
-    return getClasses(code);
-  }
-
-  @GetMapping("/classes/{code}")
-  public String[] getClasses(@PathVariable String code) {
-    System.out.println("Accès aux classes du code " + code);
-    String[] classes = CLASSES.getOrDefault(code, new String[4]);
-    System.out.println(Arrays.toString(classes));
-    return classes;
   }
 
 }

@@ -1,8 +1,10 @@
+import { httpToWs } from '../utils.js'
+
 export default class Tchat {
 
   constructor (scene, pseudo, x, y, serveur_url) {
 
-    this.serveur_url = serveur_url.replace(/.*:\/\//, 'ws://')
+    this.serveur_url = httpToWs(serveur_url)
     this.pseudo = pseudo
     // Affichage du tchat // 1120 332
     this.tchatOutput = scene.add.dom(x + 160, y + 204).createFromCache('tchatTextOutput')
@@ -20,8 +22,8 @@ export default class Tchat {
       .setVisible(false)
     this.compteurText = scene.add.text(x + 228, y - 10, '', { fontSize: '32px', fill: '#ff0000' })
       .setFixedSize(96, 32)
-      .setAlign('center');
-    this.compteur = 0;
+      .setAlign('center')
+    this.compteur = 0
 
     //Historique de la conversation
     this.historique = ''

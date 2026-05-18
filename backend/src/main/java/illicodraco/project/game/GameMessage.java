@@ -16,6 +16,10 @@ public class GameMessage {
   /// Déplacements du joueur
   private int deltaX;
   private int deltaY;
+  /// JSON au besoin
+  private String jsonData;
+  /// code de la partie (debug)
+  private String code;
 
   public boolean isSystem() {
     return system;
@@ -78,4 +82,19 @@ public class GameMessage {
     this.deltaY = deltaY;
   }
 
+  public String getJsonData() {
+    return jsonData;
+  }
+
+  public void setJsonData(String jsonData) {
+    this.jsonData = jsonData;
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
 }
