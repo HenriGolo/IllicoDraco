@@ -158,7 +158,7 @@ export class Start extends Phaser.Scene {
         // weightedPick favours items earlier in the array
         const tileIndex = (2 * x + 2 * y) % 6
 
-        // const sprite1 = this.add.sprite(640, 360, 'ship');
+        //const sprite1 = this.add.sprite(640, 360, 'ship');
 
         row.push(tileIndex)
       }
@@ -196,7 +196,7 @@ export class Start extends Phaser.Scene {
 
   addingButtons () {
 
-    // Sprites for buttons
+    //Sprites for buttons
 
     this.creer = this.add.sprite(this.middleX, this.height * 0.40, 'creer').setScale(2).setInteractive()            // Boutons
     this.join = this.add.sprite(this.middleX, this.height * 0.525, 'join').setScale(2).setInteractive()
@@ -205,7 +205,7 @@ export class Start extends Phaser.Scene {
     this.options = this.add.sprite(this.middleX, this.height * 0.85, 'options').setScale(2).setInteractive()
 
     // Détection des clics :
-    // Input Events
+    //  Input Events
 
     this.creer.on('pointerdown', () => this.on_creer())
 

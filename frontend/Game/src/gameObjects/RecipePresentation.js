@@ -1,3 +1,5 @@
+import Recipe from '../entities/Recipe.js';
+
 //Classe pour afficher une recette dans le livre des recettes
 const zoom = 3
 const width = 300
@@ -33,20 +35,21 @@ export default class RecipePresentation {
 
   }
 
-  change_recipe (recipe) {
+
+  change_recipe(recipe) {
 
     if (this.result != null) {
       this.result.destroy()
       this.tool.destroy()
 
-      for (var i = 0; i < this.ingredients.length; i++) {
+      for (let i = 0; i < this.ingredients.length; i++) {
         this.ingredients[i].destroy()
       }
     }
 
     this.recipe_name.setText(recipe.getRecipeName())
     this.ingredients = []
-    for (var i = 0; i < recipe.getNbIngredients(); i++) {
+    for (let i = 0; i < recipe.getNbIngredients(); i++) {
       this.ingredients[i] = this.scene.add.sprite(
         this.x + (((i + 1) * width) / (recipe.getNbIngredients())) - (width / (2 * recipe.getNbIngredients())),
         this.y + 144, recipe.getIngredients()[i])

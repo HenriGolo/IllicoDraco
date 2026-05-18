@@ -14,9 +14,7 @@ export class Lobby extends Phaser.Scene {
   }
 
   init (data) {
-
     this.serveur_url = data.serveur_url
-
     this.joueur_courant = data.joueur_courant
     this.pseudo = data.pseudo
     this.code = data.code
@@ -38,8 +36,29 @@ export class Lobby extends Phaser.Scene {
     // Bandeau Tchat
     graphics.fillStyle(0x555555, 1)
     graphics.fillRect(960, 128, 320, 464)
+    /*
+    //Bandeau bas
+    graphics.fillStyle(0x550055, 1);
+    graphics.fillRect(0,592,1280, 128);
+    */
 
-    // // // // // // // // // // // // // // // // // // /
+    //Bandeau haut
+    graphics.fillStyle(0x00eeff, 1)
+    graphics.fillRect(0, 0, 1280, 128)
+
+    graphics.fillStyle(0xccccff, 1)
+    graphics.fillRect(0, 0, 240, 720)
+    graphics.fillStyle(0xffcccc, 1)
+    graphics.fillRect(240, 0, 240, 720)
+    graphics.fillStyle(0xccffcc, 1)
+    graphics.fillRect(480, 0, 240, 720)
+    graphics.fillStyle(0xffffcc, 1)
+    graphics.fillRect(720, 0, 240, 720)
+
+    graphics.fillStyle(0x000aaa, 1)
+    graphics.fillRect(1184, 32, 64, 64)
+
+    /////////////////////////////////////
 
     // Affichage du titre et code
     this.add.text(0, 16, 'En attente de joueur ...', {
@@ -169,7 +188,7 @@ export class Lobby extends Phaser.Scene {
 
   }
 
-  // Changer l'avatar d'un joueur 
+  // Changer l'avatar d'un joueur
   // num entre 0 et 3
   switch_class (num, classe) {
     let o = this.joueurs[num]

@@ -104,7 +104,6 @@ export class Recueil extends Phaser.Scene {
       .on('pointerdown', () => this.nextPage())
 
     //Set les monstres
-    this.total_monster = this.monsters.length
 
     this.monstersPres = []
     for (var y = 0; y < nb_row_display; y++) {
