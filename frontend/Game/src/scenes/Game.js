@@ -345,7 +345,7 @@ export class Game extends Phaser.Scene {
 
   async getMonsters () {
 
-    const response = await fetch('http://' + this.serveur_url + '/illicodraco/monsters')
+    const response = await fetch('http://' + SERVER_URL + '/illicodraco/monsters')
     if (response.ok) {
       let data = await response.json()
       this.monstersData = data.monstersData
