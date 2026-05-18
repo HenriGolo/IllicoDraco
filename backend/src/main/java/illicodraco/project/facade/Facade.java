@@ -266,4 +266,17 @@ public class Facade {
     } 
   }  
 
+  @PostMapping("/set_coffre")
+  public void setCoffre(@RequestParam("code") String code,@RequestParam("produit") Produit produit) {
+    Optional<Partie> partie = this.partieRepo.findById(code);
+    if (partie.isPresent()) { 
+      Collection<Produit> nouvCoffre = partie.get().getCoffre();
+      nouvCoffre.add(produit);
+      partie.get().setCoffre(nouvCoffre);
+      partieRepo.save(partie);
+    } else {
+      throw new EntityNotFound("Partie inexistante");
+    } 
+
+  }
 }
