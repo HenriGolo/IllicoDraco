@@ -1,6 +1,6 @@
 import ASSETS from '../assets.js'
 
-const nom_pc = '172.22.232.58:8080' //n'ayant pas de serveur qui tourne en permanence
+const nom_pc = 'aw.313f.fr:8080' //n'ayant pas de serveur qui tourne en permanence
 const server_address = `http://${nom_pc}/IllicoDraco/`
 
 export class Start extends Phaser.Scene {
@@ -255,12 +255,14 @@ export class Start extends Phaser.Scene {
         if (response.ok) {
           const data = await response.json()
           console.log(data)
+          let start_class = data.start_class.push(['guerrier'])
           //Start le lobby avec le nombre de joueur dans data
           this.scene.start('Lobby', {
             joueur_courant: data.nbJoueurs, //A VERIFIER
             code: code,
             pseudo: this.pseudo,
-            serveur_url: server_address
+            serveur_url: server_address,
+            start_class: start_class
           })
           //
         } else {
@@ -295,7 +297,8 @@ export class Start extends Phaser.Scene {
         joueur_courant: 1,
         code: data.code,
         pseudo: this.pseudo,
-        serveur_url: server_address
+        serveur_url: server_address,
+        start_class : ['guerrier']
       })
     } else {
       console.log('Erreur a la création de la partie')
