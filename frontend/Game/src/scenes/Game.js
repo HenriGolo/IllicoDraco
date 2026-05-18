@@ -1,8 +1,11 @@
 import Tchat from '../gameObjects/Tchat.js';
 import Player from '../entities/Player.js';
+import Monster from '../entities/Monster.js';
 
 const zoom = 3;
 const ip = "127.0.0.1:5500";
+let monsterDelay = 2500;
+var tilemap;
 
 export class GameUI extends Phaser.Scene {
     constructor(joueur_courant = 4, pseudo = "Pseudo", serveur_url = "ws://localhost:8080/IllicoDraco/chat/") {
@@ -84,6 +87,7 @@ export class GameUI extends Phaser.Scene {
 
 
 export class Game extends Phaser.Scene {
+    
 
 
     constructor(joueur_courant = 4, pseudo = "Pseudo", serveur_url = "ws://localhost:8080/IllicoDraco/chat/") {
@@ -105,7 +109,7 @@ export class Game extends Phaser.Scene {
 
         //TILE MAP
 
-        const tilemap = this.make.tilemap({ key: "tilemap" }); 
+        tilemap = this.make.tilemap({ key: "tilemap" }); 
         tilemap.addTilesetImage("full_tileset", "tiles"); 
 
         tilemap.createLayer('fond', 'full_tileset', 0,0);
@@ -154,7 +158,24 @@ export class Game extends Phaser.Scene {
 
         console.log("Creation passée");
 
+        this.monsterObjects = [];
+
         this.generateMonsterGroup();
+
+        this.spawnMonsterTimer = this.time.addEvent({ // Crée l'ajout de monstres tous les monsterDelay temps
+            delay : monsterDelay,
+            callback : this.createEnnemy,
+            callbackScope : this,
+            loop : true
+        });
+
+        this.time.addEvent({    // Réduit le temps de monsterDelay toutes les 30s
+            delay : 30000,
+            callback : this.updateMonsterSpawnDelay,
+            callbackScope : this,
+            loop : true
+
+        });
         
     }
 
@@ -392,7 +413,7 @@ export class Game extends Phaser.Scene {
 
         const response = await fetch( "http://" + ip + "/illicodraco/monsters");
         if (response.ok) {
-            const monstersData = await response.json();
+            this.monstersData = await response.json();
             console.log("Data des monstres reçu")
             console.log(data);
         } else {
@@ -407,7 +428,7 @@ export class Game extends Phaser.Scene {
         // Statistique : {}
         // Produit 
     
-        for (const monster in monstersData){
+        for (const monster in this.monstersData){
             this.load.image(monster.nom, monster.path);
         }
 
@@ -417,11 +438,52 @@ export class Game extends Phaser.Scene {
     generateMonsterGroup(){
 
         this.monsters = this.physics.add.group([]);
-        const nom = 'champi';
-        const x = this.width/2;
-        const y = this.height/2;
+       
+    }
 
-        const monster = this.monsters.getFirstDead(true, x, y, nom, 0, true );
+    createEnnemy() {
+
+        const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length);
+        // listJson.filter({id} => id === indiceVoulu)[0]
+        const chosenMonster = this.monstersData.filter(({ id }) => id === chosenMonsterId)[0];
+
+        const nom = chosenMonster.name;
+        console.log("Monstre spawn : " + nom);  
+
+        const stats = chosenMonster.stats;
+        const x = Phaser.Math.Between(0, tilemap.width*16);
+        const y = 16;
+
+        const monsterSprite = this.monsters.getFirstDead(true, x, y, nom, 0, true );
+
+        const monster = new Monster(nom, monsterSprite, stats.produit, stats.vie, stats.attaque, stats.defense, stats.vitesse);
+        monster.moveTimer = this.time.addEvent({
+            delay : Phaser.Math.Between(10000,20000)/stats.vitesse,
+            callback : (monster) => {
+                this.physics.moveTo(monster.sprite, monster.sprite.x, monster.sprite.y -16, 50);
+            },
+            callbackScope : this,
+            loop : true
+
+        });
+        this.monsterObjects.push(monster);
+
+        console.log("Enemy spawned at x: " + x +", y: "+y );
+        console.log("x: " + this.player.sprite.x + " y: "+ this.player.sprite.y );
+    }
+
+    updateMonsterSpawnDelay() {
+
+        monsterDelay -= 50;
+        this.spawnMonsterTimer.destroy();
+        this.spawnMonsterTimer = this.time.addEvent({
+            delay : monsterDelay,
+            callback : this.createEnnemy,
+            callbackScope : this,
+            loop : true
+        });
+
+
     }
     
 }
