@@ -240,7 +240,7 @@ public class Facade {
     return classes;
   }
 
-  @PostMapping("/plat_random")
+  @GetMapping("/plat_random")
   public Produit getPlatRandom(){
     Collection<Recette> recettes = this.recetteRepo.findAll();
     int taille = recettes.size();
@@ -252,10 +252,11 @@ public class Facade {
         return rct.getPlat();
       }
       i++;
-    } 
+    }
+    throw new EntityNotFound("Pas de recettes dans la BD");
   }
 
-  @PostMapping("/coffre/{code}")
+  @GetMapping("/coffre/{code}")
   public Collection<Produit> getCoffre(@PathVariable String code) {
     Optional<Partie> partie = this.partieRepo.findById(code);
     if (partie.isPresent()) { 
