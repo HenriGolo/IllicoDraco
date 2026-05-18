@@ -58,6 +58,10 @@ export default class Entity {
         return this.max_pv
     }
 
+    getName() {
+        return this.name
+    }
+
     setDef(def) {
         this.def = def
     }
