@@ -1,9 +1,12 @@
-export default class Player {
+import Entity from './Entity.js'
 
-    constructor (scene, x, y, num, classe, parametre = null) {
+export default class Player extends Entity {
+
+    constructor (scene, x, y, num, classe, pv, def, atq, parametre = null) {
+        super(scene, 'j'+num+'_'+classe, pv, def, atq, x, y)
 
         this.parent_scene = scene //Scene du jeu
-        this.name = 'j'+num+'_'+classe //Nom du sprite : jx_classe
+        //this.name = 'j'+num+'_'+classe //Nom du sprite : jx_classe
         
         //Créer le sprite du joueur
         this.player = this.parent_scene.physics.add.sprite(x, y, this.name)
@@ -53,13 +56,16 @@ export default class Player {
                 let old = this.getCarriedObject()
                 ic.add_ingredient(this.getX(), this.getY(), old)
                 this.setCarriedObject("")
+                
             }
+            super.take_damage(10)
         }
 
     }
 
     //Move and play the right animation
     move(x, y) {
+        
         this.player.setVelocityX(x)
         this.player.setVelocityY(y)
 
@@ -77,6 +83,8 @@ export default class Player {
         } else {
             this.player.anims.play(this.name+'_idle', true)
         }
+
+        super.move(this.getX(), this.getY())
 
         
     }

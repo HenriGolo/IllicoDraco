@@ -117,7 +117,7 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    this.playerCur = new Player(this, this.middleX+16, this.middleY, 1, 'mage')
+    this.playerCur = new Player(this, this.middleX+16, this.middleY, 1, 'mage', 100, 10, 3)
 
     this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
     this.cameras.main.startFollow(this.playerCur.getPlayer(), true)
