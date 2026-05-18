@@ -359,7 +359,8 @@ export class Start extends Phaser.Scene {
       this.scene.launch('Parametre',
         {
           ...data,
-          previousScene: this
+          previousScene: this,
+          serveur_url : SERVER_URL
         }
       )
     } else {
