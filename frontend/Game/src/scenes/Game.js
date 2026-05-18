@@ -3,24 +3,28 @@ import Player from '../gameObjects/Player.js'
 import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
 import { SERVER_URL } from './Preloader.js'
 import Monster from '../entities/Monster.js'
+import Coffre from '../gameObjects/Coffre.js'
 
 const zoom = 3
 let monsterDelay = 2500
 var tilemap
 
 export class GameUI extends Phaser.Scene {
-  constructor (joueur_courant = 4, pseudo = 'Pseudo', serveur_url = SERVER_URL) {
+  constructor () {
     super({ key: 'GameUI' })
 
-    this.serveur_url = serveur_url
-    this.joueur_courant = joueur_courant
-    this.pseudo = pseudo
     this.tchat
     this.infosText //Affichage des informations
   }
 
+  init(data) {
+    this.serveur_url = data.serveur_url
+    this.joueur_courant = data.joueur_courant
+    this.pseudo = data.pseudo
+    this.game = data.game
+  }
+
   create () {
-    this.ui = this.add.layer()
 
     this.graphics = this.add.graphics()
     //Barre d'informations
@@ -53,6 +57,8 @@ export class GameUI extends Phaser.Scene {
 
     //Initialiser les touches du jeu
     this.input.keyboard.on('keyup', (event) => this.handle_key(event))
+
+    this.coffre =new Coffre(this)
   }
 
   open_boutique () {
@@ -104,6 +110,7 @@ export class Game extends Phaser.Scene {
 
     this.monstersData = []
     this.getMonsters()
+
 
     //TILE MAP
 
@@ -181,6 +188,15 @@ export class Game extends Phaser.Scene {
       loop: true
 
     })
+
+    this.ui = this.scene.launch('GameUI',
+    {
+      joueur_courant : this.joueur_courant, 
+      pseudo : this.pseudo, 
+      serveur_url : SERVER_URL, 
+      game : this
+    }
+    )
 
   }
 
