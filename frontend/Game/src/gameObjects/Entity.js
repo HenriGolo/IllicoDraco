@@ -25,7 +25,7 @@ export default class Entity {
         this.lifeBar_back.setX(x)
         this.lifeBar_back.setY(y-11)
 
-        this.lifeBar.setX(x)
+        this.lifeBar.setX(x-(8-(this.lifeBar.width/2)))
         this.lifeBar.setY(y-11)
     }
 
@@ -38,10 +38,44 @@ export default class Entity {
             this.pv = 0
             this.is_dead = true
         }
-        this.lifeBar.setSize(3, 4)
+        this.lifeBar.setSize((this.pv*16)/this.max_pv, 4)
+        this.lifeBar.setX(this.lifeBar.x-(8-(this.lifeBar.width/2)))
+    }
 
-        
+    getDef() {
+        return this.def
+    }
 
+    getAtq() {
+        return this.atq
+    }
+
+    getPV() {
+        return this.pv
+    }
+
+    getMaxPV() {
+        return this.max_pv
+    }
+
+    getName() {
+        return this.name
+    }
+
+    setDef(def) {
+        this.def = def
+    }
+
+    setAtq(atq) {
+        this.atq = atq
+    }
+
+    setPV(pv) {
+        this.pv = pv
+    }
+
+    setMaxPV(max_pv) {
+        this.max_pv = max_pv
     }
 
 }
