@@ -1,43 +1,47 @@
-export default class Monster {
+import Entity from '../entities/Entity.js'
 
-    constructor(name, image, produit, vie = 0, attaque = 0, defense = 0, vitesse = 0) {
-        
-        this.name = name;
-        this.image = image;
-        this.produit = produit;
-        this.vie = vie;
-        this.attaque = attaque;
-        this.defense = defense;
-        this.vitesse = vitesse;
+export default class Monster extends Entity {
 
-    }
+  constructor (scene, name, vie = 0, defense = 0, attaque = 0, init_x, init_y, vitesse = 0, image, produit) {
 
-    getName() {
-        return this.name;
-    }
+    super(scene, name, vie, defense, attaque, init_x, init_y)
 
-    getImage() {
-        return this.image;
-    }
+    this.name = name
+    this.image = image
+    this.produit = produit
+    this.vie = vie
+    this.attaque = attaque
+    this.defense = defense
+    this.vitesse = vitesse
 
-    getProduit() {
-        return this.produit;
-    }
+  }
 
-    getVie() {
-        return this.vie;
-    }
+  getName () {
+    return this.name
+  }
 
-    getAttaque() {
-        return this.attaque;
-    }
+  getImage () {
+    return this.image
+  }
 
-    getDefense() {
-        return this.defense;
-    }
+  getProduit () {
+    return this.produit
+  }
 
-    getVitesse() {
-        return this.vitesse;
-    }
+  getVie () {
+    return this.vie
+  }
+
+  getAttaque () {
+    return this.attaque
+  }
+
+  getDefense () {
+    return this.defense
+  }
+
+  getVitesse () {
+    return this.vitesse
+  }
 
 }

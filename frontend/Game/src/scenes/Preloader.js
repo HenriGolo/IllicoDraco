@@ -1,3 +1,7 @@
+// TODO garder à jour cette URL
+const nom_pc = '172.22.232.105:8080'
+export const SERVER_URL = `http://${nom_pc}/IllicoDraco/`
+
 export class Preloader extends Phaser.Scene {
   constructor () {
     super('Preloader')
@@ -6,30 +10,39 @@ export class Preloader extends Phaser.Scene {
   preload () {
 
     //Avatars
-    this.load.image('j1_pretre', 'assets/blue_pretre_idle.png')
-    this.load.image('j1_guerrier', 'assets/blue_guerrier_idle.png')
-    this.load.image('j1_mage', 'assets/blue_mage_idle.png')
-    this.load.image('j1_archer', 'assets/blue_archer_idle.png')
+    //jx_classe_anim
+    let avatars = ['guerrier', 'mage', 'archer', 'pretre']
+    for (let i = 0; i < 4; i++) { //Num Classe
+      for (let j = 1; j <= 4; j++) { //Num Joueur
 
-    this.load.image('j2_pretre', 'assets/red_pretre_idle.png')
-    this.load.image('j2_guerrier', 'assets/red_guerrier_idle.png')
-    this.load.image('j2_mage', 'assets/red_mage_idle.png')
-    this.load.image('j2_archer', 'assets/red_archer_idle.png')
+        let name = 'j' + j + '_' + avatars[i]
 
-    this.load.image('j3_pretre', 'assets/green_pretre_idle.png')
-    this.load.image('j3_guerrier', 'assets/green_guerrier_idle.png')
-    this.load.image('j3_mage', 'assets/green_mage_idle.png')
-    this.load.image('j3_archer', 'assets/green_archer_idle.png')
+        this.load.spritesheet(name, 'assets/players/' + avatars[i] + '_' + j + '.png', {
+          frameWidth: 16,
+          frameHeight: 16,
+        })
 
-    this.load.image('j4_pretre', 'assets/yellow_pretre_idle.png')
-    this.load.image('j4_guerrier', 'assets/yellow_guerrier_idle.png')
-    this.load.image('j4_mage', 'assets/yellow_mage_idle.png')
-    this.load.image('j4_archer', 'assets/yellow_archer_idle.png')
+      }
+    }
+    
+    //Monstres
+    this.load.image('champi', 'assets/monsters/champi.png')
+    this.load.image('chelou_monster', 'assets/monsters/chelou_monster.png')
+    this.load.image('dragon_smaller', 'assets/monsters/dragon_smaller.png')
+    this.load.image('evil_carotte', 'assets/monsters/evil_carotte.png')
+    this.load.image('female_poussin', 'assets/monsters/female_poussin.png')
+    this.load.image('genie', 'assets/monsters/genie.png')
+    this.load.image('killer_chicken', 'assets/monsters/killer_chicken.png')
+    this.load.image('male_poussin', 'assets/monsters/male_poussin.png')
+    this.load.image('minotaure', 'assets/monsters/minotaure.png')
+    this.load.image('navet', 'assets/monsters/navet.png')
+    this.load.image('onigiri', 'assets/monsters/onigiri.png')
+    this.load.image('slime', 'assets/monsters/slime.png')
 
     //Bouton partagé
     this.load.image('bt_retour', 'assets/button/retourButton.png')
 
-    //Bouton du Receuil
+    //Bouton du Recueil
     this.load.image('bt_recette', 'assets/button/recetteButton.png')
     this.load.image('bt_bestiaire', 'assets/button/bestiaireButton.png')
     this.load.image('bt_leftArrow', 'assets/button/leftArrowButton.png')
@@ -44,7 +57,7 @@ export class Preloader extends Phaser.Scene {
     //Boutons de Game
     this.load.image('bt_parametre', 'assets/button/parameterButton.png')
     this.load.image('bt_boutique', 'assets/button/boutiqueButton.png')
-    this.load.image('bt_receuil', 'assets/button/receuilButton.png')
+    this.load.image('bt_recueil', 'assets/button/recueilButton.png')
 
     //Boutons de la Boutique
     this.load.image('bt_ingredient', 'assets/button/ingredientButton.png')
@@ -88,30 +101,104 @@ export class Preloader extends Phaser.Scene {
       frameHeight: 32,
     })
 
-    //PlayerTest
-    this.load.spritesheet('player', 'assets/players/archer_3.png', {
-      frameWidth: 16,
-      frameHeight: 16,
-    })
-
     this.load.image('logo', 'assets/divers/logo.png')
+
+    //charger les ingrédients
+    let ingredients = ['beurre', 'carotte', 'carotte_coupee', 'cut_navet', 'eau', 'farine', 'gigot_dragon',
+      'killer_chicken_leg', 'lait', 'lampe_genie', 'levure', 'monster_eye', 'nugget', 'riz',
+      'salade', 'saucisse', 'sel_poivre', 'slime_piece']
+
+    for (let i = 0; i < ingredients.length; i++) {
+      this.load.image(ingredients[i], 'assets/ingredients/' + ingredients[i] + '.png')
+    }
+
+  }
+
+  createAnims () {
+    let avatars = ['guerrier', 'mage', 'archer', 'pretre']
+    for (let i = 0; i < 4; i++) { //Num Classe
+      for (let j = 1; j <= 4; j++) { //Num Joueur
+
+        let name = 'j' + j + '_' + avatars[i]
+
+        this.anims.create({
+          key: name + '_left',
+          frames: this.anims.generateFrameNumbers(name, { start: 3, end: 4 }),
+          frameRate: 10,
+          repeat: -1
+        })
+
+        this.anims.create({
+          key: name + '_right',
+          frames: this.anims.generateFrameNumbers(name, { start: 5, end: 6 }),
+          frameRate: 10,
+          repeat: -1
+        })
+
+        this.anims.create({
+          key: name + '_up',
+          frames: this.anims.generateFrameNumbers(name, { start: 1, end: 2 }),
+          frameRate: 10,
+          repeat: -1
+        })
+
+        this.anims.create({
+          key: name + '_down',
+          frames: this.anims.generateFrameNumbers(name, { start: 7, end: 8 }),
+          frameRate: 10,
+          repeat: -1
+        })
+
+        this.anims.create({
+          key: name + '_idle',
+          frames: [{ key: name, frame: 0 }],
+          frameRate: 10,
+          repeat: -1
+        })
+
+      }
+    }
 
   }
 
   create () {
-    //this.scene.start('Game');
-    //this.scene.start('GameUI');
 
-    this.scene.start('Start', { pseudo: '' })
+    this.createAnims()
+
+    this.scene.start('Game')
+    this.scene.start('GameUI')
+    /*
+    this.scene.start('Game', {
+      joueur_courant: 4,
+      code: 1234,
+      pseudo: 'Pseudo',
+      serveur_url: SERVER_URL
+    })
+    this.scene.start('GameUI')
+    // */
+
+    //this.scene.start('Start', { pseudo: '' })
     /*
     this.scene.start("Lobby",
         {
-            joueur_courant : 1,
+            joueur_courant : 3,
             code : 1234,
             pseudo : "Pseudo",
-            serveur_url : "ws://172.22.232.58:8080/IllicoDraco/"
+            serveur_url : "ws://172.22.232.58:8080/IllicoDraco/",
+            start_class : ["mage", "archer", "guerrier"]
         }
     );*/
+    //this.scene.start('Start', { pseudo: '' })
+
+    /*this.scene.start('Lobby',
+      {
+        joueur_courant: 3,
+        code: 1234,
+        pseudo: 'Pseudo',
+        serveur_url: SERVER_URL,
+        start_class: ['mage', 'archer', 'guerrier']
+      }
+    )*/
 
     /*
     this.scene.start('Boutique', {
@@ -124,16 +211,16 @@ export class Preloader extends Phaser.Scene {
 
 this.scene.start('Parametre',
     {
-        haut : "KeyZ",
-        bas : "KeyS",
-        droite : "KeyD",
-        gauche : "KeyQ",
+        haut : "z",
+        bas : "s",
+        droite : "d",
+        gauche : "q",
         attaquer : "Space",
-        interagir : "KeyF",
-        prendre : "KeyA",
-        boutique : "KeyB",
-        recueil : "KeyR",
-        chat : "KeyT"
+        interagir : "f",
+        prendre : "a",
+        boutique : "b",
+        recueil : "r",
+        chat : "t"
     }
 )*/
   }

@@ -15,16 +15,16 @@ public class Controles {
   private int id;                    // clef primaire dans la BD
 
   // PHASER EST EN QWERTY
-  private String haut = "KeyW"; // touche pour se déplacer vers le haut
-  private String gauche = "KeyA"; // touche pour se déplacer vers la gauche
-  private String bas = "KeyS"; // touche pour se déplacer vers le bas
-  private String droite = "KeyD"; // touche pour se déplacer vers la droite
+  private String haut = "W"; // touche pour se déplacer vers le haut
+  private String gauche = "A"; // touche pour se déplacer vers la gauche
+  private String bas = "S"; // touche pour se déplacer vers le bas
+  private String droite = "D"; // touche pour se déplacer vers la droite
   private String attaquer = "Space"; // touche pour attaquer
-  private String interagir = "KeyF"; // touche pour intéragir
-  private String prendre = "KeyQ"; // touche pour prendre / poser un produit
-  private String boutique = "KeyB"; // touche pour accéder à la boutique
-  private String recueil = "KeyR"; // touche pour ouvrir le bestiaire / livre de recettes
-  private String chat = "KeyT"; // touche pour ouvrir le chat
+  private String interagir = "F"; // touche pour intéragir
+  private String prendre = "Q"; // touche pour prendre / poser un produit
+  private String boutique = "B"; // touche pour accéder à la boutique
+  private String recueil = "R"; // touche pour ouvrir le bestiaire / livre de recettes
+  private String chat = "T"; // touche pour ouvrir le chat
 
   // constructeur
   public Controles() {

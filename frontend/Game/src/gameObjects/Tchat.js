@@ -20,15 +20,15 @@ export default class Tchat {
       .setVisible(false)
     this.compteurText = scene.add.text(x + 228, y - 10, '', { fontSize: '32px', fill: '#ff0000' })
       .setFixedSize(96, 32)
-      .setAlign('center')
-    this.compteur = 0
+      .setAlign('center');
+    this.compteur = 0;
 
     //Historique de la conversation
     this.historique = ''
 
     //this.ws = new WebSocket(serveur_url);
     const url = new URL(`chat/${pseudo}`, this.serveur_url)
-    this.ws = new WebSocket(url);
+    this.ws = new WebSocket(url)
     console.log(this.ws)
 
     this.ws.onmessage = (event) => {

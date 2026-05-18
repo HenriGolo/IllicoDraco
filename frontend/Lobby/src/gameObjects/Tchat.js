@@ -2,7 +2,7 @@ export default class Tchat {
 
     constructor(scene, pseudo, x, y, serveur_url) {
 
-        this.serveur_url = serveur_url;
+        this.serveur_url = serveur_url.replace(/.*:\/\//, 'ws://');
         this.pseudo = 'browser';//pseudo;
         // Affichage du tchat // 1120 332
         this.tchatOutput = scene.add.dom(x + 160, y + 204).createFromCache("tchatTextOutput");
@@ -12,8 +12,7 @@ export default class Tchat {
         this.tchatInput.addListener("click");
         this.tchatInput.on("click", (event) => this.send_enter_text(event));
 
-        //this.ws = new WebSocket(serveur_url);
-        this.ws = new WebSocket(`ws://localhost:8080/chat/${this.pseudo}`);
+        this.ws = new WebSocket(this.serveur_url);
         console.log(this.ws);
 
         // géré par le serveur, pas besoin ici

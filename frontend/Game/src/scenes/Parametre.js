@@ -38,7 +38,7 @@ export class Parametre extends Phaser.Scene {
     graphics.fillStyle(0x000000, 0.8)
     graphics.fillRect(0, 0, 1280, 720)
 
-    //Bouton Retour
+    // Bouton Retour
     this.add.sprite(46, 46, 'bt_retour').setScale(3, 3)
       .setInteractive()
       .on('pointerdown', () => this.close_window())
@@ -68,7 +68,7 @@ export class Parametre extends Phaser.Scene {
 
   }
 
-  //Permet de selectionner le controle a changer
+  // Permet de selectionner le controle a changer
   select (indice) {
 
     if (this.selected != -1) {
@@ -79,7 +79,7 @@ export class Parametre extends Phaser.Scene {
     this.selected = indice
   }
 
-  //change la touche associé a l'indice selectionné courant
+  // change la touche associé a l'indice selectionné courant
   change_key (new_key) {
 
     if (this.selected != -1) {
@@ -100,9 +100,9 @@ export class Parametre extends Phaser.Scene {
   }
 
   async close_window () {
-    //Si aucune touche a ""
-    //Sauvegarder les touches
-    //Retour a la fenetre précédente
+    // Si aucune touche a ""
+    // Sauvegarder les touches
+    // Retour a la fenetre précédente
 
     const url = new URL('controles', this.serveur_url)
     url.searchParams.set('pseudo', this.pseudo)
@@ -110,7 +110,6 @@ export class Parametre extends Phaser.Scene {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        //pseudo: 'pseudo',
         toucheHaut: this.keys[0],
         toucheBas: this.keys[1],
         toucheDroite: this.keys[3],
@@ -121,11 +120,11 @@ export class Parametre extends Phaser.Scene {
         accessBoutique: this.keys[8],
         bestiaireOuLivreRecette: this.keys[7],
         chat: this.keys[9],
-        id : this.id
+        id: this.id
       })
     })
 
-    console.log(response) 
+    console.log(response)
 
     this.scene.resume(this.previousScene)
     this.scene.stop(this)
