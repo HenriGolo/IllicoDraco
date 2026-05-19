@@ -115,7 +115,7 @@ export default class Coffre {
             }
         }
 
-        this.open()
+        this.close()
         
     }
 

@@ -120,7 +120,7 @@ export class Game extends Phaser.Scene {
 
     //TILE MAP
 
-    const tilemap = this.make.tilemap({ key: 'tilemap' })
+    tilemap = this.make.tilemap({ key: 'tilemap' })
     tilemap.addTilesetImage('full_tileset', 'tiles')
     this.middleY = this.height * 0.5
     tilemap.createLayer('fond', 'full_tileset', 0, 0)
@@ -411,12 +411,19 @@ export class Game extends Phaser.Scene {
 
   createEnnemy () {
 
-    if (this.monstersData.length) {
-      const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length)
-      // listJson.filter({id} => id === indiceVoulu)[0]
-      const chosenMonster = this.monstersData.filter(({ id }) => id === chosenMonsterId)[0]
+    //console.log( !this.monstersData ? "pas de monsterData defined" : "defined")
 
-      const nom = chosenMonster.name
+    if (this.monstersData.length) {
+      const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length-1)
+      // listJson.filter({id} => id === indiceVoulu)[0]
+
+      console.log("Id de monstre choisi : ", chosenMonsterId, this.monstersData)
+
+      const chosenMonster = this.monstersData[chosenMonsterId]
+
+      console.log("--------- chosen monster : ", chosenMonster)
+
+      const nom = chosenMonster.nom
       console.log('Monstre spawn : ' + nom)
 
       const stats = chosenMonster.stats
@@ -430,6 +437,7 @@ export class Game extends Phaser.Scene {
         delay: Phaser.Math.Between(10000, 20000) / stats.vitesse,
         callback: (monster) => {
           this.physics.moveTo(monster.sprite, monster.sprite.x, monster.sprite.y - 16, 50)
+          console.log("Monstre se déplace")
         },
         callbackScope: this,
         loop: true

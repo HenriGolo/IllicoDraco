@@ -3,6 +3,7 @@ import Client from "./Client.js";
 
 export class QueueClient {
   constructor(scene) {
+    this.parentScene = scene
     this.clientsGroup = scene.physics.add.group({
     classType: Client,
     runChildUpdate: true
@@ -21,7 +22,7 @@ export class QueueClient {
     const frameID = Phaser.Math.Between(0,3)*2; //0, 2, 4, 6 --> un des 4 clients au hasar
     
 
-    const newClient = new Client(13*16+8 - this.lastPosNotTaken*16, 42*16 +8, frameID,  'client');
+    const newClient = new Client(this.parentScene, 13*16+8 - this.lastPosNotTaken*16, 42*16 +8, frameID,  'client');
     const clientG = this.clientsGroup.add(newClient);
     clientG.setActive(true).setVisible(true);
 
@@ -29,7 +30,7 @@ export class QueueClient {
 
     this.lastPosNotTaken++;
 
-    console.log("Nouveau client créé; Sprite "+frameID + "position :" + this.lastPosNotTaken -1 + "taken");
+    console.log("Nouveau client créé; Sprite ", frameID, "position :", this.lastPosNotTaken -1, "taken");
     console.log("Requête : \n");
     console.log(requete);
 

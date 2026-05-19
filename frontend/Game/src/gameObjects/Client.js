@@ -6,8 +6,12 @@ export default class Client extends Phaser.Physics.Arcade.Sprite {
         // Ajouter le sprite à la scène
         scene.add.existing(this);
 
+        console.log("Added Client sprite to world")
+
         // Ajouter le body physique
         scene.physics.add.existing(this);
+
+        console.log("Added Client body to world")
 
         // Paramètres physiques (optionnel)
         // this.setCollideWorldBounds(true);
