@@ -22,10 +22,17 @@ export default class Player extends Entity {
       console.log({ key })
       return key
     }
+
+
+    console.log(Object.entries(controles)
+        .map(([key, value]) =>
+          key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
+        ))
+
     this.controles = Object.fromEntries(
       Object.entries(controles)
         .map(([key, value]) =>
-          key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
+          key === 'id' ? [] : [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
         )
     )
     console.log({ controles })

@@ -1,7 +1,7 @@
 import Tchat from '../gameObjects/Tchat.js'
 import Player from '../gameObjects/Player.js'
 import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
-import { SERVER_URL } from '../utils.js'
+import { SERVER_URL, TIME, MONEY } from '../utils.js'
 import Monster from '../entities/Monster.js'
 import Coffre from '../gameObjects/Coffre.js'
 
@@ -91,16 +91,20 @@ export class GameUI extends Phaser.Scene {
 
 export class Game extends Phaser.Scene {
 
-  constructor (
-    joueur_courant = 4,
-    pseudo = 'Pseudo',
-    serveur_url = SERVER_URL
-  ) {
+  constructor () {
     super('Game')
+  }
 
-    this.serveur_url = serveur_url
-    this.joueur_courant = joueur_courant
-    this.pseudo = pseudo
+  init (data) {
+    
+    this.joueur_courant = data.joueur_courant
+    this.pseudo = data.pseudo
+    this.ws = data.ws
+    this.joueurs_info = data.joueurs_info
+
+    this.serveur_url = SERVER_URL
+    this.duree = TIME
+    this.money = MONEY
   }
 
   preload () {
@@ -130,16 +134,13 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    const controles_url = new URL('controles', this.serveur_url)
-    controles_url.searchParams.set('pseudo', this.pseudo)
-    fetch(controles_url)
-      .then(response => response.json())
-      .then(controles => {
-        console.log({ controles })
-        this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 10, 3, controles)
-        console.log({ player: this.playerCur })
+    //INIT DU JOUEUR AVEC LES DONNEES DE JOUEUR DATA
+    console.log(">>><<<")
+      console.log(this.joueurs_info[this.joueur_courant-1].controles)
+        this.player = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 10, 3, this.joueurs_info[this.joueur_courant-1].controles)
+        console.log({ player: this.player })
         /*/TO REMOVE
-        this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 50, 3, {
+        this.player = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 50, 3, {
           gauche: 'Q',
           bas: 'S',
           droite: 'D',
@@ -147,23 +148,26 @@ export class Game extends Phaser.Scene {
           prendre: 'E'
         })//*/
         this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
-        this.cameras.main.startFollow(this.playerCur.getPlayer(), true)
+        this.cameras.main.startFollow(this.player.getSprite(), true)
         this.cameras.main.setFollowOffset(
-          -this.playerCur.getWidth() / 2,
-          -this.playerCur.getHeight() / 2
+          -this.player.getWidth() / 2,
+          -this.player.getHeight() / 2
         )
-      })
+      
+    //INIT DES AUTRES JOUEURS
+      
+    ////////////////////////////////////////////////////:::
 
     //Cacher le joueur ou monstre qui passe sous un tronc/arche
-    caches.setDepth(this.playerCur?.getDepth() + 1)
+    caches.setDepth(this.player?.getDepth() + 1)
 
     // Collisions :
     obstacles.setCollisionByProperty({ collision: true })
-    this.physics.add.collider(this.playerCur?.getPlayer(), obstacles)
+    this.physics.add.collider(this.player?.getSprite(), obstacles)
 
     this.physics.world.setBounds(0, 0, this.width, this.height)
     this.physics.world.setBoundsCollision()
-    this.playerCur?.sprite.setCollideWorldBounds()
+    this.player?.getSprite().setCollideWorldBounds()
     this.createInteractiveObjects()
     this.ingredientsContainer = new IngredientsContainer(this, this.player)
     this.ingredientsContainer.add_ingredient(this.middleX + 32, this.middleY, 'slime_piece')
@@ -207,7 +211,7 @@ export class Game extends Phaser.Scene {
     this.player?.handleKey()
     if (this.interactText) {
       if (this.interactText) {
-        this.interactText.setPosition(this.playerCur?.getX(), this.playerCur?.getY() - 20)
+        this.interactText.setPosition(this.player?.getX(), this.player?.getY() - 20)
       }
 
       // this.effect = this.marmite.preFX.addGlow(0xff00ff, 10, 0).setActive(false);
@@ -227,7 +231,7 @@ export class Game extends Phaser.Scene {
         const zone = this.objetInteract.hitZone
 
         if (!Phaser.Geom.Intersects.RectangleToRectangle(
-          this.playerCur?.getPlayer().body,
+          this.player?.getSprite().body,
           zone.body
         )) {
 
@@ -253,9 +257,9 @@ export class Game extends Phaser.Scene {
     this.hitZoneMarmite = this.add.rectangle(16 * 10, 37 * 16, 64, 64, 0x0000ff).setVisible(debug)
     this.hitZoneBar = this.add.rectangle(13 * 16 + 8, 40 * 16 + 8, 32, 16, 0x0000ff).setVisible(debug)
     this.hitZoneMarmite.setInteractive()
-    this.playerCur?.getPlayer().setAbove(this.hitZoneMarmite)
-    this.playerCur?.getPlayer().setAbove(this.hitZoneCoffre)
-    this.playerCur?.getPlayer().setAbove(this.hitZoneTable)
+    this.player?.getSprite().setAbove(this.hitZoneMarmite)
+    this.player?.getSprite().setAbove(this.hitZoneCoffre)
+    this.player?.getSprite().setAbove(this.hitZoneTable)
     this.hitZoneMarmite.setInteractive()
     this.physics.world.enable(this.hitZoneMarmite)
 
@@ -298,20 +302,20 @@ export class Game extends Phaser.Scene {
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
     console.log(this.hitZoneCoffre.body.x) // must be true
     console.log(this.hitZoneMarmite.body.enable)  // must be true
-    this.physics.add.overlap(this.playerCur?.getPlayer(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre), null, this)
-    this.physics.add.overlap(this.playerCur?.getPlayer(), this.hitZoneTable, () => this.zoneInteract(this.table))
-    this.physics.add.overlap(this.playerCur?.getPlayer(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite))
-    this.physics.add.overlap(this.playerCur?.getPlayer(), this.hitZoneBar, () => this.zoneInteract(this.bar))
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre), null, this)
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneTable, () => this.zoneInteract(this.table))
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite))
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneBar, () => this.zoneInteract(this.bar))
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
 
     //const truc = this.marmite.preFX.addGlow(0xffffff, 100, 0, false);
 
-    this.playerCur?.getPlayer().setBounce(0.2)
-    this.physics.add.collider(this.marmite, this.playerCur?.getPlayer(), null, null, this)
+    this.player?.getSprite().setBounce(0.2)
+    this.physics.add.collider(this.marmite, this.player?.getSprite(), null, null, this)
     // Préparation des interactions :
-    this.physics.add.collider(this.coffre, this.playerCur?.getPlayer(), null, null, this)
-    this.physics.add.collider(this.bar, this.playerCur?.getPlayer(), null, null, this)
-    this.physics.add.collider(this.table, this.playerCur?.getPlayer(), null, null, this)
+    this.physics.add.collider(this.coffre, this.player?.getSprite(), null, null, this)
+    this.physics.add.collider(this.bar, this.player?.getSprite(), null, null, this)
+    this.physics.add.collider(this.table, this.player?.getSprite(), null, null, this)
 
     // Préparation des interactions :
 
@@ -407,7 +411,7 @@ export class Game extends Phaser.Scene {
       this.monsterObjects.push(monster)
 
       console.log('Enemy spawned at x: ' + x + ', y: ' + y)
-      console.log('x: ' + this.playerCur?.getWidth() + ' y: ' + this.playerCur?.getHeight())
+      console.log('x: ' + this.player?.getWidth() + ' y: ' + this.player?.getHeight())
     }
   }
 
