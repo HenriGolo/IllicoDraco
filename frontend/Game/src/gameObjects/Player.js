@@ -116,6 +116,12 @@ export default class Player extends Entity {
               console.log("wtf bro")
               queue.removeClient()
             }
+            this.setCarriedObject("")
+
+            this.ws.send(JSON.stringify({
+              type: 'serv_client',
+              num: this.num
+            }))
 
             break
           }
@@ -164,7 +170,7 @@ export default class Player extends Entity {
       type: 'damage_monster',
       attaque: this.getAtq(),
       indice: indice,
-      num: this.num,
+      num: this.num
     }))
   }
 
