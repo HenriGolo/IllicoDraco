@@ -16,12 +16,15 @@ public class GameMessage {
   /// Déplacements du joueur
   private int deltaX;
   private int deltaY;
+  /// Position actuelle
+  private int x;
+  private int y;
   /// JSON au besoin
   private String jsonData;
   /// code de la partie (debug)
   private String code;
   /// Indique que le joueur a ramassé un objet
-  private String ramasse;
+  private ObjetRamasse ramasse;
 
   public boolean isSystem() {
     return system;
@@ -61,11 +64,13 @@ public class GameMessage {
 
   public void setMessage(Message message) {
     this.message = message;
+    this.message.setSystem(system);
   }
 
   public void setContent(String content) {
     if (message == null) message = new Message();
     message.setContent(content);
+    message.setSystem(system);
   }
 
   public int getDeltaX() {
@@ -100,11 +105,27 @@ public class GameMessage {
     this.code = code;
   }
 
-  public String getRamasse() {
+  public ObjetRamasse getRamasse() {
     return ramasse;
   }
 
-  public void setRamasse(String ramasse) {
+  public void setRamasse(ObjetRamasse ramasse) {
     this.ramasse = ramasse;
+  }
+
+  public int getX() {
+    return x;
+  }
+
+  public void setX(int x) {
+    this.x = x;
+  }
+
+  public int getY() {
+    return y;
+  }
+
+  public void setY(int y) {
+    this.y = y;
   }
 }
