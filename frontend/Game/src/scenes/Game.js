@@ -533,7 +533,7 @@ export class Game extends Phaser.Scene {
 
   interactClient(client){
 
-
+  }
 
   //////////////////////////Envoi message////////////////////////////
   sendDropObject(object, x, y) {
