@@ -101,6 +101,7 @@ export class Game extends Phaser.Scene {
     this.pseudo = data.pseudo
     this.ws = data.ws
     this.joueurs_info = data.joueurs_info
+    this.joueurs_classe = data.classes_info
 
     this.serveur_url = SERVER_URL
     this.duree = TIME
@@ -133,25 +134,28 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    //INIT DU JOUEUR AVEC LES DONNEES DE JOUEUR DATA
-    console.log(">>><<<")
-      console.log(this.joueurs_info[this.joueur_courant-1].controles)
-        this.player = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 10, 3, this.joueurs_info[this.joueur_courant-1].controles)
-        console.log({ player: this.player })
-        /*/TO REMOVE
-        this.player = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 50, 3, {
-          gauche: 'Q',
-          bas: 'S',
-          droite: 'D',
-          haut: 'Z',
-          prendre: 'E'
-        })//*/
-        this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
-        this.cameras.main.startFollow(this.player.getSprite(), true)
-        this.cameras.main.setFollowOffset(
-          -this.player.getWidth() / 2,
-          -this.player.getHeight() / 2
-        )
+    //INIT DES JOUEURS AVEC LES DONNEES DE JOUEUR DATA
+    this.players = []
+    for (let i = 0; i < this.joueurs_info.length; i++) {
+
+      let p = new Player(
+        this, 
+        this.middleX + 16, this.middleY, i+1, 
+        this.joueurs_classe[i], 
+        100, 10, 3, 
+        this.joueurs_info[i].controles)
+
+      this.players.push(p)
+      }
+
+      this.player = this.players[this.joueur_courant -1]
+
+      this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
+      this.cameras.main.startFollow(this.player.getSprite(), true)
+      this.cameras.main.setFollowOffset(
+        -this.player.getWidth() / 2,
+        -this.player.getHeight() / 2
+      )
       
     //INIT DES AUTRES JOUEURS
       
