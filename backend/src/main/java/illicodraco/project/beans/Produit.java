@@ -1,8 +1,6 @@
 package illicodraco.project.beans;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 // Classe java gérant l'entité "produit"
@@ -18,6 +16,8 @@ public class Produit {
   private String path;    // path vers la texture du produit
 
   private int prix;
+
+  private boolean fini;
 
 
   // constructeur
@@ -64,5 +64,13 @@ public class Produit {
 
   public void setPrix(int prix) {
     this.prix = prix;
+  }
+
+  public boolean isFini() {
+    return fini;
+  }
+
+  public void setFini(boolean fini) {
+    this.fini = fini;
   }
 }

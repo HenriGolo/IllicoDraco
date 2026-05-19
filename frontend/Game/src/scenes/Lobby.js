@@ -29,6 +29,7 @@ export class Lobby extends Phaser.Scene {
 
     this.ws.onmessage = (event) => {
       const message = JSON.parse(event.data)
+      console.log({ message })
       this.start_class = JSON.parse(message.jsonData)
       this.setup_done = true
     }

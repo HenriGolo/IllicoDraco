@@ -20,6 +20,8 @@ public class GameMessage {
   private String jsonData;
   /// code de la partie (debug)
   private String code;
+  /// Indique que le joueur a ramassé un objet
+  private String ramasse;
 
   public boolean isSystem() {
     return system;
@@ -96,5 +98,13 @@ public class GameMessage {
 
   public void setCode(String code) {
     this.code = code;
+  }
+
+  public String getRamasse() {
+    return ramasse;
+  }
+
+  public void setRamasse(String ramasse) {
+    this.ramasse = ramasse;
   }
 }
