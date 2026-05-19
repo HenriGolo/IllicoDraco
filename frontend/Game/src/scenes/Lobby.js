@@ -29,6 +29,7 @@ export class Lobby extends Phaser.Scene {
 
     this.ws.onmessage = (event) => {
       const message = JSON.parse(event.data)
+      console.log({ message })
       this.start_class = JSON.parse(message.jsonData)
       this.setup_done = true
     }
@@ -156,6 +157,15 @@ export class Lobby extends Phaser.Scene {
     url.searchParams.set('code', this.code)
     const response = await fetch(url)
     if (response.ok) {
+
+      let classes_info = []
+      for (let i = 0; i < this.joueurs.length; i++) {
+        classes_info.push(joueur_classe[this.joueurs[i].state])
+      }
+
+
+      console.log(classes_info)
+
       this.tchat.quitChat () 
       const data = await response.json()
       this.scene.start("Game", 
@@ -163,7 +173,8 @@ export class Lobby extends Phaser.Scene {
           ws : this.ws,
           joueur_courant : this.joueur_courant,
           pseudo : this.pseudo,
-          joueurs_info : data.joueurs
+          joueurs_info : data.joueurs,
+          classes_info : classes_info
         }
 
       )

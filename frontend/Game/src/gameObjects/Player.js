@@ -5,6 +5,9 @@ export default class Player extends Entity {
   constructor (scene, x, y, num, classe, pv, def, atq, controles = {}) {
     super(scene, 'j' + num + '_' + classe, pv, def, atq, x, y)
 
+    this.ws = null
+    this.num = num
+
     this.parent_scene = scene //Scene du jeu
     //this.name = 'j' + num + '_' + classe //Nom du sprite : jx_classe
 
@@ -15,6 +18,8 @@ export default class Player extends Entity {
 
     this.carried_object = this.parent_scene.add.sprite(x, y - this.sprite.height, '')
     this.carried_object.setVisible(false)
+
+    this.is_moving = false;
 
     // Touche
     this.cursors = this.parent_scene.input.keyboard.createCursorKeys()
@@ -47,28 +52,88 @@ export default class Player extends Entity {
     if (this.cursors.right.isDown || isDown('droite')) dx += 100
     if (this.cursors.up.isDown || isDown('haut')) dy -= 100
     if (this.cursors.down.isDown || isDown('bas')) dy += 100
+    //Envoie des déplacements
+    if (this.ws !== null) {
+      this.sendDeltaXY(dx, dy)
+      
+    }
+
     this.move(dx, dy)
 
     // Prendre / Poser un objet
     if (isJustDown('prendre')) {
       let ic = this.parent_scene.getIngredientsContainer()
-      let key = ic.get_overlap_object()
-      console.log(key)
-      if (key != null) {
-        if (this.objectIsCarried()) {
+      let object = ic.get_overlap_object()
+      if (object.key != null) { // on veut prendre un objet
+        if (this.objectIsCarried()) { ///Un objet est porté
           let old = this.getCarriedObject()
           ic.add_ingredient(this.getX(), this.getY(), old)
+          this.parent_scene.sendDropObject(old, this.getX(), this.getY())
         }
-        this.setCarriedObject(key)
-      } else if (this.objectIsCarried()) {
+        this.setCarriedObject(object.key)
+        this.sendCarriedObject(object)
+
+      } else if (this.objectIsCarried()) { //Un objet  est porté et on ne veut pas prendre d'objet
         let old = this.getCarriedObject()
         ic.add_ingredient(this.getX(), this.getY(), old)
+        this.parent_scene.sendDropObject(old, this.getX(), this.getY())
         this.setCarriedObject('')
+        this.sendCarriedObject({key:'', indice:-1})
       }
     } 
 
     
 
+  }
+
+  setWS(ws) {
+    this.ws = ws
+  }
+
+  sendCarriedObject(object) {
+        console.log("Object" + object)
+
+        this.ws.send(JSON.stringify({
+        type : "take_ingredient",
+        ramasse: object,
+        num: this.num,
+        }))
+  }
+
+  sendDeltaXY(x, y) {
+
+    console.log(x, y)
+    
+    if (x === 0 && y === 0) {
+      if (this.is_moving) {
+        this.is_moving = false
+        this.ws.send(JSON.stringify({
+        type : "deplacement",
+        deltaX: x,
+        deltaY: y,
+        x: this.getX(),
+        y: this.getY(),
+        num: this.num,
+        }))
+      }
+    } else {
+      this.is_moving = true
+      this.ws.send(JSON.stringify({
+        type : "deplacement",
+        deltaX: x,
+        deltaY: y,
+        x: this.getX(),
+        y: this.getY(),
+        num: this.num,
+        }))
+    }
+  
+  }
+
+  setPos(x, y) {
+    this.sprite.setX(x)
+    this.sprite.setY(y)
+    super.move(x,y)
   }
 
   // Move and play the right animation
@@ -95,6 +160,7 @@ export default class Player extends Entity {
   }
 
   setCarriedObject (texture) {
+    console.log("Objet ramassé : " + texture)
     this.carried_object.setVisible(texture !== '')
     this.carried_object.setTexture(texture)
 

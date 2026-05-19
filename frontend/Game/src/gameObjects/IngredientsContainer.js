@@ -27,12 +27,20 @@ export default class IngredientsContainer {
         this.ingredients[i].destroy()
         this.ingredients.splice(i, 1) //retire l'élément concerné
 
-        return key
+        return {key, indice:i}
       }
     }
 
-    return null
+    return {key:null, indice:-1}
 
+  }
+
+  remove_object(indice) {
+    if (indice != -1) {
+      this.ingredients[indice].destroy()
+      this.ingredients.splice(indice, 1) //retire l'élément concerné
+    }
+    
   }
 
 }

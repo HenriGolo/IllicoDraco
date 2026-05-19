@@ -101,6 +101,7 @@ export class Game extends Phaser.Scene {
     this.pseudo = data.pseudo
     this.ws = data.ws
     this.joueurs_info = data.joueurs_info
+    this.joueurs_classe = data.classes_info
 
     this.serveur_url = SERVER_URL
     this.duree = TIME
@@ -111,6 +112,9 @@ export class Game extends Phaser.Scene {
   }
 
   create () {
+
+    //Rediriger le handler de la web socket
+     this.ws.onmessage = (event) => this.on_message(event)
 
     this.monstersData = []
     this.getMonsters()
@@ -133,25 +137,29 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    //INIT DU JOUEUR AVEC LES DONNEES DE JOUEUR DATA
-    console.log(">>><<<")
-      console.log(this.joueurs_info[this.joueur_courant-1].controles)
-        this.player = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 10, 3, this.joueurs_info[this.joueur_courant-1].controles)
-        console.log({ player: this.player })
-        /*/TO REMOVE
-        this.player = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 50, 3, {
-          gauche: 'Q',
-          bas: 'S',
-          droite: 'D',
-          haut: 'Z',
-          prendre: 'E'
-        })//*/
-        this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
-        this.cameras.main.startFollow(this.player.getSprite(), true)
-        this.cameras.main.setFollowOffset(
-          -this.player.getWidth() / 2,
-          -this.player.getHeight() / 2
-        )
+    //INIT DES JOUEURS AVEC LES DONNEES DE JOUEUR DATA
+    this.players = []
+    for (let i = 0; i < this.joueurs_info.length; i++) {
+
+      let p = new Player(
+        this, 
+        this.middleX + 16, this.middleY, i+1, 
+        this.joueurs_classe[i], 
+        100, 10, 3, 
+        this.joueurs_info[i].controles)
+
+      this.players.push(p)
+      }
+
+      this.player = this.players[this.joueur_courant -1]
+      this.player.setWS(this.ws)
+
+      this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
+      this.cameras.main.startFollow(this.player.getSprite(), true)
+      this.cameras.main.setFollowOffset(
+        -this.player.getWidth() / 2,
+        -this.player.getHeight() / 2
+      )
       
     //INIT DES AUTRES JOUEURS
       
@@ -203,6 +211,28 @@ export class Game extends Phaser.Scene {
       }
     )
 
+  }
+
+  on_message(event) {
+    const message = JSON.parse(event.data)
+    console.log({ message })
+
+    if (message.num != this.joueur_courant) {
+    switch (message.type) {
+      case 'deplacement' :
+          this.players[message.num-1].setPos(message.x, message.y)
+          this.players[message.num-1].move(message.deltaX, message.deltaY)
+        break
+      case 'take_ingredient' :
+          this.players[message.num-1].setCarriedObject(message.ramasse.key)
+          this.ingredientsContainer.remove_object(message.ramasse.indice)
+      break
+      case 'drop_object' :
+        this.ingredientsContainer.add_ingredient(message.x, message.y, message.ramasse.key)
+      default :
+        console.log('Requête inconnue')
+    }
+    }
   }
 
   update () {
@@ -428,6 +458,20 @@ export class Game extends Phaser.Scene {
       loop: true
     })
   }
+
+
+
+  //////////////////////////Envoi message////////////////////////////
+  sendDropObject(object, x, y) {
+        this.ws.send(JSON.stringify({
+        type : "drop_object",
+        ramasse : {key: object},
+        x : x,
+        y : y,
+        num: this.num,
+        }))
+  }
+
 }
 
 ////////////////////////////////
