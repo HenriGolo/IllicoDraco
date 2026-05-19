@@ -120,8 +120,8 @@ public class Facade {
   }
 
   @GetMapping("/outils")
-  public Collection<Outil> getOutils() {
-    return outilRepo.findAll();
+  public Outil getOutils(@RequestParam("nom") String nom) {
+    return outilRepo.findById(nom).orElseThrow(() -> new EntityNotFound("Outil inexistant"));
   }
 
   /**
@@ -149,6 +149,11 @@ public class Facade {
   @GetMapping("/recettes/{input}")
   public Collection<Recette> getRecettes(@PathVariable("input") String nom) {
     return getRecettes(nom, nom);
+  }
+
+  @GetMapping("/recettes")
+  public Collection<Recette> getRecettes() {
+    return recetteRepo.findAll();
   }
 
   @GetMapping("/stats")
@@ -217,18 +222,6 @@ public class Facade {
   public Collection<Produit> getCoffre(@RequestParam("code") String code) {
     return partieRepo.findById(code).orElseThrow(() -> new EntityNotFound("Partie inexistente")).getCoffre();
   }*/
-
-  @PutMapping("/marmite")
-  public void remplirMarmite(@RequestParam("code") String code,@RequestParam("produit") Produit produit) {
-    Partie partie = getPartie(code);
-    partie.getMarmite().add(produit);
-    partieRepo.save(partie);
-  }
-
-  @GetMapping("/marmite")
-  public Collection<Produit> getMarmite(@RequestParam("code") String code) {
-    return partieRepo.findById(code).orElseThrow(() -> new EntityNotFound("Partie inexistante")).getMarmite();
-  }
 
   /*
   @PostMapping("/coffre")

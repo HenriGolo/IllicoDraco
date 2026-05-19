@@ -11,7 +11,7 @@ public class Outil {
   @Id
   private String nom;     // nom de l'outil
 
-  private float vitesse;  // vitesse de "travail" de l'outil
+  private int vitesse;  // vitesse de "travail" de l'outil
 
   // constructeur
   public Outil() {
@@ -23,7 +23,7 @@ public class Outil {
     return nom;
   }
 
-  public Float getVitesse() {
+  public int getVitesse() {
     return vitesse;
   }
 
@@ -33,7 +33,7 @@ public class Outil {
     this.nom = nom;
   }
 
-  public void setVitesse(Float vitesse) {
+  public void setVitesse(int vitesse) {
     this.vitesse = vitesse;
   }
 

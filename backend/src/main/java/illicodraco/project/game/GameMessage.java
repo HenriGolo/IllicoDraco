@@ -27,6 +27,8 @@ public class GameMessage {
   private ObjetRamasse ramasse;
   /// Nom du produit placé dans la marmitte / le coffre
   private String produit;
+  /// ID de l'enemi à créer
+  private String ennemi;
 
   public boolean isSystem() {
     return system;
@@ -139,4 +141,11 @@ public class GameMessage {
     this.produit = produit;
   }
 
+  public String getEnnemi() {
+    return ennemi;
+  }
+
+  public void setEnnemi(String ennemi) {
+    this.ennemi = ennemi;
+  }
 }
