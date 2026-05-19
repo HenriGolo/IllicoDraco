@@ -27,11 +27,11 @@ public class Partie {
   private int argent;                 // argent global des joueurs dans la partie
 
   private float satisfaction;         // score de satisfaction client
-/*
+
 
   @OneToMany
   private Collection<Produit> marmite; // liste des ingrédients dans la marmite
-
+/*
   @OneToMany
   private Collection<Produit> coffre; // liste des produits dans le coffre
 //*/
@@ -119,6 +119,10 @@ public class Partie {
 
   public void setSatisfaction(float satisfaction) {
     this.satisfaction = satisfaction;
+  }
+
+  public void setMarmite(Collection<Produit> marmite) {
+    this.marmite = marmite;
   }
 
   /*
