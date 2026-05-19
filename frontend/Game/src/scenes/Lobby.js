@@ -156,14 +156,14 @@ export class Lobby extends Phaser.Scene {
     url.searchParams.set('code', this.code)
     const response = await fetch(url)
     if (response.ok) {
+      this.tchat.quitChat () 
       const data = await response.json()
       this.scene.start("Game", 
         {
           ws : this.ws,
           joueur_courant : this.joueur_courant,
           pseudo : this.pseudo,
-          joueurs_info : data.joueurs_info
-
+          joueurs_info : data.joueurs
         }
 
       )
