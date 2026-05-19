@@ -99,6 +99,10 @@ export default class Player extends Entity {
             }
             break
           }
+          case "bar" : // Le joueur interagit avec la marmite
+
+            var objetPorte = this.getCarriedObject();
+
           default:
             console.log("Rien a faire...")
 

@@ -16,9 +16,10 @@ export class QueueClient {
   }
 
   addNewClient() {
-    //this.getRandomPlat();
-    //const requete = this.platData; // requête du client
-    const requete = "bonjour je suis une requete eheheh"
+    this.getRandomPlat();
+    console.log(this.platData)
+    const requete = this.platData; // requête du client
+    //const requete = "bonjour je suis une requete eheheh"
     const frameID = Phaser.Math.Between(0,3)*2; //0, 2, 4, 6 --> un des 4 clients au hasar
     
 
@@ -71,7 +72,7 @@ export class QueueClient {
     async getRandomPlat () {
 
 
-      const url = new URL('plat_random', SERVER_URL)
+      const url = new URL('plat/random', SERVER_URL)
       const response = await fetch(url)
       if (response.ok) {
         let data = await response.json()
