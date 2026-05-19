@@ -15,9 +15,11 @@ export class QueueClient {
   }
 
   addNewClient() {
-    this.getRandomPlat();
+    // this.getRandomPlat();
+    // const requete = this.platData; // requête du client
+    const requete = "bonjour je suis une requete eheheh"
     const frameID = Phaser.Math.Between(0,3)*2; //0, 2, 4, 6 --> un des 4 clients au hasar
-    const requete = this.platData; // requête du client
+    
 
     const newClient = new Client(13*16+8 - this.lastPosNotTaken*16, 42*16 +8, frameID,  'client');
     const clientG = this.clientsGroup.add(newClient);
