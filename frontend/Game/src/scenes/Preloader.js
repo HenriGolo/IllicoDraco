@@ -111,8 +111,8 @@ export class Preloader extends Phaser.Scene {
     // Spritesheet bulle de requête
 
     this.load.spritesheet('bulle', 'assets/divers/bulle_demande.png', {
-      frameWidth : 16,
-      frameHeight : 16
+      frameWidth : 24,
+      frameHeight : 24
     })
 
 
@@ -123,6 +123,12 @@ export class Preloader extends Phaser.Scene {
 
     for (let i = 0; i < ingredients.length; i++) {
       this.load.image(ingredients[i], 'assets/ingredients/' + ingredients[i] + '.png')
+    }
+
+    let plats_finis = ['atchoum', 'boeilgur', 'brioche', 'carotte_genie', 'fromage', 'jackoNavet', 'tarte', 'pain', 'ragout', 'slimeFresh', 'soupeLegumes', 'tourLegumes']
+
+    for (let i = 0; i < plats_finis.length; i++) {
+      this.load.image(plats_finis[i], 'assets/ingredients/' + plats_finis[i] + '.png')
     }
 
   }

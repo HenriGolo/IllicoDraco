@@ -119,7 +119,6 @@ export class Lobby extends Phaser.Scene {
     this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url)
 
     this.ws.onmessage = (event) => this.on_message(event)
-    this.ws.onerror = () => console.error('Erreur dans le lobby')
 
     // TEST
 
@@ -140,6 +139,7 @@ export class Lobby extends Phaser.Scene {
         break
       case 'start_game' :
         this.launch_game()
+        break
       default :
         console.error('Requête inconnue')
     }
@@ -148,6 +148,15 @@ export class Lobby extends Phaser.Scene {
 
   //fetch les données pour lancer la partie
   async launch_game () {
+    /*
+    let url_class = new URL('classes', this.serveur_url)
+      const response_class = await fetch(url_class)
+      url.searchParams.set('classe', this.code)
+      if (response_class.ok) {
+        const data = await response_class.json()
+        // Start le lobby avec le nombre de joueurs dans data
+    } */
+
     const url = new URL('start_game', this.serveur_url)
     url.searchParams.set('code', this.code)
     const response = await fetch(url)

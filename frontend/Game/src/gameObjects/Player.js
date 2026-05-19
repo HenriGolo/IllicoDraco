@@ -83,10 +83,28 @@ export default class Player extends Entity {
             }
             break
           }
-          case 'bar' : // Le joueur interagit avec la marmite
+          case 'bar' : {// Le joueur interagit avec le bar 
+
+            console.log("Interaction avec le bar")
 
             var objetPorte = this.getCarriedObject()
+            var queue = this.parent_scene.getClientQueue()
+            var client = queue.peek()
+            var objetVouluClient = client.getRequete()
 
+            console.log("Client veut :", objetVouluClient, ", je porte :", objetPorte)
+            
+            if (objetPorte === objetVouluClient.nom){
+              console.log("Client satisfait!! +", objetVouluClient.prix)
+              queue.removeClient()
+              this.parent_scene.money += objetVouluClient.prix
+            } else {
+              console.log("wtf bro")
+              queue.removeClient()
+            }
+
+            break
+          }
           default:
             console.log('Rien a faire...')
 

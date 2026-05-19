@@ -1,28 +1,38 @@
 export default class Client extends Phaser.Physics.Arcade.Sprite {
-  constructor (scene, x, y, texture, frame = null, requete = null) {
-    super(scene, x, y, texture, frame)
-    this.requete = requete
+    constructor(scene, x, y, texture, frame=null, requete = null) {
+        super(scene, x, y, texture, frame);
+        this.requete = requete;
 
-    // Ajouter le sprite à la scène
-    scene.add.existing(this)
+        // Ajouter le sprite à la scène
+        scene.add.existing(this);
 
-    // Ajouter le body physique
-    scene.physics.add.existing(this)
+        console.log("Added Client sprite to world")
 
-    // Paramètres physiques (optionnel)
-    // this.setCollideWorldBounds(true);
-    // this.setBounce(0.2);
-  }
+        // Ajouter le body physique
+        scene.physics.add.existing(this);
 
-  showRequete () {
-    this.bulle = scene.add.sprite(this.x, this.y - 8, 'bulle')
-    this.showReq = scene.add.sprite(this.x, this.y - 12, this.requete.nom)
-  }
+        console.log("Added Client body to world")
 
-  hideRequete () {
-    this.bulle?.destroy()
-    this.showReq?.destroy()
+        // Paramètres physiques (optionnel)
+        // this.setCollideWorldBounds(true);
+        // this.setBounce(0.2);
+    }
 
-  }
+    showRequete(){
+        console.log("showing request")
+        this.bulle = this.scene.add.sprite(this.x+12, this.y-18, 'bulle')
+        this.showReq = this.scene.add.sprite(this.x+12, this.y-18, this.requete.nom)
+    }
+
+    hideRequete(){
+        console.log("hiding request")
+        this.bulle?.destroy();
+        this.showReq?.destroy();
+
+    }
+
+    getRequete(){
+        return this.requete;
+    }
 
 }

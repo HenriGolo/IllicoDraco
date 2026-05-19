@@ -9,7 +9,7 @@ import Chaudron from '../gameObjects/Chaudron.js'
 
 const zoom = 3
 let monsterDelay = 5000
-let clientDelay = monsterDelay*5
+let clientDelay = 5000 //monsterDelay*2
 var tilemap
 
 export class GameUI extends Phaser.Scene {
@@ -141,6 +141,8 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
+
+
     //INIT DES JOUEURS AVEC LES DONNEES DE JOUEUR DATA
     this.players = []
     for (let i = 0; i < this.joueurs_info.length; i++) {
@@ -270,7 +272,7 @@ export class Game extends Phaser.Scene {
         this.players[message.num -1].setCarriedObject('')
         
         break
-      case 'start_chaudron' :
+      case 'start_marmite' :
         this.chaudron.start_chaudron()
         break
       case 'create_ennemy' :
@@ -289,7 +291,13 @@ export class Game extends Phaser.Scene {
       default :
         console.log('Requête inconnue')
     }
+
     }
+
+    console.log(message.type)
+    if (message.type === "fin_marmite" ){
+      this.chaudron.end_preparation(message.produit)
+    } 
   }
 
   update () {
@@ -575,6 +583,14 @@ export class Game extends Phaser.Scene {
 
   getObjectInteract() {
     return this.objectInteractLabel
+  }
+
+  getClientInteract() {
+    return this.clients.peek()
+  }
+
+  getClientQueue() {
+    return this.clients
   }
 
   updateMonsterSpawnDelay () {
