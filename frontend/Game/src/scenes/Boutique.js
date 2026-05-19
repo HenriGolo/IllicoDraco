@@ -126,12 +126,12 @@ export class Boutique extends Phaser.Scene {
 
   buy_boost (boost) {
     //TODO
-    console.log(boost)
+    console.error(boost)
   }
 
   buy_ingredient (ingredient) {
     //TODO
-    console.log(ingredient)
+    console.error(ingredient)
   }
 
   nextPage (left = false) {

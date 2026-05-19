@@ -46,8 +46,6 @@ export class Start extends Phaser.Scene {
 
     // Pas besoin de rerentrer le pseudo si on a quitté le lobby
     this.isTherePseudo = this.pseudo !== ''
-
-    console.log(this.isTherePseudo)
   }
 
   create () {
@@ -95,15 +93,9 @@ export class Start extends Phaser.Scene {
 
     if (this.keyEntree.isDown && !this.isTherePseudo) { // essayer de mettre un addListener sur une entrée classique ?
       this.isTherePseudo = true
-      console.log('Entrée pressée.')
-
       // Nom récupéré. Eventuellement mettre un système de "pseudo déjà choisi ici?"
       this.pseudo = this.pseudoContainer.getChildByName('pseudo').value
-
       this.login()
-
-      console.log('Nom choisi : ' + this.pseudo)
-
       // On cache la demande de pseudo
       this.textInser.visible = false
       this.pseudoContainer.visible = false
@@ -164,13 +156,10 @@ export class Start extends Phaser.Scene {
       }
 
       mapData.push(row)
-      // console.log(row);
       // MapData de la forme [[ 0, 2, 4, 0, 2, 4.. ], [2, 4, 0, 2..], [ 4, 0, 2, 4, ..], ..] --> indique à quelle case quel sprite on met
     }
     this.map = this.make.tilemap({ data: mapData, tileWidth: this.tileSize, tileHeight: this.tileSize })
-    // console.log("Searching for " + ASSETS.spritesheet.tiles.key + " .\n");
     const tileset = this.map.addTilesetImage(ASSETS.spritesheet.tiles.key)
-    // console.log("Found " + ASSETS.spritesheet.tiles.key + " .\n");
     this.groundLayer = this.map.createLayer(0, tileset, 0, this.mapTop).setScale(4)
   }
 
@@ -276,15 +265,11 @@ export class Start extends Phaser.Scene {
 
   async on_creer () {
     // ... actions sur le serveur pour créer un lobby
-    console.log('Créer cliqué')
     const url = new URL('create', SERVER_URL)
     url.searchParams.set('pseudo', this.pseudo)
-    console.log(url)
     const response = await fetch(url)
-    console.log(response)
     if (response.ok) {
       const data = await response.json()
-      console.log(data)
       // Start le lobby avec le code dans data et le nombre de joueur a 1
       this.scene.start('Lobby', {
         joueur_courant: 1,
@@ -294,14 +279,13 @@ export class Start extends Phaser.Scene {
         start_class: ['guerrier']
       })
     } else {
-      console.log('Erreur a la création de la partie')
+      console.error('Erreur a la création de la partie')
     }
 
   }
 
   on_join () {
     // ... actions sur le serveur pour rejoindre un lobby
-    console.log('Rejoindre cliqué')
     this.switchCodePopPupVisibility(true)
     this.switchButtonMode(false)
   }
@@ -318,8 +302,6 @@ export class Start extends Phaser.Scene {
 
   async on_options () {
     // ... ouvrir pannel options
-    console.log('Options cliqué')
-
     const url = new URL('controles', SERVER_URL)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url, {
@@ -342,7 +324,6 @@ export class Start extends Phaser.Scene {
 
     if (response.ok) {
       const data = await response.json()
-      console.log(data)
       // Start le lobby avec le code dans data et le nombre de joueur a 1
       this.scene.launch('Parametre',
         {
@@ -352,7 +333,7 @@ export class Start extends Phaser.Scene {
         }
       )
     } else {
-      console.log('Erreur au chargement des paramètres')
+      console.error('Erreur au chargement des paramètres')
     }
 
   }

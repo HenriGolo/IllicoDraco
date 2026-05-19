@@ -23,23 +23,15 @@ export default class Player extends Entity {
 
     // Touche
     this.cursors = this.parent_scene.input.keyboard.createCursorKeys()
-    const toKey = (key) => {
-      console.log({ key })
-      return key
-    }
-
-    console.log(Object.entries(controles)
-      .map(([key, value]) =>
-        key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
-      ))
-
+    const toKey = (key) => key.map(([key, value]) =>
+      key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
+    )
     this.controles = Object.fromEntries(
       Object.entries(controles)
         .map(([key, value]) =>
           key === 'id' ? [] : [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
         )
     )
-    console.log({ controles })
   }
 
   // Gere les appuies touches du joueurs
@@ -84,13 +76,10 @@ export default class Player extends Entity {
       let objectInteract = this.parent_scene.getObjectInteract()
       if (this.objectIsCarried()) {
 
-        console.log(objectInteract)
-
         switch (objectInteract) {
           case 'marmite' : //Lejoueur interagit avec la marmite
           {
             if (this.parent_scene.getChaudron().add_ingredient(this.getCarriedObject())) {
-              console.log('Ajouté avec succès')
               this.parent_scene.getChaudron().send_ingredient(this.getCarriedObject())
               this.setCarriedObject('')
 
@@ -102,7 +91,6 @@ export default class Player extends Entity {
             var objetPorte = this.getCarriedObject()
 
           default:
-            console.log('Rien a faire...')
 
         }
       } else { //On ne porte rien
@@ -120,7 +108,8 @@ export default class Player extends Entity {
 
       }
 
-    } if (isJustDown('attaquer')) {
+    }
+    if (isJustDown('attaquer')) {
 
     }
 
@@ -131,7 +120,6 @@ export default class Player extends Entity {
   }
 
   sendCarriedObject (object) {
-    console.log('Object' + object)
 
     this.ws.send(JSON.stringify({
       type: 'take_ingredient',
@@ -141,7 +129,6 @@ export default class Player extends Entity {
   }
 
   sendDeltaXY (x, y) {
-    console.log(x, y)
     if (x === 0 && y === 0) {
       if (this.is_moving) {
         this.is_moving = false
@@ -198,7 +185,6 @@ export default class Player extends Entity {
   }
 
   setCarriedObject (texture) {
-    console.log('Objet ramassé : ' + texture)
     this.carried_object.setVisible(texture !== '')
     this.carried_object.setTexture(texture)
 

@@ -25,11 +25,9 @@ export class Lobby extends Phaser.Scene {
 
     const url = new URL(`game/${this.code}/${this.pseudo}`, httpToWs(this.serveur_url))
     this.ws = new WebSocket(url)
-    console.log(this.ws)
 
     this.ws.onmessage = (event) => {
       const message = JSON.parse(event.data)
-      console.log({ message })
       this.start_class = JSON.parse(message.jsonData)
       this.setup_done = true
     }
@@ -37,7 +35,6 @@ export class Lobby extends Phaser.Scene {
       console.error('Erreur dans le lobby', error)
     }
 
-    console.log(data)
   }
 
   preload () {
@@ -46,7 +43,6 @@ export class Lobby extends Phaser.Scene {
   create () {
     if (!this.setup_done) {
       this.createTimeout = setTimeout(() => {
-        console.log('timeout')
         this.create()
       }, 0.5)
       return
@@ -123,7 +119,7 @@ export class Lobby extends Phaser.Scene {
     this.tchat = new Tchat(this, this.pseudo, 960, 128, this.serveur_url)
 
     this.ws.onmessage = (event) => this.on_message(event)
-    this.ws.onerror = () => console.log('Erreur dans le lobby')
+    this.ws.onerror = () => console.error('Erreur dans le lobby')
 
     // TEST
 
@@ -132,7 +128,6 @@ export class Lobby extends Phaser.Scene {
   // Gestion des messages de la webSocket
   on_message (event) {
     const message = JSON.parse(event.data)
-    console.log({ message })
     switch (message.type) {
       case 'leave' :
         this.disconnect_player(message.num) // num = 1,2,3 ou 4
@@ -146,13 +141,13 @@ export class Lobby extends Phaser.Scene {
       case 'start_game' :
         this.launch_game()
       default :
-        console.log('Requête inconnue')
+        console.error('Requête inconnue')
     }
 
   }
 
   //fetch les données pour lancer la partie
-  async launch_game() {
+  async launch_game () {
     const url = new URL('start_game', this.serveur_url)
     url.searchParams.set('code', this.code)
     const response = await fetch(url)
@@ -163,24 +158,20 @@ export class Lobby extends Phaser.Scene {
         classes_info.push(joueur_classe[this.joueurs[i].state])
       }
 
-
-      console.log(classes_info)
-
-      this.tchat.quitChat () 
+      this.tchat.quitChat()
       const data = await response.json()
-      this.scene.start("Game", 
+      this.scene.start('Game',
         {
-          ws : this.ws,
-          joueur_courant : this.joueur_courant,
-          pseudo : this.pseudo,
-          joueurs_info : data.joueurs,
-          classes_info : classes_info
+          ws: this.ws,
+          joueur_courant: this.joueur_courant,
+          pseudo: this.pseudo,
+          joueurs_info: data.joueurs,
+          classes_info: classes_info
         }
-
       )
 
     } else {
-      console.log('Erreur au lancement de la partie')
+      console.error('Erreur au lancement de la partie')
     }
 
   }
@@ -204,7 +195,6 @@ export class Lobby extends Phaser.Scene {
 
     if (num < this.joueur_courant) {
 
-      console.log(this.joueur_courant)
       this.joueurs[this.joueur_courant - 1].disableInteractive()
 
       this.joueur_courant -= 1
@@ -240,7 +230,6 @@ export class Lobby extends Phaser.Scene {
 
   // Quitter le jeu
   async quit () {
-    console.log(this.pseudo + ' : Je pars')
 
     this.ws.close()
     this.tchat.quitChat()
@@ -249,7 +238,6 @@ export class Lobby extends Phaser.Scene {
 
   // Lancer le jeu
   start_game () {
-    console.log(this.pseudo + ' : Cuisinons !')
 
     this.ws.send(JSON.stringify({
       type: 'start_game'
@@ -259,20 +247,16 @@ export class Lobby extends Phaser.Scene {
   // Parametre
   async parameter () {
 
-    console.log(this.pseudo + ' : Parametre !')
-    console.log(this.serveur_url)
-
     const url = new URL('controles', this.serveur_url)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url)
     if (response.ok) {
       const data = await response.json()
-      console.log(data)
       // Start le lobby avec le code dans data et le nombre de joueur a 1
       this.scene.launch('Parametre', { ...data, previousScene: this, serveur_url: this.serveur_url }
       )
     } else {
-      console.log('Erreur au chargement des paramètres')
+      console.error('Erreur au chargement des paramètres')
     }
   }
 

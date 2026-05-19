@@ -103,9 +103,6 @@ export class Parametre extends Phaser.Scene {
     // Si aucune touche a ""
     // Sauvegarder les touches
     // Retour a la fenetre précédente
-
-    console.log(this.serveur_url)
-
     const url = new URL('controles', this.serveur_url)
     url.searchParams.set('pseudo', this.pseudo)
     const response = await fetch(url, {
@@ -125,8 +122,6 @@ export class Parametre extends Phaser.Scene {
         id: this.id
       })
     })
-
-    console.log(response)
 
     this.scene.resume(this.previousScene)
     this.scene.stop(this)

@@ -28,21 +28,12 @@ public class Partie {
 
   private float satisfaction;         // score de satisfaction client
 
-/*
-  @OneToMany
-  private Collection<Produit> coffre; // liste des produits dans le coffre
-//*/
-
   // constructeur
   public Partie() {
   }
 
 
   // getters
-  /*public int getId() {
-    return id;
-  }*/
-
   public float getVitesseMonstres() {
     return vitesseMonstres;
   }
@@ -71,15 +62,7 @@ public class Partie {
     return joueurs;
   }
 
-  /*
-  public Collection<Produit> getCoffre() {
-    return coffre;
-  }//*/
-
   // setters
-  /*public void setId(int id) {
-    this.id = id;
-  }*/
 
   public void setCode(String code) {
     this.code = code;
@@ -113,10 +96,5 @@ public class Partie {
   public void setSatisfaction(float satisfaction) {
     this.satisfaction = satisfaction;
   }
-
-  /*
-  public void setCoffre(Collection<Produit> coffre) {
-    this.coffre = coffre;
-  }//*/
 
 }

@@ -30,6 +30,7 @@ public class GameEndpoint {
   private static final Map<String, String> USERS = new HashMap<>();
   private static final ConcurrentMap<String, String[]> CLASSES = new ConcurrentHashMap<>();
   private static final ConcurrentMap<String, List<String>> MARMITES = new ConcurrentHashMap<>();
+  // private static final ConcurrentMap<String, List<String>> COFFRES = new ConcurrentHashMap<>();
   private static GameEndpoint ADMIN;
 
   private Session session;
@@ -81,17 +82,14 @@ public class GameEndpoint {
         message.setJsonData(getJsonDataClasses());
       }
       if (type.equals("remplir_marmite")) {
-        remplirMarmite(message.getProduit());
-        message.setJsonData(getJsonData(getMarmite()));
+        message.setJsonData(getJsonData(remplirMarmite(message.getProduit())));
       }
       if (type.equals("start_marmite")) {
         startMarmite();
       }
       /*
-      if (type.equals("set_coffre")) {
-        facade.setCoffre(code, message.getProduit());
-        String[] data = facade.getCoffre(code).stream().map(Produit::getNom).toArray();
-        message.setJsonData(getJsonData(data));
+      if (type.equals("remplir_coffre")) {
+        message.setJsonData(getJsonData(addCoffre(message.getProduit())));
       }
       //*/
     }
@@ -212,10 +210,11 @@ public class GameEndpoint {
     return getJsonData(getClasses());
   }
 
-  private void remplirMarmite(String produit) {
+  private List<String> remplirMarmite(String produit) {
     List<String> contenu = MARMITES.getOrDefault(code, new ArrayList<>());
     contenu.add(produit);
     MARMITES.put(code, contenu);
+    return contenu;
   }
 
   private void clearMarmite() {
@@ -234,14 +233,27 @@ public class GameEndpoint {
       boolean memeQuantite = rec.getIngredients().size() == contenu.size();
       return tous && memeQuantite;
     }).findFirst().orElse(null);
-    Timer timer = new Timer(marmite.getVitesse(), e -> {
+    new Timer(marmite.getVitesse(), e -> {
       clearMarmite();
       GameMessage message = new GameMessage();
       message.setType("fin_marmite");
       message.setCode(code);
       message.setProduit(recette == null ? null : recette.getPlat().getNom());
       broadcast(message);
-    });
+    }).start();
   }
+
+  /*
+  private List<String> addCoffre(String produit) {
+    List<String> coffre = getCoffre();
+    coffre.add(produit);
+    COFFRES.put(code, coffre);
+    return coffre;
+  }
+
+  private List<String> getCoffre() {
+    return COFFRES.getOrDefault(code, new ArrayList<>());
+  }
+  //*/
 
 }
