@@ -210,4 +210,44 @@ public class Facade {
     }
   }
 
+  @GetMapping("/plat_random")
+  public Produit getPlatRandom(){
+    Collection<Recette> recettes = this.recetteRepo.findAll();
+    int taille = recettes.size();
+    Random r = new Random();
+    int indice = r.nextInt(taille);
+    int i = 0;
+    for (Recette rct : recettes) {
+      if (i == indice) {
+        return rct.getPlat();
+      }
+      i++;
+    }
+    throw new EntityNotFound("Pas de recettes dans la BD");
+  }
+
+  @GetMapping("/coffre/{code}")
+  public Collection<Produit> getCoffre(@PathVariable String code) {
+    Optional<Partie> partie = this.partieRepo.findById(code);
+    if (partie.isPresent()) { 
+      return partie.get().getCoffre();
+    } else {
+      throw new EntityNotFound("Partie inexistante");
+    } 
+  }  
+
+  @PostMapping("/set_coffre")
+  public void setCoffre(@RequestParam("code") String code,@RequestParam("produit") Produit produit) {
+    Optional<Partie> partie = this.partieRepo.findById(code);
+    if (partie.isPresent()) { 
+      Collection<Produit> nouvCoffre = partie.get().getCoffre();
+      nouvCoffre.add(produit);
+      partie.get().setCoffre(nouvCoffre);
+      partieRepo.save(partie);
+    } else {
+      throw new EntityNotFound("Partie inexistante");
+    } 
+
+  }
+
 }
