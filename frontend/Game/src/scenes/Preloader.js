@@ -198,6 +198,12 @@ export class Preloader extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
     })
+    this.anims.create({
+      key: 'marmite_niveau3',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 27, end: 38 }),
+      frameRate: 10,
+      repeat: -1
+    })
 
 
   }

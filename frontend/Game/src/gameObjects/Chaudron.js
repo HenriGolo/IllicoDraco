@@ -24,7 +24,7 @@ export default class Chaudron {
             } else if (this.content.length === 2) {
                 this.sprite.anims.play('marmite_niveau2', true)
             } else {
-                this.sprite.anims.play('marmite_enPrepa', true)
+                this.sprite.anims.play('marmite_niveau3', true)
                 this.full = true
             }
 
@@ -50,8 +50,8 @@ export default class Chaudron {
 
     send_ingredient (ingredient) {
         this.ws.send(JSON.stringify({
-        type : "add_in_chaudron",
-        ingredient : ingredient,
+        type : "remplir_marmite",
+        produit : ingredient,
         num: this.num,
         }))
     }
