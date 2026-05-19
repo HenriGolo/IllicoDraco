@@ -7,8 +7,8 @@ import Coffre from '../gameObjects/Coffre.js'
 import { QueueClient } from '../gameObjects/QueueClient.js'
 
 const zoom = 3
-let monsterDelay = 2500
-let clientDelay = monsterDelay*3
+let monsterDelay = 5000
+let clientDelay = monsterDelay*5
 var tilemap
 
 export class GameUI extends Phaser.Scene {
@@ -113,6 +113,8 @@ export class Game extends Phaser.Scene {
   }
 
   create () {
+
+    this.perdu = false;
 
     this.monstersData = []
     this.getMonsters()
@@ -240,19 +242,6 @@ export class Game extends Phaser.Scene {
         this.interactText.setPosition(this.player?.getX(), this.player?.getY() - 20)
       }
 
-      // this.effect = this.marmite.preFX.addGlow(0xff00ff, 10, 0).setActive(false);
-
-      // if (isOverlapping && this.effect.active === false ){
-      //     this.effect.setActive(true);
-      // }
-      // else {
-      //     if (this.effect != null) {
-      //         console.log("not null");
-      //         this.effect.outerStrength = 0;//.setActive(false);
-      //         //this.marmite.preFX.remove(this.effect);
-      //     }
-      // }
-
       if (this.objetInteract) {
         const zone = this.objetInteract.hitZone
 
@@ -307,7 +296,7 @@ export class Game extends Phaser.Scene {
 
     // Création bar ?
 
-    this.bar = this.add.rectangle(13 * 16 + 8, 41 * 16 + 8, 16, 16, 0xff0000)
+    this.bar = this.add.sprite(13 * 16 + 8, 41 * 16 + 8, 'bar') //this.add.rectangle(13 * 16 + 8, 41 * 16 + 8, 16, 16, 0xff0000)
     this.physics.add.existing(this.bar, 1)
     // Set overlaps et collision :
     // objets réels : collision
@@ -416,29 +405,27 @@ export class Game extends Phaser.Scene {
     if (this.monstersData.length) {
       const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length-1)
       // listJson.filter({id} => id === indiceVoulu)[0]
-
-      console.log("Id de monstre choisi : ", chosenMonsterId, this.monstersData)
+      //console.log("Id de monstre choisi : ", chosenMonsterId, this.monstersData)
 
       const chosenMonster = this.monstersData[chosenMonsterId]
 
-      console.log("--------- chosen monster : ", chosenMonster)
+      //console.log("--------- chosen monster : ", chosenMonster)
 
       const nom = chosenMonster.nom
-      console.log('Monstre spawn : ' + nom)
+      //console.log('Monstre spawn : ' + nom)
 
       const stats = chosenMonster.stats
-      const x = Phaser.Math.Between(0, tilemap.width * 16)
-      const y = 16
+      const produit = chosenMonster.produit
+      const x = Phaser.Math.Between(1, tilemap.width-1)*16
+      const y = 24
 
       const monsterSprite = this.monsters.getFirstDead(true, x, y, nom, 0, true)
 
-      const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, stats.vitesse, monsterSprite, stats.produit)
-      monster.moveTimer = this.time.addEvent({
-        delay: Phaser.Math.Between(10000, 20000) / stats.vitesse,
-        callback: (monster) => {
-          this.physics.moveTo(monster.sprite, monster.sprite.x, monster.sprite.y - 16, 50)
-          console.log("Monstre se déplace")
-        },
+      const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, x,y, stats.vitesse, monsterSprite, produit)
+      console.log("Monstre de vitesse : ", monster.vitesse)
+      this.time.addEvent({
+        delay: Phaser.Math.Between(10000, 20000) / 5,
+        callback: () => this.moveMonster(monster),
         callbackScope: this,
         loop: true
 
@@ -465,6 +452,18 @@ export class Game extends Phaser.Scene {
     })
   }
 
+  moveMonster(monster){ 
+    //this.physics.moveTo(monster.image, monster.image.x, monster.image.y + 16, 50)
+    monster.image.setY(monster.image.y + 16);
+    monster.move(monster.image.x, monster.image.y);
+
+    if (monster.image.y > 16*33){
+      this.perdu = true;
+    }
+
+    //console.log("Monstre se déplace vers :",  monster.image.x, monster.image.y )
+  }
+
   genClients(){
     this.clients.addNewClient();
   }
@@ -479,6 +478,11 @@ export class Game extends Phaser.Scene {
       loop: true
     })
   }
+
+  interactClient(client){
+
+  }
+
 }
 
 ////////////////////////////////
