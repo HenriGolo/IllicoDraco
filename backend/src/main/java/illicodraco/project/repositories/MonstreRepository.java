@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 // Interface java gérant le repository du Monstre
-public interface MonstreRepository extends JpaRepository<Monstre, Integer> {
+public interface MonstreRepository extends JpaRepository<Monstre, String> {
 
   Monstre save(Monstre monstre);
 
-  Optional<Monstre> findById(Integer id);
+  Optional<Monstre> findById(String id);
 
   List<Monstre> findAll();
 

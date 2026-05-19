@@ -15,8 +15,8 @@ public class Controles {
   private int id;                    // clef primaire dans la BD
 
   // PHASER EST EN QWERTY
-  private String haut = "W"; // touche pour se déplacer vers le haut
-  private String gauche = "A"; // touche pour se déplacer vers la gauche
+  private String haut = "Z"; // touche pour se déplacer vers le haut
+  private String gauche = "Q"; // touche pour se déplacer vers la gauche
   private String bas = "S"; // touche pour se déplacer vers le bas
   private String droite = "D"; // touche pour se déplacer vers la droite
   private String attaquer = "Space"; // touche pour attaquer

@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 // Interface java gérant le repository des Outils
-public interface OutilRepository extends JpaRepository<Outil, Integer> {
+public interface OutilRepository extends JpaRepository<Outil, String> {
 
   Outil save(Outil outil);
 
-  Optional<Outil> findById(Integer id);
+  Optional<Outil> findById(String id);
 
   List<Outil> findAll();
 
