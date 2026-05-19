@@ -81,10 +81,46 @@ export default class Player extends Entity {
         this.sendCarriedObject({key:'', indice:-1})
       }
     } 
+    if (isJustDown('interagir')) {
+      
+      let objectInteract = this.parent_scene.getObjectInteract()
+      if (this.objectIsCarried()) {
+        
+        console.log(objectInteract)
 
-    
+        switch (objectInteract) {
+          case "marmite" : //Lejoueur interagit avec la marmite
+          {
+            if (this.parent_scene.getChaudron().add_ingredient(this.getCarriedObject())) {
+              console.log("Ajouté avec succès")
+              this.parent_scene.getChaudron().send_ingredient (this.getCarriedObject())
+              this.setCarriedObject('')
+              
+            }
+            break
+          }
+          default:
+            console.log("Rien a faire...")
+
+        }
+        } else { //On ne porte rien
+          switch (objectInteract) {
+            case "marmite" : //Lejoueur interagit avec la marmite
+            {
+              this.parent_scene.getChaudron().send_start_chaudron() 
+
+              break
+            }
+            
+            default :
+              console.log("Rien a faire...")
+        }
+
+      }
 
   }
+}
+
 
   setWS(ws) {
     this.ws = ws

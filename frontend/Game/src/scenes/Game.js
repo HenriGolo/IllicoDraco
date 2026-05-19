@@ -4,6 +4,7 @@ import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
 import { SERVER_URL, TIME, MONEY } from '../utils.js'
 import Monster from '../entities/Monster.js'
 import Coffre from '../gameObjects/Coffre.js'
+import Chaudron from '../gameObjects/Chaudron.js'
 
 const zoom = 3
 let monsterDelay = 2500
@@ -161,8 +162,7 @@ export class Game extends Phaser.Scene {
         -this.player.getHeight() / 2
       )
       
-    //INIT DES AUTRES JOUEURS
-      
+  
     ////////////////////////////////////////////////////:::
 
     //Cacher le joueur ou monstre qui passe sous un tronc/arche
@@ -179,7 +179,8 @@ export class Game extends Phaser.Scene {
     this.ingredientsContainer = new IngredientsContainer(this, this.player)
     this.ingredientsContainer.add_ingredient(this.middleX + 32, this.middleY, 'slime_piece')
     this.ingredientsContainer.add_ingredient(this.middleX + 64, this.middleY, 'lait')
-    console.log(this.ingredientsContainer.get_overlap_object())
+    this.ingredientsContainer.add_ingredient(this.middleX + 16, this.middleY, 'nugget')
+    //console.log(this.ingredientsContainer.get_overlap_object())
     //////////////////////////////////////////////////////////////////////UI
     console.log('Creation passée')
 
@@ -211,6 +212,10 @@ export class Game extends Phaser.Scene {
       }
     )
 
+
+    ///Création de la marmite
+    this.chaudron = new Chaudron(this, this.marmite, this.ws, this.joueur_courant)
+
   }
 
   on_message(event) {
@@ -229,6 +234,10 @@ export class Game extends Phaser.Scene {
       break
       case 'drop_object' :
         this.ingredientsContainer.add_ingredient(message.x, message.y, message.ramasse.key)
+      break
+      case 'add_in_chaudron' :
+        
+      break
       default :
         console.log('Requête inconnue')
     }
@@ -265,11 +274,14 @@ export class Game extends Phaser.Scene {
         )) {
 
           this.objetInteract = null
+          this.objectInteractLabel = ""
           if (this.interactText) this.interactText.setVisible(false)
-          if (this.effect) {
+          
+          /*
+            if (this.effect) {
             this.effect.destroy()
             this.effect = null
-          }
+          }*/
         }
       }
 
@@ -280,6 +292,8 @@ export class Game extends Phaser.Scene {
 
     const debug = false
     // Creation rectangles = zones d'interaction avec les 3 objets resp
+
+    this.objectInteractLabel = ""
 
     this.hitZoneCoffre = this.add.rectangle(16, 35 * 16, 32, 64, 0x0000ff).setVisible(debug)
     this.hitZoneTable = this.add.rectangle(16, 39 * 16, 32, 64, 0x0000ff).setVisible(debug)
@@ -331,10 +345,10 @@ export class Game extends Phaser.Scene {
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
     console.log(this.hitZoneCoffre.body.x) // must be true
     console.log(this.hitZoneMarmite.body.enable)  // must be true
-    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre), null, this)
-    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneTable, () => this.zoneInteract(this.table))
-    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite))
-    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneBar, () => this.zoneInteract(this.bar))
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre, "coffre"), null, this)
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneTable, () => this.zoneInteract(this.table, "table"))
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite, "marmite"))
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneBar, () => this.zoneInteract(this.bar, "bar"))
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
 
     //const truc = this.marmite.preFX.addGlow(0xffffff, 100, 0, false);
@@ -353,12 +367,13 @@ export class Game extends Phaser.Scene {
     this.interactKey = this.input.keyboard.addKey('F') // à modif selon options (mettre une var globale)
   }
 
-  zoneInteract (objet) {
+  zoneInteract (objet, name) {
     //effect;
 
     if (this.objetInteract !== objet) {
       this.oldObjetInteract = this.objetInteract
       this.objetInteract = objet
+      this.objectInteractLabel = name
 
       if (!this.interactText) {
         this.interactText = this.add.text(0, 0, `Appuyez sur E`, {
@@ -368,11 +383,12 @@ export class Game extends Phaser.Scene {
       }
 
       this.interactText.setVisible(true)
+      /*
       if (!this.effect) {
         if (!this.effect) {
           this.effect = objet.preFX.addGlow(0xffffff, 100, 0)
         }
-      }
+      }*/
     }
   }
 
@@ -446,6 +462,14 @@ export class Game extends Phaser.Scene {
 
   getIngredientsContainer () {
     return this.ingredientsContainer
+  }
+
+  getChaudron () {
+    return this.chaudron
+  }
+
+  getObjectInteract() {
+    return this.objectInteractLabel
   }
 
   updateMonsterSpawnDelay () {

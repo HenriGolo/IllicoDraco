@@ -114,6 +114,8 @@ export class Preloader extends Phaser.Scene {
 
   }
 
+
+
   createAnims () {
     let avatars = ['guerrier', 'mage', 'archer', 'pretre']
     for (let i = 0; i < 4; i++) { // Num Classe
@@ -158,6 +160,32 @@ export class Preloader extends Phaser.Scene {
 
       }
     }
+
+    this.anims.create({
+      key: 'marmite_niveau1',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 13, end: 13 }),
+      frameRate: 10,
+      repeat: -1,
+    })
+    this.anims.create({
+      key: 'marmite_niveau2',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 14, end: 25 }),
+      frameRate: 10,
+      repeat: -1
+    })
+    this.anims.create({
+      key: 'marmite_enPrepa',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 1, end: 12 }),
+      frameRate: 10,
+      repeat: -1
+    })
+    this.anims.create({
+      key: 'marmite_empty',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 0, end: 0 }),
+      frameRate: 10,
+      repeat: -1
+    })
+
 
   }
 
