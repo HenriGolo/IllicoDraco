@@ -263,6 +263,7 @@ export class Game extends Phaser.Scene {
         this.ingredientsContainer.add_ingredient(message.x, message.y, message.ramasse.key)
       break
       case 'add_in_chaudron' :
+
         
       break
       default :
@@ -533,7 +534,7 @@ export class Game extends Phaser.Scene {
 
   interactClient(client){
 
-
+  }
 
   //////////////////////////Envoi message////////////////////////////
   sendDropObject(object, x, y) {
