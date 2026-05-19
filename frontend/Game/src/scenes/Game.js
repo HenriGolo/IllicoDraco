@@ -113,6 +113,9 @@ export class Game extends Phaser.Scene {
 
   create () {
 
+    //Rediriger le handler de la web socket
+     this.ws.onmessage = (event) => this.on_message(event)
+
     this.monstersData = []
     this.getMonsters()
 
@@ -149,6 +152,7 @@ export class Game extends Phaser.Scene {
       }
 
       this.player = this.players[this.joueur_courant -1]
+      this.player.setWS(this.ws)
 
       this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
       this.cameras.main.startFollow(this.player.getSprite(), true)
@@ -206,6 +210,10 @@ export class Game extends Phaser.Scene {
         game: this
       }
     )
+
+  }
+
+  on_message(event) {
 
   }
 

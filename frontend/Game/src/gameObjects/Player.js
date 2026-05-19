@@ -5,6 +5,9 @@ export default class Player extends Entity {
   constructor (scene, x, y, num, classe, pv, def, atq, controles = {}) {
     super(scene, 'j' + num + '_' + classe, pv, def, atq, x, y)
 
+    this.ws = null
+    this.num = num
+
     this.parent_scene = scene //Scene du jeu
     //this.name = 'j' + num + '_' + classe //Nom du sprite : jx_classe
 
@@ -47,6 +50,14 @@ export default class Player extends Entity {
     if (this.cursors.right.isDown || isDown('droite')) dx += 100
     if (this.cursors.up.isDown || isDown('haut')) dy -= 100
     if (this.cursors.down.isDown || isDown('bas')) dy += 100
+    //Envoie des déplacements
+    if (this.ws !== null) {
+      if (dx != 0 || dy != 0) {
+        this.sendDeltaXY(dx, dy)
+      }
+      
+    }
+
     this.move(dx, dy)
 
     // Prendre / Poser un objet
@@ -69,6 +80,20 @@ export default class Player extends Entity {
 
     
 
+  }
+
+  setWS(ws) {
+    this.ws = ws
+  }
+
+  sendDeltaXY(x, y) {
+
+    console.log(x, y)
+    this.ws.send(JSON.stringify({
+      deltaX: x,
+      deltaY: y,
+      num: this.num,
+    }))
   }
 
   // Move and play the right animation
