@@ -10,14 +10,15 @@ public class Recette {
 
   // attributs
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;                             // clef primaire dans la BD
+  private String nomPlat;
+
+  @OneToOne
+  @MapsId
+  @JoinColumn(name = "plat_nom")
+  private Produit plat;                       // plat final obtenu
 
   @ManyToMany(fetch = FetchType.EAGER)
   private Collection<Produit> ingredients;    // liste des ingrédients
-
-  @OneToOne
-  private Produit plat;                       // plat final obtenu
 
   @ManyToOne
   private Outil outil;                        // outil nécessaire pour la recette
@@ -28,10 +29,6 @@ public class Recette {
 
 
   // getters
-  public int getId() {
-    return id;
-  }
-
   public String getNom() {
     return plat.getNom();
   }
@@ -50,10 +47,6 @@ public class Recette {
 
 
   // setters
-  public void setId(int id) {
-    this.id = id;
-  }
-
   public void setNom(String nom) {
     plat.setNom(nom);
   }

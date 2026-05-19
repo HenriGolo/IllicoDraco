@@ -9,11 +9,7 @@ public class Produit {
 
   // attributs
   @Id
-  //@GeneratedValue(strategy = GenerationType.IDENTITY)
-  //private int id;         // clef primaire dans la BD
   private String nom;     // nom du produit
-
-  private String path;    // path vers la texture du produit
 
   private int prix;
 
@@ -39,11 +35,6 @@ public class Produit {
     return nom;
   }
 
-  public String getPath() {
-    return path;
-  }
-
-
   // setters
   /*public void setId(int id) {
     this.id = id;
@@ -52,11 +43,6 @@ public class Produit {
   public void setNom(String nom) {
     this.nom = nom;
   }
-
-  public void setPath(String path) {
-    this.path = path;
-  }
-
 
   public int getPrix() {
     return prix;
