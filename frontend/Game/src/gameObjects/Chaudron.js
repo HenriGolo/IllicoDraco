@@ -24,7 +24,7 @@ export default class Chaudron {
             } else if (this.content.length === 2) {
                 this.sprite.anims.play('marmite_niveau2', true)
             } else {
-                this.sprite.anims.play('marmite_enPrepa', true)
+                this.sprite.anims.play('marmite_niveau3', true)
                 this.full = true
             }
 
