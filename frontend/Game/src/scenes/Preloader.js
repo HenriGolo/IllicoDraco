@@ -100,7 +100,8 @@ export class Preloader extends Phaser.Scene {
     this.load.image('logo', 'assets/divers/logo.png')
 
     // Load : spritesheet client
-    // this.load.spritesheet('client', 'assets/client.png')
+
+    //this.load.spritesheet('client', 'assets/client.png')
 
     // charger les ingrédients
     let ingredients = ['beurre', 'carotte', 'carotte_coupee', 'cut_navet', 'eau', 'farine', 'gigot_dragon',
@@ -176,7 +177,7 @@ export class Preloader extends Phaser.Scene {
     this.scene.start('GameUI')
     // */
 
-    // this.scene.start('Start', { pseudo: '' })
+    this.scene.start('Start', { pseudo: '' })
     /*
     this.scene.start("Lobby",
         {
