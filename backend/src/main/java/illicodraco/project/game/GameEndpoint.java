@@ -32,6 +32,7 @@ public class GameEndpoint {
   private static final Map<String, String> USERS = new HashMap<>();
   private static final ConcurrentMap<String, String[]> CLASSES = new ConcurrentHashMap<>();
   private static final ConcurrentMap<String, List<String>> MARMITES = new ConcurrentHashMap<>();
+  private static final ConcurrentMap<String, Timer> TIMERS = new ConcurrentHashMap<>();
   // private static final ConcurrentMap<String, List<String>> COFFRES = new ConcurrentHashMap<>();
   private static GameEndpoint ADMIN;
 
@@ -228,14 +229,17 @@ public class GameEndpoint {
   }
 
   private void startMarmite() {
-    new Timer(5000, e -> {
+    TIMERS.put(code, new Timer(5000, e -> {
       clearMarmite();
       GameMessage message = new GameMessage();
       message.setType("fin_marmite");
       message.setCode(code);
       message.setProduit("beurre");
       broadcast(message);
-    }).start();
+      TIMERS.get(code).stop();
+      TIMERS.put(code, null);
+    }));
+    TIMERS.get(code).start();
   }
 
   /*
