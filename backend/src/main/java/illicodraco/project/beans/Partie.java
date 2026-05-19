@@ -27,11 +27,8 @@ public class Partie {
   private int argent;                 // argent global des joueurs dans la partie
 
   private float satisfaction;         // score de satisfaction client
+
 /*
-
-  @OneToMany
-  private Collection<Produit> marmite; // liste des ingrédients dans la marmite
-
   @OneToMany
   private Collection<Produit> coffre; // liste des produits dans le coffre
 //*/
@@ -78,7 +75,6 @@ public class Partie {
   public Collection<Produit> getCoffre() {
     return coffre;
   }//*/
-
 
   // setters
   /*public void setId(int id) {

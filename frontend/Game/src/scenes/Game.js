@@ -195,7 +195,7 @@ export class Game extends Phaser.Scene {
     if (this.joueur_courant === 1) {
       this.spawnMonsterTimer = this.time.addEvent({ // Crée l'ajout de monstres tous les monsterDelay temps
         delay: monsterDelay,
-        callback: () => this.createEnnemy(this.get_random_monster()),
+        callback: this.create_ennemy_and_send,
         callbackScope: this,
         loop: true
       })
@@ -250,7 +250,7 @@ export class Game extends Phaser.Scene {
 
   on_message(event) {
     const message = JSON.parse(event.data)
-    console.log({ message })
+    //console.log({ message })
 
     if (message.num != this.joueur_courant) {
     switch (message.type) {
@@ -265,10 +265,15 @@ export class Game extends Phaser.Scene {
       case 'drop_object' :
         this.ingredientsContainer.add_ingredient(message.x, message.y, message.ramasse.key)
       break
-      case 'add_in_chaudron' :
-
+      case 'remplir_marmite' :
+        this.chaudron.add_ingredient(message.produit)
+        this.players[message.num -1].setCarriedObject('')
         
       break
+      case 'start_chaudron' :
+        this.chaudron.start_chaudron()
+      case 'create_ennemy' :
+        this.createEnnemy(message.ennemi)
       default :
         console.log('Requête inconnue')
     }
@@ -446,9 +451,37 @@ export class Game extends Phaser.Scene {
 
   }
 
+    
+   get_overlap_monster () {
+
+    for (let i = 0; i < this.monsterObjects.length; i++) {
+
+      if (this.physics.world.overlap(this.player.getSprite(), this.monsterObjects[i])) {
+        let monster = this.this.monsterObjects[i]
+
+        return monster
+      }
+    }
+  }
+
+  create_ennemy_and_send() {
+
+    let ennemi = this.get_random_monster()
+
+    this.ws.send(JSON.stringify({
+      type: 'create_ennemy',
+      ennemi: ennemi,
+      num: this.num,
+    }))
+
+    this.createEnnemy(ennemi)
+  }
+
   get_random_monster() {
     if (this.monstersData.length) {
-      return Phaser.Math.Between(0, this.monstersData.length-1)
+      let rand = Math.floor(Math.random()*this.monstersData.length)
+      console.log(rand)
+      return rand
     }
   }
 
@@ -461,6 +494,8 @@ export class Game extends Phaser.Scene {
       // listJson.filter({id} => id === indiceVoulu)[0]
       //console.log("Id de monstre choisi : ", chosenMonsterId, this.monstersData)
 
+      console.log("--------- chosen monster ID : ", chosenMonsterId)
+      console.log("--------- chosen monster ID : ", this.monstersData)
       const chosenMonster = this.monstersData[chosenMonsterId]
 
       console.log("--------- chosen monster : ", chosenMonster)
@@ -508,7 +543,7 @@ export class Game extends Phaser.Scene {
     this.spawnMonsterTimer.destroy()
     this.spawnMonsterTimer = this.time.addEvent({
       delay: monsterDelay,
-      callback: this.createEnnemy,
+      callback: this.create_ennemy_and_send,
       callbackScope: this,
       loop: true
     })

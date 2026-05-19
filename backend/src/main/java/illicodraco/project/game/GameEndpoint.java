@@ -1,10 +1,15 @@
 package illicodraco.project.game;
 
+import illicodraco.project.beans.Outil;
+import illicodraco.project.beans.Produit;
+import illicodraco.project.beans.Recette;
+import illicodraco.project.facade.Facade;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import org.springframework.stereotype.Component;
 
+import javax.swing.Timer;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,9 +24,12 @@ import java.util.function.Predicate;
     encoders = GameMessageReadWrite.class)
 public class GameEndpoint {
 
+  private static final Facade facade = new Facade();
+
   private static final Set<GameEndpoint> ENDPOINTS = new CopyOnWriteArraySet<>();
   private static final Map<String, String> USERS = new HashMap<>();
   private static final ConcurrentMap<String, String[]> CLASSES = new ConcurrentHashMap<>();
+  private static final ConcurrentMap<String, List<String>> MARMITES = new ConcurrentHashMap<>();
   private static GameEndpoint ADMIN;
 
   private Session session;
@@ -72,6 +80,20 @@ public class GameEndpoint {
         switch_class(message.getNum(), message.getClasse());
         message.setJsonData(getJsonDataClasses());
       }
+      if (type.equals("remplir_marmite")) {
+        remplirMarmite(message.getProduit());
+        message.setJsonData(getJsonData(getMarmite()));
+      }
+      if (type.equals("start_marmite")) {
+        startMarmite();
+      }
+      /*
+      if (type.equals("set_coffre")) {
+        facade.setCoffre(code, message.getProduit());
+        String[] data = facade.getCoffre(code).stream().map(Produit::getNom).toArray();
+        message.setJsonData(getJsonData(data));
+      }
+      //*/
     }
     broadcast(message, endpoint -> !USERS.get(endpoint.session.getId()).equals(session.getId()));
   }
@@ -174,12 +196,52 @@ public class GameEndpoint {
     return CLASSES.get(code);
   }
 
-  private String getJsonDataClasses() {
+  private String getJsonData(List<String> data) {
+    return getJsonData(data.toArray(new String[0]));
+  }
+
+  private String getJsonData(String[] data) {
     return Arrays.toString(
-        Arrays.stream(getClasses())
+        Arrays.stream(data)
             .filter(Objects::nonNull)
             .map(classe -> "\"" + classe + "\"")
             .toArray());
+  }
+
+  private String getJsonDataClasses() {
+    return getJsonData(getClasses());
+  }
+
+  private void remplirMarmite(String produit) {
+    List<String> contenu = MARMITES.getOrDefault(code, new ArrayList<>());
+    contenu.add(produit);
+    MARMITES.put(code, contenu);
+  }
+
+  private void clearMarmite() {
+    MARMITES.put(code, new ArrayList<>());
+  }
+
+  private List<String> getMarmite() {
+    return MARMITES.getOrDefault(code, new ArrayList<>());
+  }
+
+  private void startMarmite() {
+    Outil marmite = facade.getOutils("marmite");
+    List<String> contenu = getMarmite();
+    Recette recette = facade.getRecettes().stream().filter(rec -> {
+      boolean tous = new HashSet<>(rec.getIngredients().stream().map(Produit::getNom).toList()).containsAll(contenu);
+      boolean memeQuantite = rec.getIngredients().size() == contenu.size();
+      return tous && memeQuantite;
+    }).findFirst().orElse(null);
+    Timer timer = new Timer(marmite.getVitesse(), e -> {
+      clearMarmite();
+      GameMessage message = new GameMessage();
+      message.setType("fin_marmite");
+      message.setCode(code);
+      message.setProduit(recette == null ? null : recette.getPlat().getNom());
+      broadcast(message);
+    });
   }
 
 }

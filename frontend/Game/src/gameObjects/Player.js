@@ -120,7 +120,10 @@ export default class Player extends Entity {
 
       }
 
+    } if (isJustDown('attaquer')) {
+
     }
+
   }
 
   setWS (ws) {
