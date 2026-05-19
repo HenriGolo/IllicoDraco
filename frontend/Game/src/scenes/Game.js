@@ -191,20 +191,23 @@ export class Game extends Phaser.Scene {
 
     this.generateMonsterGroup()
 
-    this.spawnMonsterTimer = this.time.addEvent({ // Crée l'ajout de monstres tous les monsterDelay temps
-      delay: monsterDelay,
-      callback: this.createEnnemy,
-      callbackScope: this,
-      loop: true
-    })
+    //Le joueur 1 s'occupe de génerer les monstres
+    if (this.joueur_courant = 1) {
+      this.spawnMonsterTimer = this.time.addEvent({ // Crée l'ajout de monstres tous les monsterDelay temps
+        delay: monsterDelay,
+        callback: () => this.createEnnemy(this.get_random_monster()),
+        callbackScope: this,
+        loop: true
+      })
 
-    this.time.addEvent({    // Réduit le temps de monsterDelay toutes les 30s
-      delay: 30000,
-      callback: this.updateMonsterSpawnDelay,
-      callbackScope: this,
-      loop: true
+      this.time.addEvent({    // Réduit le temps de monsterDelay toutes les 30s
+        delay: 30000,
+        callback: this.updateMonsterSpawnDelay,
+        callbackScope: this,
+        loop: true
 
-    })
+      })
+  }
 
 
     this.clients = new QueueClient(this);
@@ -442,12 +445,18 @@ export class Game extends Phaser.Scene {
 
   }
 
-  createEnnemy () {
+  get_random_monster() {
+    if (this.monstersData.length) {
+      return Phaser.Math.Between(0, this.monstersData.length-1)
+    }
+  }
+
+  createEnnemy (chosenMonsterId) {
 
     //console.log( !this.monstersData ? "pas de monsterData defined" : "defined")
 
     if (this.monstersData.length) {
-      const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length-1)
+      //const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length-1)
       // listJson.filter({id} => id === indiceVoulu)[0]
       //console.log("Id de monstre choisi : ", chosenMonsterId, this.monstersData)
 
