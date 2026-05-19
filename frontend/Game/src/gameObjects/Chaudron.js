@@ -50,8 +50,8 @@ export default class Chaudron {
 
     send_ingredient (ingredient) {
         this.ws.send(JSON.stringify({
-        type : "add_in_chaudron",
-        ingredient : ingredient,
+        type : "remplir_marmite",
+        produit : ingredient,
         num: this.num,
         }))
     }
