@@ -216,14 +216,22 @@ export class Game extends Phaser.Scene {
   on_message(event) {
     const message = JSON.parse(event.data)
     console.log({ message })
+
+    if (message.num != this.joueur_courant) {
     switch (message.type) {
       case 'deplacement' :
-        if (message.num != this.joueur_courant) {
+          this.players[message.num-1].setPos(message.x, message.y)
           this.players[message.num-1].move(message.deltaX, message.deltaY)
-        }
         break
+      case 'take_ingredient' :
+          this.players[message.num-1].setCarriedObject(message.ramasse.key)
+          this.ingredientsContainer.remove_object(message.ramasse.indice)
+      break
+      case 'drop_object' :
+        this.ingredientsContainer.add_ingredient(message.x, message.y, message.ramasse.key)
       default :
         console.log('Requête inconnue')
+    }
     }
   }
 
@@ -450,6 +458,20 @@ export class Game extends Phaser.Scene {
       loop: true
     })
   }
+
+
+
+  //////////////////////////Envoi message////////////////////////////
+  sendDropObject(object, x, y) {
+        this.ws.send(JSON.stringify({
+        type : "drop_object",
+        ramasse : {key: object},
+        x : x,
+        y : y,
+        num: this.num,
+        }))
+  }
+
 }
 
 ////////////////////////////////
