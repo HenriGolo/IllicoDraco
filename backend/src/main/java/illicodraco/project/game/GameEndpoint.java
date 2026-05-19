@@ -6,6 +6,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -64,7 +65,7 @@ public class GameEndpoint {
   }
 
   @OnMessage
-  public void onMessage(Session session, GameMessage message) throws IOException, EncodeException {
+  public void onMessage(Session session, GameMessage message) {
     message.setNum(getPlayerNumber(USERS.get(session.getId())));
     message.setCode(code);
     message.setSystem(false);

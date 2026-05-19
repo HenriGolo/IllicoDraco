@@ -5,11 +5,11 @@ export class Preloader extends Phaser.Scene {
 
   preload () {
 
-    //Avatars
-    //jx_classe_anim
+    // Avatars
+    // jx_classe_anim
     let avatars = ['guerrier', 'mage', 'archer', 'pretre']
-    for (let i = 0; i < 4; i++) { //Num Classe
-      for (let j = 1; j <= 4; j++) { //Num Joueur
+    for (let i = 0; i < 4; i++) { // Num Classe
+      for (let j = 1; j <= 4; j++) { // Num Joueur
 
         let name = 'j' + j + '_' + avatars[i]
 
@@ -20,8 +20,8 @@ export class Preloader extends Phaser.Scene {
 
       }
     }
-    
-    //Monstres
+
+    // Monstres
     this.load.image('champi', 'assets/monsters/champi.png')
     this.load.image('chelou_monster', 'assets/monsters/chelou_monster.png')
     this.load.image('dragon_smaller', 'assets/monsters/dragon_smaller.png')
@@ -35,31 +35,31 @@ export class Preloader extends Phaser.Scene {
     this.load.image('onigiri', 'assets/monsters/onigiri_monster.png')
     this.load.image('slime', 'assets/monsters/slime.png')
 
-    //Bouton partagé
+    // Bouton partagé
     this.load.image('bt_retour', 'assets/button/retourButton.png')
 
-    //Bouton du Recueil
+    // Bouton du Recueil
     this.load.image('bt_recette', 'assets/button/recetteButton.png')
     this.load.image('bt_bestiaire', 'assets/button/bestiaireButton.png')
     this.load.image('bt_leftArrow', 'assets/button/leftArrowButton.png')
     this.load.image('bt_rightArrow', 'assets/button/rightArrowButton.png')
     this.load.image('pageNum', 'assets/button/pageNum.png')
 
-    //Boutons de Lobby
+    // Boutons de Lobby
     this.load.image('bt_quitter', 'assets/button/quitButton.png')
     this.load.image('bt_parametre', 'assets/button/parameterButton.png')
     this.load.image('bt_lancer_partie', 'assets/button/startGameButton.png')
 
-    //Boutons de Game
+    // Boutons de Game
     this.load.image('bt_parametre', 'assets/button/parameterButton.png')
     this.load.image('bt_boutique', 'assets/button/boutiqueButton.png')
     this.load.image('bt_recueil', 'assets/button/recueilButton.png')
 
-    //Boutons de la Boutique
+    // Boutons de la Boutique
     this.load.image('bt_ingredient', 'assets/button/ingredientButton.png')
     this.load.image('bt_boost', 'assets/button/boostButton.png')
 
-    //Boosts de la boutique
+    // Boosts de la boutique
     this.load.image('dec_monster_vit', 'assets/boosts/dec_monster_vit.png')
 
     this.load.image('inc_player_atq', 'assets/boosts/inc_player_atq.png')
@@ -71,17 +71,17 @@ export class Preloader extends Phaser.Scene {
     this.load.image('lvl_chaudron', 'assets/boosts/lvl_chaudron.png')
     this.load.image('lvl_planche', 'assets/boosts/lvl_planche.png')
 
-    //Pour le tchat
+    // Pour le tchat
     this.load.html('tchatTextInput', 'assets/htmlComponents/tchatTextInput.html')
     this.load.html('tchatTextOutput', 'assets/htmlComponents/tchatTextOutput.html')
     this.load.image('text_bubble', 'assets/button/textBubble.png')
 
-    //TileMap
+    // TileMap
     this.load.image('tiles', 'assets/tileMaps/full_tileset.png')
     this.load.image('tilesMenu', 'assets/tileMaps/Tile-Sheet.png')
     this.load.tilemapTiledJSON('tilemap', 'assets/tileMaps/tilemap_original.json')
 
-    //SpriteSheet des outils
+    // SpriteSheet des outils
     this.load.spritesheet('marmite', 'assets/tools/marmite-Sheet.png', {
       frameWidth: 64,
       frameHeight: 64,
@@ -101,9 +101,9 @@ export class Preloader extends Phaser.Scene {
 
     // Load : spritesheet client
 
-    this.load.spritesheet('client', 'assets/client.png')
+    //this.load.spritesheet('client', 'assets/client.png')
 
-    //charger les ingrédients
+    // charger les ingrédients
     let ingredients = ['beurre', 'carotte', 'carotte_coupee', 'cut_navet', 'eau', 'farine', 'gigot_dragon',
       'killer_chicken_leg', 'lait', 'lampe_genie', 'levure', 'monster_eye', 'nugget', 'riz',
       'salade', 'saucisse', 'sel_poivre', 'slime_piece']
@@ -116,8 +116,8 @@ export class Preloader extends Phaser.Scene {
 
   createAnims () {
     let avatars = ['guerrier', 'mage', 'archer', 'pretre']
-    for (let i = 0; i < 4; i++) { //Num Classe
-      for (let j = 1; j <= 4; j++) { //Num Joueur
+    for (let i = 0; i < 4; i++) { // Num Classe
+      for (let j = 1; j <= 4; j++) { // Num Joueur
 
         let name = 'j' + j + '_' + avatars[i]
 
@@ -165,8 +165,8 @@ export class Preloader extends Phaser.Scene {
 
     this.createAnims()
 
-    this.scene.start('Game')
-    //this.scene.start('GameUI')
+    // this.scene.start('Game')
+    // this.scene.start('GameUI')
     /*
     this.scene.start('Game', {
       joueur_courant: 4,
@@ -177,7 +177,7 @@ export class Preloader extends Phaser.Scene {
     this.scene.start('GameUI')
     // */
 
-    //this.scene.start('Start', { pseudo: '' })
+    this.scene.start('Start', { pseudo: '' })
     /*
     this.scene.start("Lobby",
         {
@@ -188,7 +188,7 @@ export class Preloader extends Phaser.Scene {
             start_class : ["mage", "archer", "guerrier"]
         }
     );*/
-    //this.scene.start('Start', { pseudo: '' })
+    // this.scene.start('Start', { pseudo: '' })
 
     /*this.scene.start('Lobby',
       {
