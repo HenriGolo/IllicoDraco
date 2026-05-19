@@ -22,6 +22,7 @@ public class GameEndpoint {
   private static final Set<GameEndpoint> ENDPOINTS = new CopyOnWriteArraySet<>();
   private static final Map<String, String> USERS = new HashMap<>();
   private static final ConcurrentMap<String, String[]> CLASSES = new ConcurrentHashMap<>();
+  private static GameEndpoint ADMIN;
 
   private Session session;
   private String code;
@@ -32,9 +33,9 @@ public class GameEndpoint {
     this.code = code;
     ENDPOINTS.add(this);
     USERS.put(session.getId(), username);
+    if (code.equals("admin") && username.equals("admin")) ADMIN = this;
 
     List<String> joueurs = GameState.JOUEURS.getOrDefault(code, new ArrayList<>());
-    System.out.println(joueurs.getClass().getTypeName());
     if (joueurs.size() < GameState.NB_JOUEURS_MAX) {
       joueurs.add(username);
       GameState.JOUEURS.put(code, joueurs);
@@ -43,17 +44,14 @@ public class GameEndpoint {
       message.setType("join");
       message.setSystem(true);
       message.setContent(username + " arrive en renfort !");
-      System.out.println(username);
       // Gestion des classes dans le lobby
       int num = joueurs.size();
       message.setCode(code);
       message.setNum(num);
-      System.out.println("avant " + Arrays.toString(CLASSES.get(code)));
       switch_class(num, GameState.START_CLASS);
       message.setJsonData(getJsonDataClasses());
-      System.out.println("après " + Arrays.toString(CLASSES.get(code)));
       message.setClasse(GameState.START_CLASS);
-      broadcast(message);
+      broadcast(message, e -> true);
     } else {
       GameMessage message = new GameMessage();
       message.setSystem(true);
@@ -64,20 +62,22 @@ public class GameEndpoint {
   }
 
   @OnMessage
-  public void onMessage(Session session, GameMessage message) throws IOException, EncodeException {
+  public void onMessage(Session session, GameMessage message) {
     message.setNum(getPlayerNumber(USERS.get(session.getId())));
     message.setCode(code);
     message.setSystem(false);
-    if (message.getType().equals("switch_class")) {
-      switch_class(message.getNum(), message.getClasse());
-      message.setJsonData(getJsonDataClasses());
+    String type = message.getType();
+    if (type != null && !type.isBlank()) {
+      if (type.equals("switch_class")) {
+        switch_class(message.getNum(), message.getClasse());
+        message.setJsonData(getJsonDataClasses());
+      }
     }
     broadcast(message, endpoint -> !USERS.get(endpoint.session.getId()).equals(session.getId()));
   }
 
   @OnClose
   public void onClose(Session session) {
-    System.out.println("avant collapse " + GameState.JOUEURS.get(code));
     ENDPOINTS.remove(this);
     GameMessage message = new GameMessage();
     message.setSystem(true);
@@ -86,7 +86,6 @@ public class GameEndpoint {
     message.setCode(code);
     broadcast(message);
     collapseOnLeave(USERS.get(session.getId()));
-    System.out.println("après collapse " + GameState.JOUEURS.get(code));
   }
 
   @OnError
@@ -97,8 +96,15 @@ public class GameEndpoint {
     message.setContent(USERS.get(session.getId()) + " a rencontré une erreur : " + throwable.getMessage());
   }
 
-  private static void broadcast(GameMessage message, Predicate<GameEndpoint> predicate) {
-    ENDPOINTS.forEach(endpoint -> {
+  private static void broadcast(Collection<GameEndpoint> endpoints, GameMessage message, Predicate<GameEndpoint> predicate) {
+    if (ADMIN != null) {
+      try {
+        ADMIN.session.getBasicRemote().sendObject(message);
+      } catch (Throwable e) {
+        e.printStackTrace();
+      }
+    }
+    endpoints.forEach(endpoint -> {
       synchronized (endpoint) {
         try {
           if (predicate.test(endpoint)) {
@@ -111,7 +117,17 @@ public class GameEndpoint {
     });
   }
 
-  private static void broadcast(GameMessage message) {
+  private void broadcast(GameMessage message, Predicate<GameEndpoint> predicate) {
+    broadcast(
+        ENDPOINTS.stream().filter(endpoint ->
+            endpoint.code.equals(code)
+        ).toList(),
+        message,
+        predicate
+    );
+  }
+
+  private void broadcast(GameMessage message) {
     broadcast(message, endpoint -> true);
   }
 
@@ -134,18 +150,17 @@ public class GameEndpoint {
       }
       _i++;
     }
-    GameState.JOUEURS.put(code,
-        GameState.JOUEURS.get(code).stream().filter(_username ->
-                !username.equals(_username))
-            .toList());
+    List<String> rebuilt_usernames = new ArrayList<>();
     String[] old = CLASSES.get(code);
     String[] rebuilt = new String[CLASSES.get(code).length];
     int pos = 0;
     for (int i = 0; i < rebuilt.length; i++) {
       if (!indices.contains(i)) {
         rebuilt[pos++] = old[i];
+        if (i < usernames.size()) rebuilt_usernames.add(usernames.get(i));
       }
     }
+    GameState.JOUEURS.put(code, rebuilt_usernames);
     CLASSES.put(code, rebuilt);
   }
 

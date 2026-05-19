@@ -1,10 +1,7 @@
 package illicodraco.project.beans;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,10 +27,10 @@ public class Partie {
   private int argent;                 // argent global des joueurs dans la partie
 
   private float satisfaction;         // score de satisfaction client
-
-  @ManyToOne
+/*
+  @OneToMany
   private Collection<Produit> coffre; // liste des produits dans le coffre
-
+*/
 
   // constructeur
   public Partie() {
@@ -73,9 +70,9 @@ public class Partie {
     return joueurs;
   }
 
-  public Collection<Produit> getCoffre() {
+  /*public Collection<Produit> getCoffre() {
     return coffre;
-  }
+  }*/
 
 
   // setters
@@ -116,8 +113,8 @@ public class Partie {
     this.satisfaction = satisfaction;
   }
 
-  public void setCoffre(Collection<Produit> coffre) {
-        this.coffre = coffre;
-  }
+  /*public void setCoffre(Collection<Produit> coffre) {
+    this.coffre = coffre;
+  }*/
 
 }
