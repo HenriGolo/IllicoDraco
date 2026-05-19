@@ -192,7 +192,7 @@ export class Game extends Phaser.Scene {
     this.generateMonsterGroup()
 
     //Le joueur 1 s'occupe de génerer les monstres
-    if (this.joueur_courant = 1) {
+    if (this.joueur_courant === 1) {
       this.spawnMonsterTimer = this.time.addEvent({ // Crée l'ajout de monstres tous les monsterDelay temps
         delay: monsterDelay,
         callback: () => this.createEnnemy(this.get_random_monster()),
@@ -463,7 +463,7 @@ export class Game extends Phaser.Scene {
 
       const chosenMonster = this.monstersData[chosenMonsterId]
 
-      //console.log("--------- chosen monster : ", chosenMonster)
+      console.log("--------- chosen monster : ", chosenMonster)
 
       const nom = chosenMonster.nom
       //console.log('Monstre spawn : ' + nom)
