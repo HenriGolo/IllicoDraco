@@ -8,15 +8,10 @@ public class Classe {
 
   // attributs
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;         // clef primaire dans la BD
-
   private String nom;     // nom de la classe
 
   @OneToOne
   private Statistiques stats; // statistiques associées à la classe
-
-  private String path;    // path vers la texture du joueur de cette classe
 
 
   // constructeur
@@ -25,31 +20,13 @@ public class Classe {
 
 
   // getters
-  public int getId() {
-    return id;
-  }
-
   public String getNom() {
     return nom;
   }
 
-  public String getPath() {
-    return path;
-  }
-
-
   // setters
-  public void setId(int id) {
-    this.id = id;
-  }
-
   public void setNom(String nom) {
     this.nom = nom;
   }
-
-  public void setPath(String path) {
-    this.path = path;
-  }
-
 
 }

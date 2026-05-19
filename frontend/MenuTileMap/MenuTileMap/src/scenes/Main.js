@@ -140,6 +140,7 @@ export class Main extends Phaser.Scene {
                 
                 this.objetInteract = null;
                 if (this.interactText) this.interactText.setVisible(false);
+
                 if (this.effect) {
                      this.effect.destroy();
                      this.effect = null;

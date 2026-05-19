@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 // Interface java gérant le repository des Classes
-public interface ClasseRepository extends JpaRepository<Classe, Integer> {
+public interface ClasseRepository extends JpaRepository<Classe, String> {
 
   Classe save(Classe classe);
 
-  Optional<Classe> findById(Integer id);
+  Optional<Classe> findById(String id);
 
   List<Classe> findAll();
 

@@ -2,8 +2,10 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-# source comp.sh Annuaire
-# cp Annuaire.war "$TOMCAT_HOME/webapps/."
+# Frontend
+source comp.sh frontend
+cp frontend.war "$TOMCAT_HOME/webapps/IDFront.war"
+# Backend
 cd backend
 ./mvnw package
 cd -

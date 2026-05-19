@@ -15,6 +15,7 @@ import java.util.Random;
 @RestController("Facade")
 public class Facade {
 
+  private static final Random random = new Random();
 
   // attributs
   @Autowired
@@ -205,56 +206,23 @@ public class Facade {
     }
   }
 
-  @GetMapping("/plat_random")
-  public Produit getPlatRandom(){
-    Collection<Recette> recettes = this.recetteRepo.findAll();
-    int taille = recettes.size();
-    Random r = new Random();
-    int indice = r.nextInt(taille);
-    int i = 0;
-    for (Recette rct : recettes) {
-      if (i == indice) {
-        return rct.getPlat();
-      }
-      i++;
-    }
-    throw new EntityNotFound("Pas de recettes dans la BD");
+  @GetMapping("/plat/random")
+  public Produit getPlatRandom() {
+    Collection<Produit> vendables = produitRepo.findAll().stream().filter(Produit::isFini).toList();
+    return vendables.stream().skip(random.nextInt(vendables.toArray().length)).findFirst().orElseThrow(() -> new EntityNotFound("Aucun plat fini trouvé !"));
   }
 
-  @GetMapping("/coffre/{code}")
-  public Collection<Produit> getCoffre(@PathVariable String code) {
-    Optional<Partie> partie = this.partieRepo.findById(code);
-    if (partie.isPresent()) { 
-      return partie.get().getCoffre();
-    } else {
-      throw new EntityNotFound("Partie inexistante");
-    } 
-  }  
-
-  @PostMapping("/set_coffre")
-  public void setCoffre(@RequestParam("code") String code,@RequestParam("produit") Produit produit) {
-    Optional<Partie> partie = this.partieRepo.findById(code);
-    if (partie.isPresent()) { 
-      Collection<Produit> nouvCoffre = partie.get().getCoffre();
-      nouvCoffre.add(produit);
-      partie.get().setCoffre(nouvCoffre);
-      partieRepo.save(partie);
-    } else {
-      throw new EntityNotFound("Partie inexistante");
-    } 
-
+  /*
+  @GetMapping("/coffre")
+  public Collection<Produit> getCoffre(@RequestParam("code") String code) {
+    return partieRepo.findById(code).orElseThrow(() -> new EntityNotFound("Partie inexistente")).getCoffre();
   }
 
-  @PutMapping("/marmite")
-  public void remplirMarmite(@RequestParam("code") String code,@RequestParam("produit") Produit produit) {
+  @PostMapping("/coffre")
+  public void setCoffre(@RequestParam("code") String code, @RequestBody Produit produit) {
     Partie partie = getPartie(code);
-    partie.getMarmite().add(produit);
+    partie.getCoffre().add(produit);
     partieRepo.save(partie);
-  }
-
-  @GetMapping("/marmite")
-  public Collection<Produit> getMarmite(@RequestParam("code") String code) {
-    return partieRepo.findById(code).orElseThrow(() -> new EntityNotFound("Partie inexistante")).getMarmite();
-  }
+  }//*/
 
 }

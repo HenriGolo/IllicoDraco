@@ -97,11 +97,24 @@ export class Preloader extends Phaser.Scene {
       frameHeight: 32,
     })
 
+    this.load.image('bar', 'assets/tools/comptoir.png')
+
     this.load.image('logo', 'assets/divers/logo.png')
 
     // Load : spritesheet client
 
-    //this.load.spritesheet('client', 'assets/client.png')
+    this.load.spritesheet('client', 'assets/client.png', {
+      frameWidth : 16,
+      frameHeight : 16
+    })
+
+    // Spritesheet bulle de requête
+
+    this.load.spritesheet('bulle', 'assets/divers/bulle_demande.png', {
+      frameWidth : 16,
+      frameHeight : 16
+    })
+
 
     // charger les ingrédients
     let ingredients = ['beurre', 'carotte', 'carotte_coupee', 'cut_navet', 'eau', 'farine', 'gigot_dragon',
@@ -113,6 +126,8 @@ export class Preloader extends Phaser.Scene {
     }
 
   }
+
+
 
   createAnims () {
     let avatars = ['guerrier', 'mage', 'archer', 'pretre']
@@ -158,6 +173,32 @@ export class Preloader extends Phaser.Scene {
 
       }
     }
+
+    this.anims.create({
+      key: 'marmite_niveau1',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 13, end: 13 }),
+      frameRate: 10,
+      repeat: -1,
+    })
+    this.anims.create({
+      key: 'marmite_niveau2',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 14, end: 25 }),
+      frameRate: 10,
+      repeat: -1
+    })
+    this.anims.create({
+      key: 'marmite_enPrepa',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 1, end: 12 }),
+      frameRate: 10,
+      repeat: -1
+    })
+    this.anims.create({
+      key: 'marmite_empty',
+      frames: this.anims.generateFrameNumbers('marmite', { start: 0, end: 0 }),
+      frameRate: 10,
+      repeat: -1
+    })
+
 
   }
 
