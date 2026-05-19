@@ -19,7 +19,7 @@ export default class Player extends Entity {
     this.carried_object = this.parent_scene.add.sprite(x, y - this.sprite.height, '')
     this.carried_object.setVisible(false)
 
-    this.is_moving = false;
+    this.is_moving = false
 
     // Touche
     this.cursors = this.parent_scene.input.keyboard.createCursorKeys()
@@ -28,11 +28,10 @@ export default class Player extends Entity {
       return key
     }
 
-
     console.log(Object.entries(controles)
-        .map(([key, value]) =>
-          key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
-        ))
+      .map(([key, value]) =>
+        key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
+      ))
 
     this.controles = Object.fromEntries(
       Object.entries(controles)
@@ -55,9 +54,7 @@ export default class Player extends Entity {
     //Envoie des déplacements
     if (this.ws !== null) {
       this.sendDeltaXY(dx, dy)
-      
     }
-
     this.move(dx, dy)
 
     // Prendre / Poser un objet
@@ -78,62 +75,58 @@ export default class Player extends Entity {
         ic.add_ingredient(this.getX(), this.getY(), old)
         this.parent_scene.sendDropObject(old, this.getX(), this.getY())
         this.setCarriedObject('')
-        this.sendCarriedObject({key:'', indice:-1})
+        this.sendCarriedObject({ key: '', indice: -1 })
       }
-    } 
-
-    
+    }
 
   }
 
-  setWS(ws) {
+  setWS (ws) {
     this.ws = ws
   }
 
-  sendCarriedObject(object) {
-        console.log("Object" + object)
+  sendCarriedObject (object) {
+    console.log('Object' + object)
 
-        this.ws.send(JSON.stringify({
-        type : "take_ingredient",
-        ramasse: object,
-        num: this.num,
-        }))
+    this.ws.send(JSON.stringify({
+      type: 'take_ingredient',
+      ramasse: object,
+      num: this.num,
+    }))
   }
 
-  sendDeltaXY(x, y) {
-
+  sendDeltaXY (x, y) {
     console.log(x, y)
-    
     if (x === 0 && y === 0) {
       if (this.is_moving) {
         this.is_moving = false
         this.ws.send(JSON.stringify({
-        type : "deplacement",
-        deltaX: x,
-        deltaY: y,
-        x: this.getX(),
-        y: this.getY(),
-        num: this.num,
+          type: 'deplacement',
+          deltaX: x,
+          deltaY: y,
+          x: this.getX(),
+          y: this.getY(),
+          num: this.num,
         }))
       }
     } else {
       this.is_moving = true
       this.ws.send(JSON.stringify({
-        type : "deplacement",
+        type: 'deplacement',
         deltaX: x,
         deltaY: y,
         x: this.getX(),
         y: this.getY(),
         num: this.num,
-        }))
+      }))
     }
-  
+
   }
 
-  setPos(x, y) {
+  setPos (x, y) {
     this.sprite.setX(x)
     this.sprite.setY(y)
-    super.move(x,y)
+    super.move(x, y)
   }
 
   // Move and play the right animation
@@ -160,7 +153,7 @@ export default class Player extends Entity {
   }
 
   setCarriedObject (texture) {
-    console.log("Objet ramassé : " + texture)
+    console.log('Objet ramassé : ' + texture)
     this.carried_object.setVisible(texture !== '')
     this.carried_object.setTexture(texture)
 
