@@ -1,7 +1,7 @@
 import Tchat from '../gameObjects/Tchat.js'
 import Player from '../gameObjects/Player.js'
 import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
-import { MONEY, SERVER_URL, TIME } from '../utils.js'
+import { SERVER_URL, TIME, MONEY } from '../utils.js'
 import Monster from '../entities/Monster.js'
 import Coffre from '../gameObjects/Coffre.js'
 import { QueueClient } from '../gameObjects/QueueClient.js'
@@ -9,7 +9,7 @@ import Chaudron from '../gameObjects/Chaudron.js'
 
 const zoom = 3
 let monsterDelay = 5000
-let clientDelay = monsterDelay * 5
+let clientDelay = monsterDelay*5
 var tilemap
 
 export class GameUI extends Phaser.Scene {
@@ -99,7 +99,7 @@ export class Game extends Phaser.Scene {
   }
 
   init (data) {
-
+    
     this.joueur_courant = data.joueur_courant
     this.pseudo = data.pseudo
     this.ws = data.ws
@@ -116,9 +116,9 @@ export class Game extends Phaser.Scene {
 
   create () {
 
-    this.perdu = false
+    this.perdu = false;
     //Rediriger le handler de la web socket
-    this.ws.onmessage = (event) => this.on_message(event)
+     this.ws.onmessage = (event) => this.on_message(event)
 
     this.monstersData = []
     this.getMonsters()
@@ -146,25 +146,26 @@ export class Game extends Phaser.Scene {
     for (let i = 0; i < this.joueurs_info.length; i++) {
 
       let p = new Player(
-        this,
-        this.middleX + 16, this.middleY, i + 1,
-        this.joueurs_classe[i],
-        100, 10, 3,
+        this, 
+        this.middleX + 16, this.middleY, i+1, 
+        this.joueurs_classe[i], 
+        100, 10, 3, 
         this.joueurs_info[i].controles)
 
       this.players.push(p)
-    }
+      }
 
-    this.player = this.players[this.joueur_courant - 1]
-    this.player.setWS(this.ws)
+      this.player = this.players[this.joueur_courant -1]
+      this.player.setWS(this.ws)
 
-    this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
-    this.cameras.main.startFollow(this.player.getSprite(), true)
-    this.cameras.main.setFollowOffset(
-      -this.player.getWidth() / 2,
-      -this.player.getHeight() / 2
-    )
-
+      this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels)
+      this.cameras.main.startFollow(this.player.getSprite(), true)
+      this.cameras.main.setFollowOffset(
+        -this.player.getWidth() / 2,
+        -this.player.getHeight() / 2
+      )
+      
+  
     ////////////////////////////////////////////////////:::
 
     //Cacher le joueur ou monstre qui passe sous un tronc/arche
@@ -182,7 +183,9 @@ export class Game extends Phaser.Scene {
     this.ingredientsContainer.add_ingredient(this.middleX + 32, this.middleY, 'slime_piece')
     this.ingredientsContainer.add_ingredient(this.middleX + 64, this.middleY, 'lait')
     this.ingredientsContainer.add_ingredient(this.middleX + 16, this.middleY, 'nugget')
+    //console.log(this.ingredientsContainer.get_overlap_object())
     //////////////////////////////////////////////////////////////////////UI
+    console.log('Creation passée')
 
     this.monsterObjects = []
 
@@ -204,12 +207,16 @@ export class Game extends Phaser.Scene {
         loop: true
 
       })
-    }
+  }
 
-    this.clients = new QueueClient(this)
-    this.clients.addNewClient()
 
-    this.clientTimer = this.time.addEvent({    // Fait spawn un client dans la file
+    this.clients = new QueueClient(this);
+    console.log(this.clients.clientsQueue);
+    this.clients.addNewClient();
+    console.log(this.clients.clientsQueue);
+
+
+    this.clientTimer = this.time.addEvent({    // Fait spawn un client dans la file 
       delay: clientDelay,
       callback: this.genClients,
       callbackScope: this,
@@ -225,6 +232,7 @@ export class Game extends Phaser.Scene {
 
     })
 
+
     this.ui = this.scene.launch('GameUI',
       {
         joueur_courant: this.joueur_courant,
@@ -234,39 +242,53 @@ export class Game extends Phaser.Scene {
       }
     )
 
+
     ///Création de la marmite
     this.chaudron = new Chaudron(this, this.marmite, this.ws, this.joueur_courant)
 
   }
 
-  on_message (event) {
+  on_message(event) {
     const message = JSON.parse(event.data)
+    //console.log({ message })
 
     if (message.num != this.joueur_courant) {
-      switch (message.type) {
-        case 'deplacement' :
-          this.players[message.num - 1].setPos(message.x, message.y)
-          this.players[message.num - 1].move(message.deltaX, message.deltaY)
-          break
-        case 'take_ingredient' :
-          this.players[message.num - 1].setCarriedObject(message.ramasse.key)
-          this.ingredientsContainer.remove_object(message.ramasse.indice)
-          break
-        case 'drop_object' :
-          this.ingredientsContainer.add_ingredient(message.x, message.y, message.ramasse.key)
-          break
-        case 'remplir_marmite' :
-          this.chaudron.add_ingredient(message.produit)
-          this.players[message.num - 1].setCarriedObject('')
+    switch (message.type) {
+      case 'deplacement' :
+        this.players[message.num-1].setPos(message.x, message.y)
+        this.players[message.num-1].move(message.deltaX, message.deltaY)
+        break
+      case 'take_ingredient' :
+        this.players[message.num-1].setCarriedObject(message.ramasse.key)
+        this.ingredientsContainer.remove_object(message.ramasse.indice)
+        break
+      case 'drop_object' :
+        this.ingredientsContainer.add_ingredient(message.x, message.y, message.ramasse.key)
+        break
+      case 'remplir_marmite' :
+        this.chaudron.add_ingredient(message.produit)
+        this.players[message.num -1].setCarriedObject('')
+        
+        break
+      case 'start_chaudron' :
+        this.chaudron.start_chaudron()
+        break
+      case 'create_ennemy' :
+        this.createEnnemy(message.ennemi, message.x, message.y)
+        break
+      case 'damage_monster' :
+        console.log("w>",message.attaque, message.indice)
+        console.log(this.monsterObjects, this.monsterObjects.length)
+        this.monsterObjects[message.indice].take_damage(message.attaque)
+        if (this.monsterObjects[message.indice].isDead()) {
+          this.remove_monster(message.indice)
+        } 
 
-          break
-        case 'start_chaudron' :
-          this.chaudron.start_chaudron()
-        case 'create_ennemy' :
-          this.createEnnemy(message.ennemi)
-        default :
-          console.error('Requête inconnue')
-      }
+        break
+      
+      default :
+        console.log('Requête inconnue')
+    }
     }
   }
 
@@ -287,9 +309,9 @@ export class Game extends Phaser.Scene {
         )) {
 
           this.objetInteract = null
-          this.objectInteractLabel = ''
+          this.objectInteractLabel = ""
           if (this.interactText) this.interactText.setVisible(false)
-
+          
           /*
             if (this.effect) {
             this.effect.destroy()
@@ -306,7 +328,7 @@ export class Game extends Phaser.Scene {
     const debug = false
     // Creation rectangles = zones d'interaction avec les 3 objets resp
 
-    this.objectInteractLabel = ''
+    this.objectInteractLabel = ""
 
     this.hitZoneCoffre = this.add.rectangle(16, 35 * 16, 32, 64, 0x0000ff).setVisible(debug)
     this.hitZoneTable = this.add.rectangle(16, 39 * 16, 32, 64, 0x0000ff).setVisible(debug)
@@ -356,10 +378,12 @@ export class Game extends Phaser.Scene {
     this.table.hitZone = this.hitZoneTable
     this.marmite.hitZone = this.hitZoneMarmite
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
-    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre, 'coffre'), null, this)
-    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneTable, () => this.zoneInteract(this.table, 'table'))
-    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite, 'marmite'))
-    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneBar, () => this.zoneInteract(this.bar, 'bar'))
+    console.log(this.hitZoneCoffre.body.x) // must be true
+    console.log(this.hitZoneMarmite.body.enable)  // must be true
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneCoffre, () => this.zoneInteract(this.coffre, "coffre"), null, this)
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneTable, () => this.zoneInteract(this.table, "table"))
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneMarmite, () => this.zoneInteract(this.marmite, "marmite"))
+    this.physics.add.overlap(this.player?.getSprite(), this.hitZoneBar, () => this.zoneInteract(this.bar, "bar"))
     // p-ê à rempalcer par var isOverlapping = this.physics.world.overlap(object1, object2); dans le update
 
     //const truc = this.marmite.preFX.addGlow(0xffffff, 100, 0, false);
@@ -410,10 +434,14 @@ export class Game extends Phaser.Scene {
     if (response.ok) {
       let data = await response.json()
       this.monstersData = data
+      console.log('Data des monstres reçu')
+      console.log(data)
     } else {
       console.error('Erreur HTTP : ', response.status)
 
     }
+
+    console.log('>>>>>>>>>>>>' + this.monstersData)
 
   }
 
@@ -435,65 +463,105 @@ export class Game extends Phaser.Scene {
 
   }
 
-  get_overlap_monster () {
+    
+   get_overlap_monster () {
 
     for (let i = 0; i < this.monsterObjects.length; i++) {
 
-      if (this.physics.world.overlap(this.player.getSprite(), this.monsterObjects[i])) {
-        let monster = this.this.monsterObjects[i]
+      if (this.physics.world.overlap(this.player.getSprite(), this.monsterObjects[i].getImage())) {
+        let monster = this.monsterObjects[i]
 
-        return monster
+        return {monster : monster, indice : i} 
       }
     }
+
+    return{monster : null, indice : -1} 
   }
 
-  create_ennemy_and_send () {
+
+  remove_monster(indice, kill = true){
+    let monster = this.monsterObjects[indice]
+    console.log("CUISINE",monster, indice)
+    this.monsterObjects.splice(indice, 1)
+    console.log(monster.getX(), monster.getY(), monster.getProduit().nom)
+    if (kill){
+      this.ingredientsContainer.add_ingredient(monster.getX(), monster.getY(), monster.getProduit().nom)
+    }else{
+
+    } 
+    
+    monster.die()
+
+  } 
+
+  create_ennemy_and_send() {
 
     let ennemi = this.get_random_monster()
+
+    let x = Phaser.Math.Between(1, tilemap.width-1)*16
+    let y = 24
+
 
     this.ws.send(JSON.stringify({
       type: 'create_ennemy',
       ennemi: ennemi,
       num: this.num,
+      x: x,
+      y: y 
     }))
 
-    this.createEnnemy(ennemi)
+    
+
+    this.createEnnemy(ennemi, x, y)
   }
 
-  get_random_monster () {
+  get_random_monster() {
     if (this.monstersData.length) {
-      let rand = Math.floor(Math.random() * this.monstersData.length)
+      let rand = Math.floor(Math.random()*this.monstersData.length)
+      console.log(rand)
       return rand
     }
   }
 
-  createEnnemy (chosenMonsterId) {
+  createEnnemy (chosenMonsterId, x, y) {
+
+    //console.log( !this.monstersData ? "pas de monsterData defined" : "defined")
 
     if (this.monstersData.length) {
       //const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length-1)
       // listJson.filter({id} => id === indiceVoulu)[0]
+      //console.log("Id de monstre choisi : ", chosenMonsterId, this.monstersData)
 
+      console.log("--------- chosen monster ID : ", chosenMonsterId)
+      console.log("--------- chosen monster ID : ", this.monstersData)
       const chosenMonster = this.monstersData[chosenMonsterId]
 
+      console.log("--------- chosen monster : ", chosenMonster)
+
       const nom = chosenMonster.nom
+      //console.log('Monstre spawn : ' + nom)
 
       const stats = chosenMonster.stats
       const produit = chosenMonster.produit
-      const x = Phaser.Math.Between(1, tilemap.width - 1) * 16
-      const y = 24
+      
 
       const monsterSprite = this.monsters.getFirstDead(true, x, y, nom, 0, true)
 
-      const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, x, y, stats.vitesse, monsterSprite, produit)
-      this.time.addEvent({
-        delay: Phaser.Math.Between(10000, 20000) / 5,
+      const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, x,y, stats.vitesse, monsterSprite, produit)
+      console.log("Monstre de vitesse : ", monster.vitesse)
+      let timer = this.time.addEvent({
+        delay: 500,//monster.vitesse, //Phaser.Math.Between(10000, 20000) / 5,
         callback: () => this.moveMonster(monster),
         callbackScope: this,
         loop: true
 
       })
+
+      monster.setTimer(timer)
       this.monsterObjects.push(monster)
 
+      console.log('Enemy spawned at x: ' + x + ', y: ' + y)
+      console.log('x: ' + this.player?.getWidth() + ' y: ' + this.player?.getHeight())
     }
   }
 
@@ -505,7 +573,7 @@ export class Game extends Phaser.Scene {
     return this.chaudron
   }
 
-  getObjectInteract () {
+  getObjectInteract() {
     return this.objectInteractLabel
   }
 
@@ -520,19 +588,22 @@ export class Game extends Phaser.Scene {
     })
   }
 
-  moveMonster (monster) {
+  moveMonster(monster){ 
     //this.physics.moveTo(monster.image, monster.image.x, monster.image.y + 16, 50)
-    monster.image.setY(monster.image.y + 16)
-    monster.move(monster.image.x, monster.image.y)
+    monster.image.setY(monster.image.y + 16);
+    monster.move(monster.image.x, monster.image.y);
 
-    if (monster.image.y > 16 * 33) {
-      this.perdu = true
+    if (monster.image.y > 16*33){
+      let id = this.monsterObjects.findIndex((m) => m === monster);
+      this.remove_monster(id, false)
+      this.perdu = true;
     }
 
+    //console.log("Monstre se déplace vers :",  monster.image.x, monster.image.y )
   }
 
-  genClients () {
-    this.clients.addNewClient()
+  genClients(){
+    this.clients.addNewClient();
   }
 
   updateClientSpawnDelay () {
@@ -546,19 +617,19 @@ export class Game extends Phaser.Scene {
     })
   }
 
-  interactClient (client) {
+  interactClient(client){
 
   }
 
   //////////////////////////Envoi message////////////////////////////
-  sendDropObject (object, x, y) {
-    this.ws.send(JSON.stringify({
-      type: 'drop_object',
-      ramasse: { key: object },
-      x: x,
-      y: y,
-      num: this.num,
-    }))
+  sendDropObject(object, x, y) {
+        this.ws.send(JSON.stringify({
+        type : "drop_object",
+        ramasse : {key: object},
+        x : x,
+        y : y,
+        num: this.num,
+        }))
   }
 
 }

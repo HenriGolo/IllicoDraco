@@ -23,13 +23,10 @@ export default class Player extends Entity {
 
     // Touche
     this.cursors = this.parent_scene.input.keyboard.createCursorKeys()
-    const toKey = (key) => key.map(([key, value]) =>
-      key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
-    )
     this.controles = Object.fromEntries(
       Object.entries(controles)
         .map(([key, value]) =>
-          key === 'id' ? [] : [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
+          key === 'id' ? [] : [key, this.parent_scene.input.keyboard.addKey(value)]
         )
     )
   }
@@ -91,6 +88,7 @@ export default class Player extends Entity {
             var objetPorte = this.getCarriedObject()
 
           default:
+            console.log('Rien a faire...')
 
         }
       } else { //On ne porte rien
@@ -110,9 +108,30 @@ export default class Player extends Entity {
 
     }
     if (isJustDown('attaquer')) {
+      let data = this.parent_scene.get_overlap_monster()
+      if (data.monster != null) {
+        this.attaquer_monstre(data.monster, data.indice)
+      }
 
     }
 
+  }
+
+  attaquer_monstre (monstre, indice) {
+    //Attaquer le monstre
+    monstre.take_damage(this.getAtq())
+
+    //Si le monstre est mort le tuer
+    if (monstre.isDead()) {
+      this.parent_scene.remove_monster(indice)
+    }
+
+    this.ws.send(JSON.stringify({
+      type: 'damage_monster',
+      attaque: this.getAtq(),
+      indice: indice,
+      num: this.num,
+    }))
   }
 
   setWS (ws) {

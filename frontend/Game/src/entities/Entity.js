@@ -31,6 +31,7 @@ export default class Entity {
 
     take_damage(amount) {
 
+        console.log("Attaque : " + amount + "  " + this.pv)
         let damage = amount - ((amount*this.def)/100)
 
         this.pv = this.pv - damage
@@ -38,9 +39,17 @@ export default class Entity {
             this.pv = 0
             this.is_dead = true
         }
+
+        console.log("AttaqueRes : " + amount + "  " + this.pv)
+
         this.lifeBar.setSize((this.pv*16)/this.max_pv, 4)
         this.lifeBar.setX(this.lifeBar.x-(8-(this.lifeBar.width/2)))
     }
+
+    isDead(){
+        console.log("Dead : "  + this.is_dead)
+        return this.is_dead
+    } 
 
     getDef() {
         return this.def
@@ -77,5 +86,10 @@ export default class Entity {
     setMaxPV(max_pv) {
         this.max_pv = max_pv
     }
+
+    die(){
+        this.lifeBar.destroy()
+        this.lifeBar_back.destroy()
+    } 
 
 }
