@@ -29,4 +29,11 @@ public class Classe {
     this.nom = nom;
   }
 
+  public Statistiques getStats() {
+    return stats;
+  }
+
+  public void setStats(Statistiques stats) {
+    this.stats = stats;
+  }
 }

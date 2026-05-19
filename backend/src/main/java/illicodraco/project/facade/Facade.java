@@ -217,18 +217,4 @@ public class Facade {
     return vendables.stream().skip(random.nextInt(vendables.toArray().length)).findFirst().orElseThrow(() -> new EntityNotFound("Aucun plat fini trouvé !"));
   }
 
-  /*
-  @GetMapping("/coffre")
-  public Collection<Produit> getCoffre(@RequestParam("code") String code) {
-    return partieRepo.findById(code).orElseThrow(() -> new EntityNotFound("Partie inexistente")).getCoffre();
-  }*/
-
-  /*
-  @PostMapping("/coffre")
-  public void setCoffre(@RequestParam("code") String code, @RequestBody Produit produit) {
-    Partie partie = getPartie(code);
-    partie.getCoffre().add(produit);
-    partieRepo.save(partie);
-  }*/
-
 }

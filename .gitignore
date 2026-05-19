@@ -34,3 +34,4 @@ backend/.sts4-cache
 
 ### Custom ###
 !/backend/lib/*
+*.war

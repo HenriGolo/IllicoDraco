@@ -23,23 +23,12 @@ export default class Player extends Entity {
 
     // Touche
     this.cursors = this.parent_scene.input.keyboard.createCursorKeys()
-    const toKey = (key) => {
-      console.log({ key })
-      return key
-    }
-
-    console.log(Object.entries(controles)
-      .map(([key, value]) =>
-        key !== 'id' && [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
-      ))
-
     this.controles = Object.fromEntries(
       Object.entries(controles)
         .map(([key, value]) =>
-          key === 'id' ? [] : [key, this.parent_scene.input.keyboard.addKey(toKey(value))]
+          key === 'id' ? [] : [key, this.parent_scene.input.keyboard.addKey(value)]
         )
     )
-    console.log({ controles })
   }
 
   // Gere les appuies touches du joueurs
@@ -84,23 +73,44 @@ export default class Player extends Entity {
       let objectInteract = this.parent_scene.getObjectInteract()
       if (this.objectIsCarried()) {
 
-        console.log(objectInteract)
-
         switch (objectInteract) {
           case 'marmite' : //Lejoueur interagit avec la marmite
           {
             if (this.parent_scene.getChaudron().add_ingredient(this.getCarriedObject())) {
-              console.log('Ajouté avec succès')
               this.parent_scene.getChaudron().send_ingredient(this.getCarriedObject())
               this.setCarriedObject('')
 
             }
             break
           }
-          case 'bar' : // Le joueur interagit avec la marmite
+          case 'bar' : {// Le joueur interagit avec le bar 
+
+            console.log("Interaction avec le bar")
 
             var objetPorte = this.getCarriedObject()
+            var queue = this.parent_scene.getClientQueue()
+            var client = queue.peek()
+            var objetVouluClient = client.getRequete()
 
+            console.log("Client veut :", objetVouluClient, ", je porte :", objetPorte)
+            
+            if (objetPorte === objetVouluClient.nom){
+              console.log("Client satisfait!! +", objetVouluClient.prix)
+              queue.removeClient()
+              this.parent_scene.money += objetVouluClient.prix
+            } else {
+              console.log("wtf bro")
+              queue.removeClient()
+            }
+            this.setCarriedObject("")
+
+            this.ws.send(JSON.stringify({
+              type: 'serv_client',
+              num: this.num
+            }))
+
+            break
+          }
           default:
             console.log('Rien a faire...')
 
@@ -120,10 +130,32 @@ export default class Player extends Entity {
 
       }
 
-    } if (isJustDown('attaquer')) {
+    }
+    if (isJustDown('attaquer')) {
+      let data = this.parent_scene.get_overlap_monster()
+      if (data.monster != null) {
+        this.attaquer_monstre(data.monster, data.indice)
+      }
 
     }
 
+  }
+
+  attaquer_monstre (monstre, indice) {
+    //Attaquer le monstre
+    monstre.take_damage(this.getAtq())
+
+    //Si le monstre est mort le tuer
+    if (monstre.isDead()) {
+      this.parent_scene.remove_monster(indice)
+    }
+
+    this.ws.send(JSON.stringify({
+      type: 'damage_monster',
+      attaque: this.getAtq(),
+      indice: indice,
+      num: this.num
+    }))
   }
 
   setWS (ws) {
@@ -131,7 +163,6 @@ export default class Player extends Entity {
   }
 
   sendCarriedObject (object) {
-    console.log('Object' + object)
 
     this.ws.send(JSON.stringify({
       type: 'take_ingredient',
@@ -141,7 +172,6 @@ export default class Player extends Entity {
   }
 
   sendDeltaXY (x, y) {
-    console.log(x, y)
     if (x === 0 && y === 0) {
       if (this.is_moving) {
         this.is_moving = false
@@ -198,7 +228,6 @@ export default class Player extends Entity {
   }
 
   setCarriedObject (texture) {
-    console.log('Objet ramassé : ' + texture)
     this.carried_object.setVisible(texture !== '')
     this.carried_object.setTexture(texture)
 

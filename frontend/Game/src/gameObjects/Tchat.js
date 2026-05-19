@@ -31,7 +31,6 @@ export default class Tchat {
     //this.ws = new WebSocket(serveur_url);
     const url = new URL(`chat/${pseudo}`, this.serveur_url)
     this.ws = new WebSocket(url)
-    console.log(this.ws)
 
     this.ws.onmessage = (event) => {
       const message = JSON.parse(event.data)
@@ -46,10 +45,8 @@ export default class Tchat {
   // récupère le texte entré et l'envoie au tchat
   send_enter_text () {
     let inputText = this.tchatInput.getChildByName('textField')
-    console.log({ inputText })
     if (inputText.value !== '') {
       let text = inputText.value
-      console.log({ text })
       inputText.value = '' // reset HTML
       this.send_text(text)
     }
@@ -57,7 +54,6 @@ export default class Tchat {
 
   // Envoie le texte passé en paramètre au tchat via la websocket au serveur
   send_text (content, to = null) {
-    console.log({ content, to })
     if (content !== '') {
       this.ws.send(JSON.stringify({ content, from: this.pseudo, to }))
     }

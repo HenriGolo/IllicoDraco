@@ -6,7 +6,6 @@ export default class IngredientsContainer {
     this.parent_scene = scene
     this.player = player
 
-    console.log(player)
   }
 
   add_ingredient (x, y, key) {
@@ -27,20 +26,20 @@ export default class IngredientsContainer {
         this.ingredients[i].destroy()
         this.ingredients.splice(i, 1) //retire l'élément concerné
 
-        return {key, indice:i}
+        return { key, indice: i }
       }
     }
 
-    return {key:null, indice:-1}
+    return { key: null, indice: -1 }
 
   }
 
-  remove_object(indice) {
+  remove_object (indice) {
     if (indice != -1) {
       this.ingredients[indice].destroy()
       this.ingredients.splice(indice, 1) //retire l'élément concerné
     }
-    
+
   }
 
 }

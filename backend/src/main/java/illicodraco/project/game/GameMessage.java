@@ -29,6 +29,10 @@ public class GameMessage {
   private String produit;
   /// ID de l'enemi à créer
   private String ennemi;
+  /// Nombre de dégâts infligés
+  private int attaque;
+  /// Indice
+  private int indice;
 
   public boolean isSystem() {
     return system;
@@ -147,5 +151,21 @@ public class GameMessage {
 
   public void setEnnemi(String ennemi) {
     this.ennemi = ennemi;
+  }
+
+  public int getAttaque() {
+    return attaque;
+  }
+
+  public void setAttaque(int attaque) {
+    this.attaque = attaque;
+  }
+
+  public int getIndice() {
+    return indice;
+  }
+
+  public void setIndice(int indice) {
+    this.indice = indice;
   }
 }
