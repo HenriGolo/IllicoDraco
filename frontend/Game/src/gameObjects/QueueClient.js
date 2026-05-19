@@ -22,18 +22,25 @@ export class QueueClient {
     //const requete = "bonjour je suis une requete eheheh"
     const frameID = Phaser.Math.Between(0,3)*2; //0, 2, 4, 6 --> un des 4 clients au hasar
     
+    console.log("Requête : \n");
+    console.log(requete);
 
-    const newClient = new Client(this.parentScene, 13*16+8 - this.lastPosNotTaken*16, 42*16 +8, 'client', this.lastPosNotTaken === 0 ? frameID : frameID+1);
+    const newClient = new Client(this.parentScene, 13*16+8 - this.lastPosNotTaken*16, 42*16 +8, 'client', this.lastPosNotTaken === 0 ? frameID : frameID+1, requete);
     const clientG = this.clientsGroup.add(newClient);
     clientG.setActive(true).setVisible(true);
 
     this.clientsQueue.push(newClient);
 
+    if (this.lastPosNotTaken === 0) {
+      newClient.showRequete();
+    }
+
     this.lastPosNotTaken++;
 
     console.log("Nouveau client créé; Sprite ", frameID, "position :", this.lastPosNotTaken -1, "taken");
-    console.log("Requête : \n");
-    console.log(requete);
+    
+
+
 
   }
 
