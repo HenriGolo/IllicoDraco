@@ -1,5 +1,5 @@
-import { SERVER_URL } from "../scenes/Preloader";
-import Client from "./Client";
+import { SERVER_URL } from "../utils.js";
+import Client from "./Client.js";
 
 export class QueueClient {
   constructor(scene) {
@@ -8,7 +8,7 @@ export class QueueClient {
     runChildUpdate: true
 });
     this.clientsQueue = [];
-    this.clients.maxSize = 6;
+    this.clientsGroup.maxSize = 6;
     this.lastPosNotTaken = 0; // de 0 à clients.maxSize
     this.platData = null;
     

@@ -4,9 +4,11 @@ import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
 import { SERVER_URL, TIME, MONEY } from '../utils.js'
 import Monster from '../entities/Monster.js'
 import Coffre from '../gameObjects/Coffre.js'
+import { QueueClient } from '../gameObjects/QueueClient.js'
 
 const zoom = 3
 let monsterDelay = 2500
+let clientDelay = monsterDelay*3
 var tilemap
 
 export class GameUI extends Phaser.Scene {
@@ -195,6 +197,30 @@ export class Game extends Phaser.Scene {
 
     })
 
+
+    this.clients = new QueueClient(this);
+    console.log(this.clients.clientsQueue);
+    this.clients.addNewClient();
+    console.log(this.clients.clientsQueue);
+
+
+    this.clientTimer = this.time.addEvent({    // Fait spawn un client dans la file 
+      delay: clientDelay,
+      callback: this.genClients,
+      callbackScope: this,
+      loop: true
+
+    })
+
+    this.time.addEvent({    // Modifie le temps de spawn des clients
+      delay: 30000,
+      callback: this.updateClientSpawnDelay,
+      callbackScope: this,
+      loop: true
+
+    })
+
+
     this.ui = this.scene.launch('GameUI',
     {
       joueur_courant : this.joueur_courant, 
@@ -349,10 +375,11 @@ export class Game extends Phaser.Scene {
 
   async getMonsters () {
 
-    const response = await fetch('http://' + SERVER_URL + '/illicodraco/monsters')
+    const url = new URL('monstres', SERVER_URL)
+    const response = await fetch(url)
     if (response.ok) {
       let data = await response.json()
-      this.monstersData = data.monstersData
+      this.monstersData = data
       console.log('Data des monstres reçu')
       console.log(data)
     } else {
@@ -425,6 +452,21 @@ export class Game extends Phaser.Scene {
     this.spawnMonsterTimer = this.time.addEvent({
       delay: monsterDelay,
       callback: this.createEnnemy,
+      callbackScope: this,
+      loop: true
+    })
+  }
+
+  genClients(){
+    this.clients.addNewClient();
+  }
+
+  updateClientSpawnDelay () {
+    clientDelay -= 50
+    this.clientTimer.destroy()
+    this.clientTimer = this.time.addEvent({
+      delay: clientDelay,
+      callback: this.genClients,
       callbackScope: this,
       loop: true
     })
