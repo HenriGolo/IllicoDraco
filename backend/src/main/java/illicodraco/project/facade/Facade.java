@@ -245,4 +245,16 @@ public class Facade {
 
   }
 
+  @PutMapping("/marmite")
+  public void remplirMarmite(@RequestParam("code") String code,@RequestParam("produit") Produit produit) {
+    Partie partie = getPartie(code);
+    partie.getMarmite().add(produit);
+    partieRepo.save(partie);
+  }
+
+  @GetMapping("/marmite")
+  public Collection<Produit> getMarmite(@RequestParam("code") String code) {
+    return partieRepo.findById(code).orElseThrow(() -> new EntityNotFound("Partie inexistante")).getMarmite();
+  }
+
 }

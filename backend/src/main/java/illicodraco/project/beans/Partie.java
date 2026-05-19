@@ -27,10 +27,12 @@ public class Partie {
   private int argent;                 // argent global des joueurs dans la partie
 
   private float satisfaction;         // score de satisfaction client
-/*
+
+  @OneToMany
+  private Collection<Produit> marmite; // liste des ingrédients dans la marmite
+  
   @OneToMany
   private Collection<Produit> coffre; // liste des produits dans le coffre
-*/
 
   // constructeur
   public Partie() {
@@ -70,10 +72,13 @@ public class Partie {
     return joueurs;
   }
 
-  /*public Collection<Produit> getCoffre() {
+  public Collection<Produit> getCoffre() {
     return coffre;
-  }*/
+  }
 
+  public Collection<Produit> getMarmite() {
+    return marmite;
+  }
 
   // setters
   /*public void setId(int id) {
@@ -113,8 +118,12 @@ public class Partie {
     this.satisfaction = satisfaction;
   }
 
-  /*public void setCoffre(Collection<Produit> coffre) {
+  public void setCoffre(Collection<Produit> coffre) {
     this.coffre = coffre;
-  }*/
+  }
+
+  public void setMarmite(Collection<Produit> marmite) {
+    this.marmite = marmite;
+  }
 
 }

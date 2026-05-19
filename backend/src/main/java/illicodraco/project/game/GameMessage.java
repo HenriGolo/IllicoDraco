@@ -25,6 +25,8 @@ public class GameMessage {
   private String code;
   /// Indique que le joueur a ramassé un objet
   private ObjetRamasse ramasse;
+  /// Nom du produit placé dans la marmitte / le coffre
+  private String produit;
 
   public boolean isSystem() {
     return system;
@@ -128,4 +130,13 @@ public class GameMessage {
   public void setY(int y) {
     this.y = y;
   }
+
+  public String getProduit() {
+    return produit;
+  }
+
+  public void setProduit(String produit) {
+    this.produit = produit;
+  }
+
 }

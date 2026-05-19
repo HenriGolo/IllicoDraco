@@ -5,6 +5,9 @@ import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import org.springframework.stereotype.Component;
 
+import illicodraco.project.beans.Produit;
+import illicodraco.project.facade.Facade;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +21,8 @@ import java.util.function.Predicate;
     decoders = GameMessageReadWrite.class,
     encoders = GameMessageReadWrite.class)
 public class GameEndpoint {
+
+  private static final Facade facade = new Facade();
 
   private static final Set<GameEndpoint> ENDPOINTS = new CopyOnWriteArraySet<>();
   private static final Map<String, String> USERS = new HashMap<>();
@@ -71,6 +76,16 @@ public class GameEndpoint {
       if (type.equals("switch_class")) {
         switch_class(message.getNum(), message.getClasse());
         message.setJsonData(getJsonDataClasses());
+      }
+      if (type.equals("remplir_marmite")) {
+        facade.remplirMarmite(code, message.getProduit());
+        String[] data = facade.getMarmite(code).stream().map(Produit::getNom).toArray();
+        message.setJsonData(getJsonData(data));
+      }
+      if (type.equals("set_coffre")) {
+        facade.setCoffre(code, message.getProduit());
+        String[] data = facade.getCoffre(code).stream().map(Produit::getNom).toArray();
+        message.setJsonData(getJsonData(data));
       }
     }
     broadcast(message, endpoint -> !USERS.get(endpoint.session.getId()).equals(session.getId()));
@@ -174,12 +189,16 @@ public class GameEndpoint {
     return CLASSES.get(code);
   }
 
-  private String getJsonDataClasses() {
+  private String getJsonData(String[] data) {
     return Arrays.toString(
-        Arrays.stream(getClasses())
+        Arrays.stream(data)
             .filter(Objects::nonNull)
             .map(classe -> "\"" + classe + "\"")
             .toArray());
+  }
+
+  private String getJsonDataClasses() {
+    return getJsonData(getClasses());
   }
 
 }
