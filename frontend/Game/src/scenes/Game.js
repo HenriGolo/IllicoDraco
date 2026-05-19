@@ -4,10 +4,12 @@ import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
 import { SERVER_URL, TIME, MONEY } from '../utils.js'
 import Monster from '../entities/Monster.js'
 import Coffre from '../gameObjects/Coffre.js'
+import { QueueClient } from '../gameObjects/QueueClient.js'
 import Chaudron from '../gameObjects/Chaudron.js'
 
 const zoom = 3
-let monsterDelay = 2500
+let monsterDelay = 5000
+let clientDelay = monsterDelay*5
 var tilemap
 
 export class GameUI extends Phaser.Scene {
@@ -114,6 +116,7 @@ export class Game extends Phaser.Scene {
 
   create () {
 
+    this.perdu = false;
     //Rediriger le handler de la web socket
      this.ws.onmessage = (event) => this.on_message(event)
 
@@ -122,7 +125,7 @@ export class Game extends Phaser.Scene {
 
     //TILE MAP
 
-    const tilemap = this.make.tilemap({ key: 'tilemap' })
+    tilemap = this.make.tilemap({ key: 'tilemap' })
     tilemap.addTilesetImage('full_tileset', 'tiles')
     this.middleY = this.height * 0.5
     tilemap.createLayer('fond', 'full_tileset', 0, 0)
@@ -203,6 +206,30 @@ export class Game extends Phaser.Scene {
 
     })
 
+
+    this.clients = new QueueClient(this);
+    console.log(this.clients.clientsQueue);
+    this.clients.addNewClient();
+    console.log(this.clients.clientsQueue);
+
+
+    this.clientTimer = this.time.addEvent({    // Fait spawn un client dans la file 
+      delay: clientDelay,
+      callback: this.genClients,
+      callbackScope: this,
+      loop: true
+
+    })
+
+    this.time.addEvent({    // Modifie le temps de spawn des clients
+      delay: 30000,
+      callback: this.updateClientSpawnDelay,
+      callbackScope: this,
+      loop: true
+
+    })
+
+
     this.ui = this.scene.launch('GameUI',
       {
         joueur_courant: this.joueur_courant,
@@ -251,19 +278,6 @@ export class Game extends Phaser.Scene {
       if (this.interactText) {
         this.interactText.setPosition(this.player?.getX(), this.player?.getY() - 20)
       }
-
-      // this.effect = this.marmite.preFX.addGlow(0xff00ff, 10, 0).setActive(false);
-
-      // if (isOverlapping && this.effect.active === false ){
-      //     this.effect.setActive(true);
-      // }
-      // else {
-      //     if (this.effect != null) {
-      //         console.log("not null");
-      //         this.effect.outerStrength = 0;//.setActive(false);
-      //         //this.marmite.preFX.remove(this.effect);
-      //     }
-      // }
 
       if (this.objetInteract) {
         const zone = this.objetInteract.hitZone
@@ -324,7 +338,7 @@ export class Game extends Phaser.Scene {
 
     // Création bar ?
 
-    this.bar = this.add.rectangle(13 * 16 + 8, 41 * 16 + 8, 16, 16, 0xff0000)
+    this.bar = this.add.sprite(13 * 16 + 8, 41 * 16 + 8, 'bar') //this.add.rectangle(13 * 16 + 8, 41 * 16 + 8, 16, 16, 0xff0000)
     this.physics.add.existing(this.bar, 1)
     // Set overlaps et collision :
     // objets réels : collision
@@ -394,10 +408,11 @@ export class Game extends Phaser.Scene {
 
   async getMonsters () {
 
-    const response = await fetch('http://' + SERVER_URL + '/illicodraco/monsters')
+    const url = new URL('monstres', SERVER_URL)
+    const response = await fetch(url)
     if (response.ok) {
       let data = await response.json()
-      this.monstersData = data.monstersData
+      this.monstersData = data
       console.log('Data des monstres reçu')
       console.log(data)
     } else {
@@ -429,26 +444,32 @@ export class Game extends Phaser.Scene {
 
   createEnnemy () {
 
-    if (this.monstersData.length) {
-      const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length)
-      // listJson.filter({id} => id === indiceVoulu)[0]
-      const chosenMonster = this.monstersData.filter(({ id }) => id === chosenMonsterId)[0]
+    //console.log( !this.monstersData ? "pas de monsterData defined" : "defined")
 
-      const nom = chosenMonster.name
-      console.log('Monstre spawn : ' + nom)
+    if (this.monstersData.length) {
+      const chosenMonsterId = Phaser.Math.Between(0, this.monstersData.length-1)
+      // listJson.filter({id} => id === indiceVoulu)[0]
+      //console.log("Id de monstre choisi : ", chosenMonsterId, this.monstersData)
+
+      const chosenMonster = this.monstersData[chosenMonsterId]
+
+      //console.log("--------- chosen monster : ", chosenMonster)
+
+      const nom = chosenMonster.nom
+      //console.log('Monstre spawn : ' + nom)
 
       const stats = chosenMonster.stats
-      const x = Phaser.Math.Between(0, tilemap.width * 16)
-      const y = 16
+      const produit = chosenMonster.produit
+      const x = Phaser.Math.Between(1, tilemap.width-1)*16
+      const y = 24
 
       const monsterSprite = this.monsters.getFirstDead(true, x, y, nom, 0, true)
 
-      const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, stats.vitesse, monsterSprite, stats.produit)
-      monster.moveTimer = this.time.addEvent({
-        delay: Phaser.Math.Between(10000, 20000) / stats.vitesse,
-        callback: (monster) => {
-          this.physics.moveTo(monster.sprite, monster.sprite.x, monster.sprite.y - 16, 50)
-        },
+      const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, x,y, stats.vitesse, monsterSprite, produit)
+      console.log("Monstre de vitesse : ", monster.vitesse)
+      this.time.addEvent({
+        delay: Phaser.Math.Between(10000, 20000) / 5,
+        callback: () => this.moveMonster(monster),
         callbackScope: this,
         loop: true
 
@@ -482,6 +503,35 @@ export class Game extends Phaser.Scene {
       loop: true
     })
   }
+
+  moveMonster(monster){ 
+    //this.physics.moveTo(monster.image, monster.image.x, monster.image.y + 16, 50)
+    monster.image.setY(monster.image.y + 16);
+    monster.move(monster.image.x, monster.image.y);
+
+    if (monster.image.y > 16*33){
+      this.perdu = true;
+    }
+
+    //console.log("Monstre se déplace vers :",  monster.image.x, monster.image.y )
+  }
+
+  genClients(){
+    this.clients.addNewClient();
+  }
+
+  updateClientSpawnDelay () {
+    clientDelay -= 50
+    this.clientTimer.destroy()
+    this.clientTimer = this.time.addEvent({
+      delay: clientDelay,
+      callback: this.genClients,
+      callbackScope: this,
+      loop: true
+    })
+  }
+
+  interactClient(client){
 
 
 

@@ -97,11 +97,24 @@ export class Preloader extends Phaser.Scene {
       frameHeight: 32,
     })
 
+    this.load.image('bar', 'assets/tools/comptoir.png')
+
     this.load.image('logo', 'assets/divers/logo.png')
 
     // Load : spritesheet client
 
-    //this.load.spritesheet('client', 'assets/client.png')
+    this.load.spritesheet('client', 'assets/client.png', {
+      frameWidth : 16,
+      frameHeight : 16
+    })
+
+    // Spritesheet bulle de requête
+
+    this.load.spritesheet('bulle', 'assets/divers/bulle_demande.png', {
+      frameWidth : 16,
+      frameHeight : 16
+    })
+
 
     // charger les ingrédients
     let ingredients = ['beurre', 'carotte', 'carotte_coupee', 'cut_navet', 'eau', 'farine', 'gigot_dragon',
