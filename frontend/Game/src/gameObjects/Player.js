@@ -110,7 +110,7 @@ export default class Player extends Entity {
           case 'marmite' : //Lejoueur interagit avec la marmite
           {
             this.parent_scene.getChaudron().send_start_chaudron()
-
+           
             break
           }
 
@@ -121,9 +121,33 @@ export default class Player extends Entity {
       }
 
     } if (isJustDown('attaquer')) {
-
+      let data = this.parent_scene.get_overlap_monster()
+      console.log("Monster Attaque : ", data.monster)
+      if (data.monster != null){
+        this.attaquer_monstre(data.monster, data.indice)
+      } 
+        
     }
 
+  } 
+
+
+
+  attaquer_monstre(monstre, indice){
+    //Attaquer le monstre
+    monstre.take_damage(this.getAtq())
+
+    //Si le monstre est mort le tuer
+    if (monstre.isDead()) {
+      this.parent_scene.remove_monster(indice)
+    } 
+
+    this.ws.send(JSON.stringify({
+      type: 'damage_monster',
+      attaque: this.getAtq(),
+      indice: indice,
+      num: this.num,
+    }))
   }
 
   setWS (ws) {
@@ -131,7 +155,7 @@ export default class Player extends Entity {
   }
 
   sendCarriedObject (object) {
-    console.log('Object' + object)
+    //console.log('Object' + object)
 
     this.ws.send(JSON.stringify({
       type: 'take_ingredient',
@@ -141,7 +165,7 @@ export default class Player extends Entity {
   }
 
   sendDeltaXY (x, y) {
-    console.log(x, y)
+    //console.log(x, y)
     if (x === 0 && y === 0) {
       if (this.is_moving) {
         this.is_moving = false

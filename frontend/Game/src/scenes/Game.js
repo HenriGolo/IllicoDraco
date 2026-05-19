@@ -255,25 +255,37 @@ export class Game extends Phaser.Scene {
     if (message.num != this.joueur_courant) {
     switch (message.type) {
       case 'deplacement' :
-          this.players[message.num-1].setPos(message.x, message.y)
-          this.players[message.num-1].move(message.deltaX, message.deltaY)
+        this.players[message.num-1].setPos(message.x, message.y)
+        this.players[message.num-1].move(message.deltaX, message.deltaY)
         break
       case 'take_ingredient' :
-          this.players[message.num-1].setCarriedObject(message.ramasse.key)
-          this.ingredientsContainer.remove_object(message.ramasse.indice)
-      break
+        this.players[message.num-1].setCarriedObject(message.ramasse.key)
+        this.ingredientsContainer.remove_object(message.ramasse.indice)
+        break
       case 'drop_object' :
         this.ingredientsContainer.add_ingredient(message.x, message.y, message.ramasse.key)
-      break
+        break
       case 'remplir_marmite' :
         this.chaudron.add_ingredient(message.produit)
         this.players[message.num -1].setCarriedObject('')
         
-      break
+        break
       case 'start_chaudron' :
         this.chaudron.start_chaudron()
+        break
       case 'create_ennemy' :
-        this.createEnnemy(message.ennemi)
+        this.createEnnemy(message.ennemi, message.x, message.y)
+        break
+      case 'damage_monster' :
+        console.log("w>",message.attaque, message.indice)
+        console.log(this.monsterObjects, this.monsterObjects.length)
+        this.monsterObjects[message.indice].take_damage(message.attaque)
+        if (this.monsterObjects[message.indice].isDead()) {
+          this.remove_monster(message.indice)
+        } 
+
+        break
+      
       default :
         console.log('Requête inconnue')
     }
@@ -456,25 +468,51 @@ export class Game extends Phaser.Scene {
 
     for (let i = 0; i < this.monsterObjects.length; i++) {
 
-      if (this.physics.world.overlap(this.player.getSprite(), this.monsterObjects[i])) {
-        let monster = this.this.monsterObjects[i]
+      if (this.physics.world.overlap(this.player.getSprite(), this.monsterObjects[i].getImage())) {
+        let monster = this.monsterObjects[i]
 
-        return monster
+        return {monster : monster, indice : i} 
       }
     }
+
+    return{monster : null, indice : -1} 
   }
+
+
+  remove_monster(indice, kill = true){
+    let monster = this.monsterObjects[indice]
+    console.log("CUISINE",monster, indice)
+    this.monsterObjects.splice(indice, 1)
+    console.log(monster.getX(), monster.getY(), monster.getProduit().nom)
+    if (kill){
+      this.ingredientsContainer.add_ingredient(monster.getX(), monster.getY(), monster.getProduit().nom)
+    }else{
+
+    } 
+    
+    monster.die()
+
+  } 
 
   create_ennemy_and_send() {
 
     let ennemi = this.get_random_monster()
 
+    let x = Phaser.Math.Between(1, tilemap.width-1)*16
+    let y = 24
+
+
     this.ws.send(JSON.stringify({
       type: 'create_ennemy',
       ennemi: ennemi,
       num: this.num,
+      x: x,
+      y: y 
     }))
 
-    this.createEnnemy(ennemi)
+    
+
+    this.createEnnemy(ennemi, x, y)
   }
 
   get_random_monster() {
@@ -485,7 +523,7 @@ export class Game extends Phaser.Scene {
     }
   }
 
-  createEnnemy (chosenMonsterId) {
+  createEnnemy (chosenMonsterId, x, y) {
 
     //console.log( !this.monstersData ? "pas de monsterData defined" : "defined")
 
@@ -505,20 +543,21 @@ export class Game extends Phaser.Scene {
 
       const stats = chosenMonster.stats
       const produit = chosenMonster.produit
-      const x = Phaser.Math.Between(1, tilemap.width-1)*16
-      const y = 24
+      
 
       const monsterSprite = this.monsters.getFirstDead(true, x, y, nom, 0, true)
 
       const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, x,y, stats.vitesse, monsterSprite, produit)
       console.log("Monstre de vitesse : ", monster.vitesse)
-      this.time.addEvent({
-        delay: Phaser.Math.Between(10000, 20000) / 5,
+      let timer = this.time.addEvent({
+        delay: 500,//monster.vitesse, //Phaser.Math.Between(10000, 20000) / 5,
         callback: () => this.moveMonster(monster),
         callbackScope: this,
         loop: true
 
       })
+
+      monster.setTimer(timer)
       this.monsterObjects.push(monster)
 
       console.log('Enemy spawned at x: ' + x + ', y: ' + y)
@@ -555,6 +594,8 @@ export class Game extends Phaser.Scene {
     monster.move(monster.image.x, monster.image.y);
 
     if (monster.image.y > 16*33){
+      let id = this.monsterObjects.findIndex((m) => m === monster);
+      this.remove_monster(id, false)
       this.perdu = true;
     }
 

@@ -10,6 +10,7 @@ export default class IngredientsContainer {
   }
 
   add_ingredient (x, y, key) {
+    console.log("Ingredient add", x, y, key)
     let ing = this.parent_scene.physics.add.sprite(x, y, key)
     //this.parent_scene.physics.add.overlap(this.player.getPlayer(),  ing ,() => this.overlap_with_player(ing));
     this.ingredients.push(ing)
