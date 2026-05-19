@@ -20,8 +20,8 @@ export default class Client extends Phaser.Physics.Arcade.Sprite {
 
     showRequete(){
         console.log("showing request")
-        this.bulle = this.scene.add.sprite(this.x, this.y-16, 'bulle')
-        this.showReq = this.scene.add.sprite(this.x, this.y-20, this.requete.nom)
+        this.bulle = this.scene.add.sprite(this.x+12, this.y-18, 'bulle')
+        this.showReq = this.scene.add.sprite(this.x+12, this.y-18, this.requete.nom)
     }
 
     hideRequete(){
@@ -29,6 +29,10 @@ export default class Client extends Phaser.Physics.Arcade.Sprite {
         this.bulle?.destroy();
         this.showReq?.destroy();
 
+    }
+
+    getRequete(){
+        return this.requete;
     }
 
 }

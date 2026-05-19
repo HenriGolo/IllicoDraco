@@ -538,6 +538,14 @@ export class Game extends Phaser.Scene {
     return this.objectInteractLabel
   }
 
+  getClientInteract() {
+    return this.clients.peek()
+  }
+
+  getClientQueue() {
+    return this.clients
+  }
+
   updateMonsterSpawnDelay () {
     monsterDelay -= 50
     this.spawnMonsterTimer.destroy()

@@ -111,8 +111,8 @@ export class Preloader extends Phaser.Scene {
     // Spritesheet bulle de requête
 
     this.load.spritesheet('bulle', 'assets/divers/bulle_demande.png', {
-      frameWidth : 16,
-      frameHeight : 16
+      frameWidth : 24,
+      frameHeight : 24
     })
 
 
