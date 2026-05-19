@@ -23,17 +23,32 @@ export class QueueClient {
 
   removeClient() {
 
-    this.clientsQueue[0].hideRequete();
+    if (this.clientsQueue.length > 0){
 
-    this.clientsGroup.shiftPosition(1133, 1654, 0);
-    var c = this.clientsQueue.shift();
-    c.killAndHide();
+      this.clientsQueue[0].hideRequete();
 
-    // Changer l'orientation du perso en tête de file : 
-    this.clientsQueue[0].setFrame(this.clientsQueue[0].frame +1);
-    this.clientsQueue[0].showRequete();
+      //this.clientsGroup.shiftPosition(1133, 1654, 0);
+      var c = this.clientsQueue.shift();
+      c?.destroy();
+      this.lastPosNotTaken--;
 
-    return c;
+      this.clientsQueue.forEach((client) => {
+        console.log("will move one : ", client.x)
+        client.x += 16
+        console.log("moved one : ", client.x)
+      })
+
+      // Changer l'orientation du perso en tête de file :
+      if (this.clientsQueue.length > 0) { 
+        this.clientsQueue[0].setFrame(this.clientsQueue[0].frame +1);
+        this.clientsQueue[0].showRequete();
+      }
+
+    } else {
+      console.log("not enough clients")
+    }
+
+    //return c;
     //return this.isEmpty() ? null : this.clients.shift();
   }
 

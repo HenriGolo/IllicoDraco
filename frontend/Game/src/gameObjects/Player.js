@@ -114,6 +114,7 @@ export default class Player extends Entity {
               this.parent_scene.money += objetVouluClient.prix
             } else {
               console.log("wtf bro")
+              queue.removeClient()
             }
 
             break

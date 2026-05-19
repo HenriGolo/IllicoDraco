@@ -9,7 +9,7 @@ import Chaudron from '../gameObjects/Chaudron.js'
 
 const zoom = 3
 let monsterDelay = 5000
-let clientDelay = monsterDelay*5
+let clientDelay = 5000 //monsterDelay*2
 var tilemap
 
 export class GameUI extends Phaser.Scene {
