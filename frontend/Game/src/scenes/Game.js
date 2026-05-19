@@ -287,6 +287,12 @@ export class Game extends Phaser.Scene {
         } 
 
         break
+      case 'serv_client' : 
+     {
+        this.getClientQueue().removeClient()
+        this.players[message.num - 1].setCarriedObject("")  
+        break
+     } 
       
       default :
         console.log('Requête inconnue')
