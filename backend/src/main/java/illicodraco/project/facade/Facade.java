@@ -76,9 +76,9 @@ public class Facade {
     return controls;
   }
 
-  @GetMapping("/partie")
-  public Partie getPartie(@RequestParam("game_id") String game_id) {
-    return partieRepo.findById(game_id).orElseThrow(() -> new EntityNotFound("Partie inexistante"));
+  @GetMapping("/start_game")
+  public Partie getPartie(@RequestParam("code") String code) {
+    return partieRepo.findById(code.toUpperCase()).orElseThrow(() -> new EntityNotFound("Partie inexistante"));
   }
 
   @PostMapping("/partie")
@@ -151,24 +151,13 @@ public class Facade {
 
   @GetMapping("/create")
   public Partie createGame(@RequestParam("pseudo") String pseudo) {
-
     Random r = new Random();
-    Collection<Partie> parties = partieRepo.findAll();
-    boolean code_ok = false;
-    String code = "XXXXXX";
-
-    while (!code_ok) {
-      code_ok = true;
-      String c1 = r.nextInt(26) + "a";
-      String c2 = r.nextInt(26) + "a";
-      code = c1 + c2 + r.nextInt(10) + r.nextInt(10) + r.nextInt(10) + r.nextInt(10);
-
-      for (Partie p : parties) {
-        if (p.getCode().equals(code)) {
-          code_ok = false;
-        }
-      }
-    }
+    String code;
+    do {
+      String c1 = String.valueOf((char) (r.nextInt(26) + 'a'));
+      String c2 = String.valueOf((char) (r.nextInt(26) + 'a'));
+      code = (c1 + c2 + r.nextInt(10) + r.nextInt(10) + r.nextInt(10) + r.nextInt(10)).toUpperCase();
+    } while (partieRepo.existsById(code));
 
     Joueur joueur = login(pseudo);
 
@@ -187,7 +176,7 @@ public class Facade {
 
   @GetMapping("/join")
   public Partie joinGame(@RequestParam("pseudo") String pseudo, @RequestParam("code") String code) {
-    Optional<Partie> _partie = partieRepo.findById(code);
+    Optional<Partie> _partie = partieRepo.findById(code.toUpperCase());
     if (_partie.isPresent()) {
       Partie partie = _partie.get();
       if (partie.getNbJoueurs() >= 4) {

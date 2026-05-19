@@ -17,7 +17,7 @@ export class GameUI extends Phaser.Scene {
     this.infosText //Affichage des informations
   }
 
-  init(data) {
+  init (data) {
     this.serveur_url = data.serveur_url
     this.joueur_courant = data.joueur_courant
     this.pseudo = data.pseudo
@@ -58,7 +58,7 @@ export class GameUI extends Phaser.Scene {
     //Initialiser les touches du jeu
     this.input.keyboard.on('keyup', (event) => this.handle_key(event))
 
-    this.coffre =new Coffre(this)
+    this.coffre = new Coffre(this)
   }
 
   open_boutique () {
@@ -110,7 +110,6 @@ export class Game extends Phaser.Scene {
 
     this.monstersData = []
     this.getMonsters()
-
 
     //TILE MAP
 
@@ -192,12 +191,12 @@ export class Game extends Phaser.Scene {
     })
 
     this.ui = this.scene.launch('GameUI',
-    {
-      joueur_courant : this.joueur_courant, 
-      pseudo : this.pseudo, 
-      serveur_url : SERVER_URL, 
-      game : this
-    }
+      {
+        joueur_courant: this.joueur_courant,
+        pseudo: this.pseudo,
+        serveur_url: SERVER_URL,
+        game: this
+      }
     )
 
   }
