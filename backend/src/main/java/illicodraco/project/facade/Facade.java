@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
@@ -110,6 +111,11 @@ public class Facade {
   @GetMapping("/monstres")
   public Collection<Monstre> getMonstre() {
     return monstreRepo.findAll();
+  }
+
+  @PostMapping("/monstres")
+  public void addMonstre(@RequestBody Monstre[] monstres) {
+    monstreRepo.saveAll(Arrays.stream(monstres).toList());
   }
 
   @GetMapping("/outils")
