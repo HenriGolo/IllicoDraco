@@ -52,9 +52,7 @@ export default class Player extends Entity {
     if (this.cursors.down.isDown || isDown('bas')) dy += 100
     //Envoie des déplacements
     if (this.ws !== null) {
-      if (dx != 0 || dy != 0) {
-        this.sendDeltaXY(dx, dy)
-      }
+      this.sendDeltaXY(dx, dy)
       
     }
 
@@ -90,6 +88,7 @@ export default class Player extends Entity {
 
     console.log(x, y)
     this.ws.send(JSON.stringify({
+      type : "deplacement",
       deltaX: x,
       deltaY: y,
       num: this.num,

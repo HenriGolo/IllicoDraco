@@ -214,7 +214,17 @@ export class Game extends Phaser.Scene {
   }
 
   on_message(event) {
-
+    const message = JSON.parse(event.data)
+    console.log({ message })
+    switch (message.type) {
+      case 'deplacement' :
+        if (message.num != this.joueur_courant) {
+          this.players[message.num-1].move(message.deltaX, message.deltaY)
+        }
+        break
+      default :
+        console.log('Requête inconnue')
+    }
   }
 
   update () {
