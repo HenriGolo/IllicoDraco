@@ -39,7 +39,7 @@ export default class Chaudron {
         this.sprite.anims.play('marmite_empty', true)
         this.full = false
         this.content = []
-        this.scene.getIngredientsContainer().add_ingredient(this.sprite.x, this.sprite.y, plat)
+        this.scene.getIngredientsContainer().add_ingredient(this.sprite.x, this.sprite.y+32, plat)
     }
 
     start_chaudron() {
@@ -62,7 +62,7 @@ export default class Chaudron {
             this.start_chaudron()
 
             this.ws.send(JSON.stringify({
-            type : "start_chaudron",
+            type : "start_marmite",
             num: this.num
             }))
         }

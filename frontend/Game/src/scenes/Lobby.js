@@ -151,8 +151,19 @@ export class Lobby extends Phaser.Scene {
 
   }
 
+
   //fetch les données pour lancer la partie
   async launch_game() {
+    /*
+    let url_class = new URL('classes', this.serveur_url)
+      const response_class = await fetch(url_class)
+      url.searchParams.set('classe', this.code)
+      if (response_class.ok) {
+        const data = await response_class.json()
+        // Start le lobby avec le nombre de joueurs dans data
+        console.log("iiiiiii", data)
+    } */
+
     const url = new URL('start_game', this.serveur_url)
     url.searchParams.set('code', this.code)
     const response = await fetch(url)
