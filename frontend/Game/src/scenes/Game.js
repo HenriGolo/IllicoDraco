@@ -1,7 +1,7 @@
 import Tchat from '../gameObjects/Tchat.js'
 import Player from '../gameObjects/Player.js'
 import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
-import { SERVER_URL } from '../utils.js'
+import { SERVER_URL, TIME, MONEY } from '../utils.js'
 import Monster from '../entities/Monster.js'
 import Coffre from '../gameObjects/Coffre.js'
 
@@ -91,16 +91,20 @@ export class GameUI extends Phaser.Scene {
 
 export class Game extends Phaser.Scene {
 
-  constructor (
-    joueur_courant = 4,
-    pseudo = 'Pseudo',
-    serveur_url = SERVER_URL
-  ) {
+  constructor () {
     super('Game')
+  }
 
-    this.serveur_url = serveur_url
-    this.joueur_courant = joueur_courant
-    this.pseudo = pseudo
+  init (data) {
+    
+    this.joueur_courant = data.joueur_courant
+    this.pseudo = data.pseudo
+    this.ws = data.ws
+    this.joueurs_info = data.joueurs_info
+
+    this.serveur_url = SERVER_URL
+    this.duree = TIME
+    this.money = MONEY
   }
 
   preload () {
@@ -130,12 +134,7 @@ export class Game extends Phaser.Scene {
     this.cameras.main.setZoom(4)
     this.cameras.main.centerOn(this.middleX, this.middleY)
 
-    const controles_url = new URL('controles', this.serveur_url)
-    controles_url.searchParams.set('pseudo', this.pseudo)
-    fetch(controles_url)
-      .then(response => response.json())
-      .then(controles => {
-        console.log({ controles })
+    //ACHANGER INIT DU JOUEURS AVEC LES DONNEES DE JOUEUR DATA
         this.playerCur = new Player(this, this.middleX + 16, this.middleY, 1, 'mage', 100, 10, 3, controles)
         console.log({ player: this.playerCur })
         /*/TO REMOVE
@@ -152,7 +151,8 @@ export class Game extends Phaser.Scene {
           -this.playerCur.getWidth() / 2,
           -this.playerCur.getHeight() / 2
         )
-      })
+      
+      ////////////////////////////////////////////////////:::
 
     //Cacher le joueur ou monstre qui passe sous un tronc/arche
     caches.setDepth(this.playerCur?.getDepth() + 1)

@@ -142,8 +142,34 @@ export class Lobby extends Phaser.Scene {
       case 'switch_class' :
         this.switch_class(message.num - 1, message.classe) // num = 1,2,3 ou 4, classe = 'mage', 'guerrier'...
         break
+      case 'start_game' :
+        this.launch_game()
       default :
         console.log('Requête inconnue')
+    }
+
+  }
+
+  //fetch les données pour lancer la partie
+  async launch_game() {
+    const url = new URL('start_game', this.serveur_url)
+    url.searchParams.set('code', this.code)
+    const response = await fetch(url)
+    if (response.ok) {
+      const data = await response.json()
+      this.scene.start("Game", 
+        {
+          ws : this.ws,
+          joueur_courant : this.joueur_courant,
+          pseudo : this.pseudo,
+          joueurs_info : data.joueurs_info
+
+        }
+
+      )
+
+    } else {
+      console.log('Erreur au lancement de la partie')
     }
 
   }
@@ -212,8 +238,11 @@ export class Lobby extends Phaser.Scene {
 
   // Lancer le jeu
   start_game () {
-    // TODO START
     console.log(this.pseudo + ' : Cuisinons !')
+
+    this.ws.send(JSON.stringify({
+      type: 'start_game'
+    }))
   }
 
   // Parametre

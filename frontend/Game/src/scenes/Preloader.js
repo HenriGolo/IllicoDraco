@@ -101,7 +101,7 @@ export class Preloader extends Phaser.Scene {
 
     // Load : spritesheet client
 
-    this.load.spritesheet('client', 'assets/client.png')
+    //this.load.spritesheet('client', 'assets/client.png')
 
     //charger les ingrédients
     let ingredients = ['beurre', 'carotte', 'carotte_coupee', 'cut_navet', 'eau', 'farine', 'gigot_dragon',
