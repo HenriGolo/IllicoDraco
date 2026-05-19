@@ -23,11 +23,6 @@ import java.util.function.Predicate;
     encoders = GameMessageReadWrite.class)
 public class GameEndpoint {
 
-  @Autowired
-  OutilRepository outilRepo;
-  @Autowired
-  RecetteRepository recetteRepo;
-
   private static final Set<GameEndpoint> ENDPOINTS = new CopyOnWriteArraySet<>();
   private static final Map<String, String> USERS = new HashMap<>();
   private static final ConcurrentMap<String, String[]> CLASSES = new ConcurrentHashMap<>();
