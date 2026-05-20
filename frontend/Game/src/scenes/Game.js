@@ -95,9 +95,7 @@ export class GameUI extends Phaser.Scene {
         break
       }
     }
-
   }
-
 }
 
 export class Game extends Phaser.Scene {
@@ -209,7 +207,6 @@ export class Game extends Phaser.Scene {
         callback: this.updateMonsterSpawnDelay,
         callbackScope: this,
         loop: true
-
       })
     }
 
@@ -223,7 +220,6 @@ export class Game extends Phaser.Scene {
         callback: this.genClients,
         callbackScope: this,
         loop: true
-
       })
 
       this.time.addEvent({    // Modifie le temps de spawn des clients
@@ -231,7 +227,6 @@ export class Game extends Phaser.Scene {
         callback: this.updateClientSpawnDelay,
         callbackScope: this,
         loop: true
-
       })
     }
 
@@ -247,7 +242,6 @@ export class Game extends Phaser.Scene {
 
     ///Création de la marmite
     this.chaudron = new Chaudron(this, this.marmite, this.ws, this.joueur_courant)
-
   }
 
   setGameUi (ui) {
@@ -287,8 +281,8 @@ export class Game extends Phaser.Scene {
           this.createEnnemy(message.ennemi, message.x, message.y)
           break
         case 'damage_monster' :
-          this.monsterObjects[message.indice].take_damage(message.attaque)
-          if (this.monsterObjects[message.indice].isDead()) {
+          this.monsterObjects[message.indice]?.take_damage(message.attaque)
+          if (this.monsterObjects[message.indice]?.isDead() === true) {
             this.remove_monster(message.indice)
           }
 
@@ -307,7 +301,6 @@ export class Game extends Phaser.Scene {
         default :
           console.error('Requête inconnue')
       }
-
     }
 
     if (message.type === 'fin_marmite') {
@@ -342,7 +335,6 @@ export class Game extends Phaser.Scene {
           }*/
         }
       }
-
     }
   }
 
@@ -457,9 +449,7 @@ export class Game extends Phaser.Scene {
       this.monstersData = data
     } else {
       console.error('Erreur HTTP : ', response.status)
-
     }
-
   }
 
   preloadMonstergroup () {
@@ -471,13 +461,11 @@ export class Game extends Phaser.Scene {
     for (const monster in this.monstersData) {
       this.load.image(monster.nom, monster.path)
     }
-
   }
 
   generateMonsterGroup () {
 
     this.monsters = this.physics.add.group([])
-
   }
 
   get_overlap_monster () {
@@ -500,11 +488,9 @@ export class Game extends Phaser.Scene {
     if (kill) {
       this.ingredientsContainer.add_ingredient(monster.getX(), monster.getY(), monster.getProduit().nom)
     } else {
-
     }
 
     monster.die()
-
   }
 
   create_ennemy_and_send () {
@@ -553,12 +539,10 @@ export class Game extends Phaser.Scene {
         callback: () => this.moveMonster(monster),
         callbackScope: this,
         loop: true
-
       })
 
       monster.setTimer(timer)
       this.monsterObjects.push(monster)
-
     }
   }
 
@@ -603,7 +587,6 @@ export class Game extends Phaser.Scene {
       this.remove_monster(id, false)
       this.perdu = true
     }
-
   }
 
   genClients () {
@@ -622,7 +605,6 @@ export class Game extends Phaser.Scene {
   }
 
   interactClient (client) {
-
   }
 
   //////////////////////////Envoi message////////////////////////////
@@ -635,7 +617,6 @@ export class Game extends Phaser.Scene {
       num: this.num,
     }))
   }
-
 }
 
 ////////////////////////////////

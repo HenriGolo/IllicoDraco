@@ -13,7 +13,6 @@ export class Lobby extends Phaser.Scene {
 
     this.joueurs
     this.tchat
-
   }
 
   init (data) {
@@ -34,7 +33,6 @@ export class Lobby extends Phaser.Scene {
     this.ws.onerror = (error) => {
       console.error('Erreur dans le lobby', error)
     }
-
   }
 
   preload () {
@@ -121,7 +119,6 @@ export class Lobby extends Phaser.Scene {
     this.ws.onmessage = (event) => this.on_message(event)
 
     // TEST
-
   }
 
   // Gestion des messages de la webSocket
@@ -143,7 +140,6 @@ export class Lobby extends Phaser.Scene {
       default :
         console.error('Requête inconnue')
     }
-
   }
 
   //fetch les données pour lancer la partie
@@ -178,11 +174,9 @@ export class Lobby extends Phaser.Scene {
           classes_info: classes_info
         }
       )
-
     } else {
       console.error('Erreur au lancement de la partie')
     }
-
   }
 
   // Permet d'afficher le joueur numéro num (num entre 0 et 3)
@@ -214,7 +208,6 @@ export class Lobby extends Phaser.Scene {
 
     this.nb_joueur -= 1
     this.joueurs[this.nb_joueur].destroy()
-
   }
 
   async switch_class_cur_player () {
@@ -270,7 +263,5 @@ export class Lobby extends Phaser.Scene {
   }
 
   update () {
-
   }
-
 }

@@ -33,14 +33,12 @@ export default class MonsterPresentation {
     this.text_produit = scene.add.text(x + 20, y + 235, 'Produit :', { fontSize: '32px', fill: '#FFF' })
 
     this.graphics.setVisible(false)
-
   }
 
   change_monster (monster) {
 
     if (this.monster_img != null) {
       this.monster_img.destroy()
-
     }
 
     this.monster_name.setText(monster.getName())
@@ -69,5 +67,4 @@ export default class MonsterPresentation {
       this.produit_img.setVisible(b)
     }
   }
-
 }

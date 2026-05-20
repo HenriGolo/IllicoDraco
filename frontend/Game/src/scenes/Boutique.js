@@ -10,7 +10,6 @@ export class Boutique extends Phaser.Scene {
 
     this.curPage = 0
     this.dansIngredient = true
-
   }
 
   init (data) {
@@ -19,7 +18,6 @@ export class Boutique extends Phaser.Scene {
   }
 
   preload () {
-
   }
 
   create () {
@@ -121,7 +119,6 @@ export class Boutique extends Phaser.Scene {
     }
 
     this.switch_ingredient()
-
   }
 
   buy_boost (boost) {
@@ -161,7 +158,6 @@ export class Boutique extends Phaser.Scene {
       this.switch_ingredient_visibility(true)
     } else {
     }
-
   }
 
   switch_boost () {
@@ -180,7 +176,6 @@ export class Boutique extends Phaser.Scene {
     this.rightArrowButton.setVisible(false)
     this.curPageSprite.setVisible(false)
     ////
-
   }
 
   switch_ingredient () {
@@ -208,7 +203,6 @@ export class Boutique extends Phaser.Scene {
     for (let i = begin; i < end; i++) {
       this.ingredients_button[i].setVisible(val)
     }
-
   }
 
   switch_boost_visibility (val) {
@@ -221,11 +215,8 @@ export class Boutique extends Phaser.Scene {
   }
 
   close_window () {
-
   }
 
   update () {
-
   }
-
 }

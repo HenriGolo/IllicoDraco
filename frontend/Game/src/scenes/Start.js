@@ -38,7 +38,6 @@ export class Start extends Phaser.Scene {
     })
 
     this.pseudoChoisi = false
-
   }
 
   init (data) {
@@ -86,7 +85,6 @@ export class Start extends Phaser.Scene {
       this.addingButtons()
       this.createPopup()
     }
-
   }
 
   update () {
@@ -103,7 +101,6 @@ export class Start extends Phaser.Scene {
       // On fait apparaitre les autres éléments du menu
       this.addingButtons()
       this.createPopup()
-
     }
   }
 
@@ -178,7 +175,6 @@ export class Start extends Phaser.Scene {
       for (let x = 0; x < this.mapWidth; x++) {
         tile = this.map.getTileAt(x, y)
         tile.index = (tile.index + 1) % 6
-
       }
     }
   }
@@ -207,7 +203,6 @@ export class Start extends Phaser.Scene {
     this.options.on('pointerdown', () => this.on_options())
 
     this.createPopup()
-
   }
 
   // Précreer le popup de récupération de code
@@ -224,7 +219,6 @@ export class Start extends Phaser.Scene {
     this.gameCodeContainer.on('click', (event) => this.send_code(event))
 
     this.switchCodePopPupVisibility(false)
-
   }
 
   // Envoi le code au server et démarre le lobby si la partie existe
@@ -251,7 +245,6 @@ export class Start extends Phaser.Scene {
       } else {
         inputCode.value = 'Code Invalide'
       }
-
     } else {
       this.switchCodePopPupVisibility(false)
       this.switchButtonMode(true)
@@ -281,7 +274,6 @@ export class Start extends Phaser.Scene {
     } else {
       console.error('Erreur a la création de la partie')
     }
-
   }
 
   on_join () {
@@ -335,7 +327,6 @@ export class Start extends Phaser.Scene {
     } else {
       console.error('Erreur au chargement des paramètres')
     }
-
   }
 
   switchButtonMode (val) {
@@ -353,5 +344,4 @@ export class Start extends Phaser.Scene {
       this.options.setInteractive()
     }
   }
-
 }

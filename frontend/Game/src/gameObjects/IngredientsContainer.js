@@ -5,7 +5,6 @@ export default class IngredientsContainer {
     this.ingredients = []
     this.parent_scene = scene
     this.player = player
-
   }
 
   add_ingredient (x, y, key) {
@@ -31,7 +30,6 @@ export default class IngredientsContainer {
     }
 
     return { key: null, indice: -1 }
-
   }
 
   remove_object (indice) {
@@ -39,7 +37,5 @@ export default class IngredientsContainer {
       this.ingredients[indice].destroy()
       this.ingredients.splice(indice, 1) //retire l'élément concerné
     }
-
   }
-
 }

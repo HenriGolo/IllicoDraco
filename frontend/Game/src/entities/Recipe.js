@@ -1,32 +1,30 @@
 export default class Recipe {
 
-    constructor(recipe_name, ingredients, result, tool) {
-        
-        this.recipe_name = recipe_name;
-        this.ingredients = ingredients;
-        this.result = result;
-        this.tool = tool;
+  constructor (recipe_name, ingredients, result, tool) {
 
-    }
+    this.recipe_name = recipe_name
+    this.ingredients = ingredients
+    this.result = result
+    this.tool = tool
+  }
 
-    getRecipeName() {
-        return this.recipe_name;
-    }
+  getRecipeName () {
+    return this.recipe_name
+  }
 
-    getIngredients() {
-        return this.ingredients;
-    }
+  getIngredients () {
+    return this.ingredients
+  }
 
-    getResult() {
-        return this.result;
-    }
+  getResult () {
+    return this.result
+  }
 
-    getTool() {
-        return this.tool;
-    }
+  getTool () {
+    return this.tool
+  }
 
-    getNbIngredients() {
-        return this.ingredients.length;
-    }
-
+  getNbIngredients () {
+    return this.ingredients.length
+  }
 }

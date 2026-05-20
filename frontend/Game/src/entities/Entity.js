@@ -1,95 +1,88 @@
 //SVP ne pas utiliser pour client
 export default class Entity {
 
-    //scene -> scene sur laquelle l'entité se trouve
-    //name -> nom de l'entité
-    //pv, def, atq -> point e vie, defense , attaque
-    //init_x, init_y -> coordonnée initiale
+  //scene -> scene sur laquelle l'entité se trouve
+  //name -> nom de l'entité
+  //pv, def, atq -> point e vie, defense , attaque
+  //init_x, init_y -> coordonnée initiale
 
-    constructor(scene, name, pv, def, atq, init_x, init_y) {
+  constructor (scene, name, pv, def, atq, init_x, init_y) {
 
-        this.is_dead = false;
-        this.name = name;
-        this.pv = pv;
-        this.max_pv = pv;
-        this.def = def;
-        this.atq = atq;
+    this.is_dead = false
+    this.name = name
+    this.pv = pv
+    this.max_pv = pv
+    this.def = def
+    this.atq = atq
 
-        this.lifeBar_back = scene.add.rectangle(init_x, init_y-11, 16, 4, 0xffffff)
-        this.lifeBar = scene.add.rectangle(init_x, init_y-11, 16, 4, 0xff0000)
+    this.lifeBar_back = scene.add.rectangle(init_x, init_y - 11, 16, 4, 0xffffff)
+    this.lifeBar = scene.add.rectangle(init_x, init_y - 11, 16, 4, 0xff0000)
+  }
 
+  move (x, y) {
+    this.lifeBar_back.setX(x)
+    this.lifeBar_back.setY(y - 11)
+
+    this.lifeBar.setX(x - (8 - (this.lifeBar.width / 2)))
+    this.lifeBar.setY(y - 11)
+  }
+
+  take_damage (amount) {
+
+    let damage = amount - ((amount * this.def) / 100)
+
+    this.pv = this.pv - damage
+    if (this.pv < 0) {
+      this.pv = 0
+      this.is_dead = true
     }
 
+    this.lifeBar.setSize((this.pv * 16) / this.max_pv, 4)
+    this.lifeBar.setX(this.lifeBar.x - (8 - (this.lifeBar.width / 2)))
+  }
 
-    move(x, y) {
-        this.lifeBar_back.setX(x)
-        this.lifeBar_back.setY(y-11)
+  isDead () {
+    return this.is_dead
+  }
 
-        this.lifeBar.setX(x-(8-(this.lifeBar.width/2)))
-        this.lifeBar.setY(y-11)
-    }
+  getDef () {
+    return this.def
+  }
 
-    take_damage(amount) {
+  getAtq () {
+    return this.atq
+  }
 
-        console.log("Attaque : " + amount + "  " + this.pv)
-        let damage = amount - ((amount*this.def)/100)
+  getPV () {
+    return this.pv
+  }
 
-        this.pv = this.pv - damage
-        if (this.pv < 0) {
-            this.pv = 0
-            this.is_dead = true
-        }
+  getMaxPV () {
+    return this.max_pv
+  }
 
-        console.log("AttaqueRes : " + amount + "  " + this.pv)
+  getName () {
+    return this.name
+  }
 
-        this.lifeBar.setSize((this.pv*16)/this.max_pv, 4)
-        this.lifeBar.setX(this.lifeBar.x-(8-(this.lifeBar.width/2)))
-    }
+  setDef (def) {
+    this.def = def
+  }
 
-    isDead(){
-        console.log("Dead : "  + this.is_dead)
-        return this.is_dead
-    } 
+  setAtq (atq) {
+    this.atq = atq
+  }
 
-    getDef() {
-        return this.def
-    }
+  setPV (pv) {
+    this.pv = pv
+  }
 
-    getAtq() {
-        return this.atq
-    }
+  setMaxPV (max_pv) {
+    this.max_pv = max_pv
+  }
 
-    getPV() {
-        return this.pv
-    }
-
-    getMaxPV() {
-        return this.max_pv
-    }
-
-    getName() {
-        return this.name
-    }
-
-    setDef(def) {
-        this.def = def
-    }
-
-    setAtq(atq) {
-        this.atq = atq
-    }
-
-    setPV(pv) {
-        this.pv = pv
-    }
-
-    setMaxPV(max_pv) {
-        this.max_pv = max_pv
-    }
-
-    die(){
-        this.lifeBar.destroy()
-        this.lifeBar_back.destroy()
-    } 
-
+  die () {
+    this.lifeBar.destroy()
+    this.lifeBar_back.destroy()
+  }
 }

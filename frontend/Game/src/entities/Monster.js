@@ -10,7 +10,6 @@ export default class Monster extends Entity {
     this.produit = produit
     this.vitesse = vitesse
     this.timer = null
-
   }
 
   getImage () {
@@ -25,29 +24,27 @@ export default class Monster extends Entity {
     return this.vitesse
   }
 
-  getTimer(){
+  getTimer () {
     return this.timer
-  } 
+  }
 
-  setTimer(timer){
+  setTimer (timer) {
     this.timer = timer
-  } 
+  }
 
-  getX(){
+  getX () {
     return this.image.x
-  } 
+  }
 
-  getY(){
+  getY () {
     return this.image.y
-  } 
+  }
 
-
-  die(){
+  die () {
     super.die()
     this.image.destroy()
-    if (this.timer != null){
+    if (this.timer != null) {
       this.timer.destroy()
-    } 
-  } 
-
+    }
+  }
 }

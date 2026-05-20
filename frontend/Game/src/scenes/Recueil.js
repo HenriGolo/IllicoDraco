@@ -62,7 +62,6 @@ export class Recueil extends Phaser.Scene {
   }
 
   preload () {
-
   }
 
   create () {
@@ -150,7 +149,6 @@ export class Recueil extends Phaser.Scene {
     this.dansRecette = true
     this.curPageText.setText('1')
     this.chargeRecipePage()
-
   }
 
   switch_bestiaire () {
@@ -185,7 +183,6 @@ export class Recueil extends Phaser.Scene {
     } else {
       this.chargeMonsterPage()
     }
-
   }
 
   //Charge la page courante de monstre
@@ -195,7 +192,6 @@ export class Recueil extends Phaser.Scene {
     var lim = Math.min(this.curPage * size + size, this.total_monster)
     for (var i = this.curPage * size; i < lim; i++) {
       this.monstersPres[i - (size * this.curPage)].change_monster(this.monsters[i])
-
     }
   }
 
@@ -207,9 +203,7 @@ export class Recueil extends Phaser.Scene {
     var lim = Math.min(this.curPage * size + size, this.total_recipe)
     for (var i = this.curPage * size; i < lim; i++) {
       this.recipesPres[i - (size * this.curPage)].change_recipe(this.recipes[i])
-
     }
-
   }
 
   hideMonsterPage () {
@@ -225,7 +219,5 @@ export class Recueil extends Phaser.Scene {
   }
 
   update () {
-
   }
-
 }

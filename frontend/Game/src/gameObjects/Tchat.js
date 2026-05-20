@@ -39,7 +39,6 @@ export default class Tchat {
         : `${message.from} : ${message.content}`)
     }
     this.ws.onerror = () => this.add_text_to_tchat(this.pseudo + ' : Une erreur s\'est produite')
-
   }
 
   // récupère le texte entré et l'envoie au tchat
@@ -70,7 +69,6 @@ export default class Tchat {
       this.compteur += 1
       this.bubble.setVisible(true)
       this.compteurText.setText(this.compteur > this.chatLimit ? `+${this.chatLimit}` : this.compteur)
-
     }
   }
 
@@ -83,12 +81,10 @@ export default class Tchat {
       this.compteur = 0
       this.bubble.setVisible(false)
       this.compteurText.setText('')
-
     }
   }
 
   quitChat () {
     this.ws.close()
   }
-
 }

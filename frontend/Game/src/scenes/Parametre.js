@@ -3,7 +3,6 @@ export class Parametre extends Phaser.Scene {
   constructor () {
     super('Parametre')
     this.selected = -1
-
   }
 
   init (data) {
@@ -65,7 +64,6 @@ export class Parametre extends Phaser.Scene {
     this.input.keyboard.on('keydown',
       (event) => this.change_key(event.code)
     )
-
   }
 
   // Permet de selectionner le controle a changer
@@ -96,7 +94,6 @@ export class Parametre extends Phaser.Scene {
       this.keys[this.selected] = new_key
       this.selected = -1
     }
-
   }
 
   async close_window () {
@@ -126,5 +123,4 @@ export class Parametre extends Phaser.Scene {
     this.scene.resume(this.previousScene)
     this.scene.stop(this)
   }
-
 }

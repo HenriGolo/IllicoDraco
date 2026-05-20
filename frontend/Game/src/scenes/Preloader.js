@@ -17,7 +17,6 @@ export class Preloader extends Phaser.Scene {
           frameWidth: 16,
           frameHeight: 16,
         })
-
       }
     }
 
@@ -104,17 +103,16 @@ export class Preloader extends Phaser.Scene {
     // Load : spritesheet client
 
     this.load.spritesheet('client', 'assets/client.png', {
-      frameWidth : 16,
-      frameHeight : 16
+      frameWidth: 16,
+      frameHeight: 16
     })
 
     // Spritesheet bulle de requête
 
     this.load.spritesheet('bulle', 'assets/divers/bulle_demande.png', {
-      frameWidth : 24,
-      frameHeight : 24
+      frameWidth: 24,
+      frameHeight: 24
     })
-
 
     // charger les ingrédients
     let ingredients = ['beurre', 'carotte', 'carotte_coupee', 'cut_navet', 'eau', 'farine', 'gigot_dragon',
@@ -130,10 +128,7 @@ export class Preloader extends Phaser.Scene {
     for (let i = 0; i < plats_finis.length; i++) {
       this.load.image(plats_finis[i], 'assets/plats_finis/' + plats_finis[i] + '.png')
     }
-
   }
-
-
 
   createAnims () {
     let avatars = ['guerrier', 'mage', 'archer', 'pretre']
@@ -176,7 +171,6 @@ export class Preloader extends Phaser.Scene {
           frameRate: 10,
           repeat: -1
         })
-
       }
     }
 
@@ -210,7 +204,6 @@ export class Preloader extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
     })
-
 
   }
 

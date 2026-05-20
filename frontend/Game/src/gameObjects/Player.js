@@ -58,7 +58,6 @@ export default class Player extends Entity {
         }
         this.setCarriedObject(object.key)
         this.sendCarriedObject(object)
-
       } else if (this.objectIsCarried()) { //Un objet  est porté et on ne veut pas prendre d'objet
         let old = this.getCarriedObject()
         ic.add_ingredient(this.getX(), this.getY(), old)
@@ -79,35 +78,28 @@ export default class Player extends Entity {
             if (this.parent_scene.getChaudron().add_ingredient(this.getCarriedObject())) {
               this.parent_scene.getChaudron().send_ingredient(this.getCarriedObject())
               this.setCarriedObject('')
-
             }
             break
           }
           case 'bar' : {// Le joueur interagit avec le bar 
-
-            console.log("Interaction avec le bar")
 
             var objetPorte = this.getCarriedObject()
             var queue = this.parent_scene.getClientQueue()
             var client = queue.peek()
             var objetVouluClient = client.getRequete()
 
-            console.log("Client veut :", objetVouluClient, ", je porte :", objetPorte)
-            
             let argent = 0
-            if (objetPorte === objetVouluClient.nom){
-              console.log("Client satisfait!! +", objetVouluClient.prix)
+            if (objetPorte === objetVouluClient.nom) {
               argent = queue.getPrice()
               this.parent_scene.getUi().add_money(queue.getPrice())
               queue.removeClient()
-              
+
             } else {
-              console.log("wtf bro")
               argent = 1
               this.parent_scene.getUi().add_money(1)
               queue.removeClient()
             }
-            this.setCarriedObject("")
+            this.setCarriedObject('')
 
             this.ws.send(JSON.stringify({
               type: 'serv_client',
@@ -118,8 +110,6 @@ export default class Player extends Entity {
             break
           }
           default:
-            console.log('Rien a faire...')
-
         }
       } else { //On ne porte rien
         switch (objectInteract) {
@@ -133,18 +123,14 @@ export default class Player extends Entity {
           default :
             console.log('Rien a faire...')
         }
-
       }
-
     }
     if (isJustDown('attaquer')) {
       let data = this.parent_scene.get_overlap_monster()
       if (data.monster != null) {
         this.attaquer_monstre(data.monster, data.indice)
       }
-
     }
-
   }
 
   attaquer_monstre (monstre, indice) {
@@ -201,7 +187,6 @@ export default class Player extends Entity {
         num: this.num,
       }))
     }
-
   }
 
   setPos (x, y) {
@@ -230,13 +215,11 @@ export default class Player extends Entity {
       this.sprite.anims.play(this.name + '_idle', true)
     }
     super.move(this.getX(), this.getY())
-
   }
 
   setCarriedObject (texture) {
     this.carried_object.setVisible(texture !== '')
     this.carried_object.setTexture(texture)
-
   }
 
   // Retourne null si aucun objet est porté sinon retourne la texture de l'objet
@@ -245,7 +228,6 @@ export default class Player extends Entity {
       return this.carried_object.texture.key
     }
     return null
-
   }
 
   // Est ce qu'un objet est tenu
@@ -276,5 +258,4 @@ export default class Player extends Entity {
   getHeight () {
     return this.sprite.height
   }
-
 }

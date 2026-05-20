@@ -1,5 +1,3 @@
-import Recipe from '../entities/Recipe.js';
-
 //Classe pour afficher une recette dans le livre des recettes
 const zoom = 3
 const width = 300
@@ -32,11 +30,9 @@ export default class RecipePresentation {
     this.tool = null
 
     this.graphics.setVisible(false)
-
   }
 
-
-  change_recipe(recipe) {
+  change_recipe (recipe) {
 
     if (this.result != null) {
       this.result.destroy()
@@ -77,5 +73,4 @@ export default class RecipePresentation {
       this.ingredients[i].setVisible(b)
     }
   }
-
 }
