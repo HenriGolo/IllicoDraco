@@ -1,5 +1,6 @@
 package illicodraco.project.game;
 
+import illicodraco.project.beans.Produit;
 import illicodraco.project.game.chat.Message;
 
 public class GameMessage {
@@ -33,6 +34,8 @@ public class GameMessage {
   private int attaque;
   /// Indice
   private int indice;
+  /// Produit complet
+  private Produit produit_complet;
 
   public boolean isSystem() {
     return system;
@@ -167,5 +170,13 @@ public class GameMessage {
 
   public void setIndice(int indice) {
     this.indice = indice;
+  }
+
+  public Produit getProduit_complet() {
+    return produit_complet;
+  }
+
+  public void setProduit_complet(Produit produit_complet) {
+    this.produit_complet = produit_complet;
   }
 }
