@@ -1,7 +1,7 @@
 import Tchat from '../gameObjects/Tchat.js'
 import Player from '../gameObjects/Player.js'
 import IngredientsContainer from '../gameObjects/IngredientsContainer.js'
-import { MONEY, SERVER_URL, TIME } from '../utils.js'
+import { MONEY, SERVER_URL, TIME } from '../../../utils.js'
 import Monster from '../entities/Monster.js'
 import Coffre from '../gameObjects/Coffre.js'
 import { QueueClient } from '../gameObjects/QueueClient.js'

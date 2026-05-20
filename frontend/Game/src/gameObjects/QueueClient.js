@@ -1,4 +1,4 @@
-import { SERVER_URL } from "../utils.js";
+import { SERVER_URL } from "../../../utils.js";
 import Client from "./Client.js";
 
 export class QueueClient {

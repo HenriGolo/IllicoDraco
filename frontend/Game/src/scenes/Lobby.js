@@ -1,5 +1,5 @@
 import Tchat from '../gameObjects/Tchat.js'
-import { httpToWs } from '../utils.js'
+import { httpToWs } from '../../../utils.js'
 
 const zoom = 10
 const joueur_classe = ['guerrier', 'mage', 'pretre', 'archer']
