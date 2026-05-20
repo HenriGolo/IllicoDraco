@@ -34,6 +34,7 @@ public class GameMessage {
   private int attaque;
   /// Indice
   private int indice;
+  /// Produit complet
   private Produit produit_complet;
 
   public boolean isSystem() {

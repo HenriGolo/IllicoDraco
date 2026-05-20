@@ -1,11 +1,8 @@
 package illicodraco.project.game;
 
-import illicodraco.project.repositories.OutilRepository;
-import illicodraco.project.repositories.RecetteRepository;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.Timer;
@@ -22,6 +19,8 @@ import java.util.function.Predicate;
     decoders = GameMessageReadWrite.class,
     encoders = GameMessageReadWrite.class)
 public class GameEndpoint {
+
+  private static final Random random = new Random();
 
   private static final Set<GameEndpoint> ENDPOINTS = new CopyOnWriteArraySet<>();
   private static final Map<String, String> USERS = new HashMap<>();
@@ -224,12 +223,14 @@ public class GameEndpoint {
   }
 
   private void startMarmite() {
+    List<String> platsPossibles = List.of("atchoum", "beurre", "boeilgur", "brioche", "carotte_genie", "fromage", "jackoNavet", "lampe_genie", "pain", "ragout", "salade", "saucisse", "slime_fresh", "soupe_legumes", "tarte", "tour_legumes");
+    String plat = platsPossibles.get(random.nextInt(platsPossibles.size()));
     TIMERS.put(code, new Timer(5000, e -> {
       clearMarmite();
       GameMessage message = new GameMessage();
       message.setType("fin_marmite");
       message.setCode(code);
-      message.setProduit("beurre");
+      message.setProduit(plat);
       broadcast(message);
       TIMERS.get(code).stop();
       TIMERS.put(code, null);

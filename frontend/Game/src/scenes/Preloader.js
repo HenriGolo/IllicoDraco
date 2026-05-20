@@ -125,7 +125,7 @@ export class Preloader extends Phaser.Scene {
       this.load.image(ingredients[i], 'assets/ingredients/' + ingredients[i] + '.png')
     }
 
-    let plats_finis = ['atchoum', 'boeilgur', 'brioche', 'carotte_genie', 'fromage', 'jackoNavet', 'tarte', 'pain', 'ragout', 'slimeFresh', 'soupeLegumes', 'tourLegumes']
+    let plats_finis = ['atchoum', 'boeilgur', 'brioche', 'carotte_genie', 'fromage', 'jackoNavet', 'tarte', 'pain', 'ragout', 'slime_fresh', 'soupe_legumes', 'tour_legumes']
 
     for (let i = 0; i < plats_finis.length; i++) {
       this.load.image(plats_finis[i], 'assets/plats_finis/' + plats_finis[i] + '.png')
