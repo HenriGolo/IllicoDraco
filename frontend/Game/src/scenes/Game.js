@@ -256,7 +256,7 @@ export class Game extends Phaser.Scene {
   on_message (event) {
     const message = JSON.parse(event.data)
 
-    if (message.num != this.joueur_courant) {
+    if (message.num !== this.joueur_courant) {
       switch (message.type) {
         case 'deplacement' :
           this.players[message.num - 1].setPos(message.x, message.y)
@@ -272,7 +272,6 @@ export class Game extends Phaser.Scene {
         case 'remplir_marmite' :
           this.chaudron.add_ingredient(message.produit)
           this.players[message.num - 1].setCarriedObject('')
-
           break
         case 'start_marmite' :
           this.chaudron.start_chaudron()
@@ -285,24 +284,21 @@ export class Game extends Phaser.Scene {
           if (this.monsterObjects[message.indice]?.isDead() === true) {
             this.remove_monster(message.indice)
           }
-
           break
-        case 'serv_client' : {
+        case 'serv_client' :
           this.ui.add_money(message.indice)
           this.getClientQueue().removeClient()
           this.players[message.num - 1].setCarriedObject('')
           break
-        }
-        case 'create_client' : {
+        case 'create_client' :
           this.getClientQueue().create_client(message.produit_complet)
           break
-        }
-
+        case 'fin_marmite':
+          break
         default :
-          console.error('Requête inconnue')
+          console.error(`Requête inconnue ${message.type}`, { message })
       }
     }
-
     if (message.type === 'fin_marmite') {
       this.chaudron.end_preparation(message.produit)
     }
