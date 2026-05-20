@@ -12,9 +12,9 @@ rm -fr "$TOMCAT_HOME/webapps/IllicoDraco" || true
 cd backend
 ./mvnw clean package
 cd -
-cp backend/target/project-0.0.1-SNAPSHOT.war IllicoDraco.war
+mv backend/target/project-0.0.1-SNAPSHOT.war IllicoDraco.war
 # Rajout du frontend dans le WAR
 jar uf IllicoDraco.war -C frontend .
-cp IllicoDraco.war "$TOMCAT_HOME/webapps/"
+mv IllicoDraco.war "$TOMCAT_HOME/webapps/"
 # Lancement du serveur Tomcat
 exec "$TOMCAT_HOME/bin/startup.sh"
