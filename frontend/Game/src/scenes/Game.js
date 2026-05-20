@@ -25,6 +25,7 @@ export class GameUI extends Phaser.Scene {
     this.joueur_courant = data.joueur_courant
     this.pseudo = data.pseudo
     this.game = data.game
+    this.argent = MONEY
   }
 
   create () {
@@ -36,7 +37,7 @@ export class GameUI extends Phaser.Scene {
     this.graphics.fillRect(0, 0, 1280, 50)
     this.graphics.strokeRect(2, 2, 1276, 48)
 
-    this.infosText = this.add.text(0, 16, 'Temps : XX | Argent : XX', { fontSize: '24px', fill: '#ffffff' })
+    this.infosText = this.add.text(0, 16, 'Argent : ' + this.argent, { fontSize: '24px', fill: '#ffffff' })
       .setFixedSize(1280, 32)
       .setAlign('center')
 
@@ -62,6 +63,12 @@ export class GameUI extends Phaser.Scene {
     this.input.keyboard.on('keyup', (event) => this.handle_key(event))
 
     this.coffre = new Coffre(this)
+
+    this.game.setGameUi(this)
+  }
+  add_money(money) {
+    this.argent += money
+    this.infosText.setText("Argent : " + this.argent)
   }
 
   open_boutique () {
@@ -108,7 +115,6 @@ export class Game extends Phaser.Scene {
 
     this.serveur_url = SERVER_URL
     this.duree = TIME
-    this.money = MONEY
   }
 
   preload () {
@@ -238,8 +244,8 @@ export class Game extends Phaser.Scene {
     })
      }
 
-
-    this.ui = this.scene.launch('GameUI',
+    this.ui = null
+    this.scene.launch('GameUI',
       {
         joueur_courant: this.joueur_courant,
         pseudo: this.pseudo,
@@ -252,6 +258,16 @@ export class Game extends Phaser.Scene {
     ///Création de la marmite
     this.chaudron = new Chaudron(this, this.marmite, this.ws, this.joueur_courant)
 
+  }
+
+  setGameUi(ui) {
+    this.ui = ui
+  }
+
+  getUi() {
+
+    console.log("UI", this.ui)
+    return this.ui
   }
 
   on_message(event) {
@@ -293,6 +309,7 @@ export class Game extends Phaser.Scene {
         break
       case 'serv_client' : 
         {
+        this.ui.add_money(message.indice)
         this.getClientQueue().removeClient()
         this.players[message.num - 1].setCarriedObject("")  
         break
@@ -435,7 +452,7 @@ export class Game extends Phaser.Scene {
       this.objectInteractLabel = name
 
       if (!this.interactText) {
-        this.interactText = this.add.text(0, 0, `Appuyez sur E`, {
+        this.interactText = this.add.text(0, 0, `Appuyez sur F`, {
           fontSize: '20px',
           color: '#ffffff'
         }).setOrigin(0.5).setScale(0.5)
@@ -574,7 +591,7 @@ export class Game extends Phaser.Scene {
       const monster = new Monster(this, nom, stats.vie, stats.defense, stats.attaque, x,y, stats.vitesse, monsterSprite, produit)
       console.log("Monstre de vitesse : ", monster.vitesse)
       let timer = this.time.addEvent({
-        delay: 500,//monster.vitesse, //Phaser.Math.Between(10000, 20000) / 5,
+        delay: 3000,//monster.vitesse, //Phaser.Math.Between(10000, 20000) / 5,
         callback: () => this.moveMonster(monster),
         callbackScope: this,
         loop: true
