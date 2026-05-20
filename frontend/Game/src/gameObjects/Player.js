@@ -94,18 +94,24 @@ export default class Player extends Entity {
 
             console.log("Client veut :", objetVouluClient, ", je porte :", objetPorte)
             
+            let argent = 0
             if (objetPorte === objetVouluClient.nom){
               console.log("Client satisfait!! +", objetVouluClient.prix)
+              argent = queue.getPrice()
+              this.parent_scene.getUi().add_money(queue.getPrice())
               queue.removeClient()
-              this.parent_scene.money += objetVouluClient.prix
+              
             } else {
               console.log("wtf bro")
+              argent = 1
+              this.parent_scene.getUi().add_money(1)
               queue.removeClient()
             }
             this.setCarriedObject("")
 
             this.ws.send(JSON.stringify({
               type: 'serv_client',
+              indice: argent,
               num: this.num
             }))
 

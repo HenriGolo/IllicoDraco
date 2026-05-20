@@ -1,4 +1,4 @@
-import { httpToWs } from '../utils.js'
+import { httpToWs } from '../../../utils.js'
 
 export default class Tchat {
 

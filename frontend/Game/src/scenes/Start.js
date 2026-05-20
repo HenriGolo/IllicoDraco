@@ -1,5 +1,5 @@
 import ASSETS from '../assets.js'
-import { SERVER_URL } from '../utils.js'
+import { SERVER_URL } from '../../../utils.js'
 
 export class Start extends Phaser.Scene {
 
