@@ -212,19 +212,22 @@ export class Game extends Phaser.Scene {
   }
 
 
-    this.clients = new QueueClient(this);
+    this.clients = new QueueClient(this, this.ws);
     console.log(this.clients.clientsQueue);
-    this.clients.addNewClient();
-    console.log(this.clients.clientsQueue);
+    //this.clients.addNewClient();
+    console.log(this.clients.clientsQueue, this.joueur_courant);
 
 
-    this.clientTimer = this.time.addEvent({    // Fait spawn un client dans la file 
-      delay: clientDelay,
-      callback: this.genClients,
-      callbackScope: this,
-      loop: true
+    if (this.joueur_courant === 1) {
 
-    })
+      this.clientTimer = this.time.addEvent({    // Fait spawn un client dans la file 
+        delay: clientDelay,
+        callback: this.genClients,
+        callbackScope: this,
+        loop: true
+
+      })
+   
 
     this.time.addEvent({    // Modifie le temps de spawn des clients
       delay: 30000,
@@ -233,6 +236,7 @@ export class Game extends Phaser.Scene {
       loop: true
 
     })
+     }
 
 
     this.ui = this.scene.launch('GameUI',
@@ -288,11 +292,17 @@ export class Game extends Phaser.Scene {
 
         break
       case 'serv_client' : 
-     {
+        {
         this.getClientQueue().removeClient()
         this.players[message.num - 1].setCarriedObject("")  
         break
-     } 
+        } 
+      case 'create_client' :
+        {
+          console.log("GENERATION DE CLIENT", message.produit_complet)
+          this.getClientQueue().create_client(message.produit_complet)
+          break
+        }
       
       default :
         console.log('Requête inconnue')

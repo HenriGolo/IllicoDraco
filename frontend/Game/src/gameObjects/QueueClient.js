@@ -2,7 +2,7 @@ import { SERVER_URL } from "../utils.js";
 import Client from "./Client.js";
 
 export class QueueClient {
-  constructor(scene) {
+  constructor(scene, ws) {
     this.parentScene = scene
     this.clientsGroup = scene.physics.add.group({
     classType: Client,
@@ -12,6 +12,7 @@ export class QueueClient {
     this.clientsGroup.maxSize = 6;
     this.lastPosNotTaken = 0; // de 0 à clients.maxSize
     this.platData = null;
+    this.ws = ws 
     
   }
 
@@ -19,6 +20,10 @@ export class QueueClient {
     this.getRandomPlat();
     console.log("getRandomPlat appelé")
 
+  }
+
+  getPrice() {
+    return this.data.prix
   }
 
   removeClient() {
@@ -75,12 +80,29 @@ export class QueueClient {
       const response = await fetch(url)
       if (response.ok) {
         let data = await response.json()
-        this.platData = data;
+        
         console.log('------------ Data des PLATS reçu')
         console.log(data)
 
-        // Test 
+        this.ws.send(JSON.stringify({
+        type: 'create_client',
+        produit_complet: data,
+        num: this.num
+        }))
 
+        this.create_client(data)
+      } else {
+        console.error('Erreur HTTP : ', response.status)
+      
+      }
+
+      console.log("getRandomPlat a retourné son résultat")
+    }
+
+    create_client(data) {
+
+        // Test 
+        this.platData = data;
         const requete = this.platData; // requête du client
         //const requete = "bonjour je suis une requete eheheh"
         const frameID = Phaser.Math.Between(0,3)*2; //0, 2, 4, 6 --> un des 4 clients au hasar
@@ -102,13 +124,6 @@ export class QueueClient {
 
         console.log("Nouveau client créé; Sprite ", frameID, "position :", this.lastPosNotTaken -1, "taken");
 
-
-      } else {
-        console.error('Erreur HTTP : ', response.status)
-      
-      }
-
-      console.log("getRandomPlat a retourné son résultat")
-
     }
+  
 }
